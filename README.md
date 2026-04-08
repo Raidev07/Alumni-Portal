@@ -9,7 +9,6 @@ The **PLP Alumni Portal** is a web-based platform designed for alumni of **Paman
 Currently, this is the **initial landing page** featuring:
 - Branded navbar with PLP and Alumni logos
 - Hero slider highlighting welcome message and registration features
-- Responsive design optimized for desktop and mobile
 
 Future expansions will include full authentication, alumni directory, event management, and more.
 
@@ -23,7 +22,6 @@ Future expansions will include full authentication, alumni directory, event mana
     | Alumni Card Application  |
     | Yearbook Claiming        |
     | 2-in-1 Package           |
-- ✅ **Responsive Design**: Mobile-first with smooth animations and hover effects
 - ✅ **Branding**: Official PLP colors (#006E14 green theme) and logos
 
 
