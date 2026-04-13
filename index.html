@@ -9,6 +9,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"/>
+    <link rel="stylesheet" href="signUpDialog_Style.css">
 </head>
 <body>
     <nav class="navbar" id="navbar">
@@ -29,11 +30,30 @@
             <div class="nav-right">
                 <div class="btns">
                     <button class="btn">Login</button>
-                    <button class="btn">Signup</button>
+                    <button class="btn" onclick="document.getElementById('signUpDialog').showModal()">
+                        Signup
+                    </button>
                 </div>
                 <a href="#" class="logo-link2"><img src="image/plplogo.png" alt="PLP Logo"></a>
             </div>
         </nav>
+
+    <!-- Sign Up Dialog Start -->
+    <dialog id="signUpDialog">
+        <div class="title">Sign As...</div>
+        <div class="registerButtons">
+            <button class="btn" onclick="window.location.href = 'studentform/student_form.html'">
+                Register As Student
+            </button>
+            <button class="btn" onclick="window.location.href = 'alumniform/index.html'">
+                Register As Alumni
+            </button>
+        </div>
+        <button id="closeButton" class="btn" onclick="document.getElementById('signUpDialog').close()">
+            Close
+        </button>
+    </dialog>
+    <!-- Sign Up Dialog End -->
 
     <section class="header">
         <!-- Swiper Slider -->

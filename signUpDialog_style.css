@@ -1,0 +1,43 @@
+:root {
+  --main-lightGreen: #28a745;
+  --main-darkGreen: #006e14;
+  --main-grey: #ccc;
+  --sub-grey: #d9d9d9;
+}
+
+#signUpDialog {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  margin: 0;
+  border: 3px solid #006e14;
+  border-radius: 8px;
+  padding: 20px;
+  height: 40vh;
+  width: 40vw;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+dialog::backdrop {
+  background: rgba(0, 0, 0, 0.6); /* dark overlay */
+}
+
+#signUpDialog .title {
+  font-size: 2.8rem;
+}
+#signUpDialog .registerButtons{
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  justify-content: space-around;
+  margin: 30px 0 10px 0;
+}
+
+#signUpDialog #closeButton {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  padding: 8px 15px;
+  font-size: 1rem;
+}
