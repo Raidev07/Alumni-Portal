@@ -19,7 +19,7 @@ body {
   display: flex;
   height: 100vh;
   justify-content: center;
-  align-items: center; 
+  align-items: center;
   background: rgba(40, 167, 69, 0.8);
   padding: 10px;
 }
@@ -134,7 +134,6 @@ form .sex__details {
   position: relative;
 }
 
-
 form .sex__details .sex__title {
   font-size: 16px;
   font-weight: 500;
@@ -174,10 +173,7 @@ form input[type="radio"] {
 }
 /* Sex Section End */
 
-
 /* Academic Details */
-
-
 
 .academic__details {
   margin-bottom: 20px;
@@ -272,7 +268,6 @@ form .academic__details .input__box input:valid {
   border-color: var(--main-lightGreen);
 }
 
-
 form .pass__details .input__box.name__row {
   width: 100%;
   display: flex;
@@ -329,28 +324,51 @@ form .pass__details .input__box.name__row div span {
   color: var(--main-lightGreen);
 }
 
-
-
 /* submit button */
 form .button {
   height: 45px;
   margin: 45px 0;
+  display: flex;
+  flex: 1;
+  gap: 20px;
 }
 
 form .button input {
   height: 100%;
   width: 100%;
-  outline: none;
-  color: #fff;
+  padding: 0.5rem 1.5rem;
+  border-radius: 30px;
+  font-weight: 600;
+  font-size: 1.2rem;
+  background: #006e14;
+  color: white;
   border: none;
-  font-size: 18px;
-  font-weight: 500;
-  border-radius: 5px;
-  background: var(--main-darkGreen);
-  transition: all 0.3s ease;
+  cursor: pointer;
+  transition: 0.3s;
+}
+form .button .btn {
+  height: 100%;
+  width: 100%;
+  padding: 0.5rem 1.5rem;
+  border: 3px solid var(--main-darkGreen);
+  border-radius: 30px;
+  font-weight: 600;
+  font-size: 1.2rem;
+  background: #fff;
+  color: var(--main-darkGreen);
+  cursor: pointer;
+  transition: 0.3s;
 }
 
+form .button .btn:hover{
+  background: var(--main-darkGreen);
+  border: none;
+  color: #fff;
+}
+
+form .button .btn:hover,
 form .button input:hover {
+  box-shadow: 0 0 25px #006e14;
   background: var(--main-lightGreen);
 }
 
