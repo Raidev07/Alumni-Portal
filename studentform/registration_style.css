@@ -1,0 +1,397 @@
+/* all */
+/* @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500&display=swap"); */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+}
+
+:root {
+  --main-lightGreen: #28a745;
+  --main-darkGreen: #006e14;
+  --main-grey: #ccc;
+  --sub-grey: #d9d9d9;
+}
+
+body {
+  display: flex;
+  height: 100vh;
+  justify-content: center;
+  align-items: center;
+  background: rgba(40, 167, 69, 0.8);
+  padding: 10px;
+}
+/* container and form */
+.form_container {
+  margin: auto;
+  max-width: 150vh;
+  width: auto;
+  background: #fff;
+  padding: 25px 30px;
+  border-radius: 5px;
+}
+.form_container .title {
+  font-size: 2.5rem;
+  font-weight: 500;
+  position: relative;
+}
+
+.form_container .title::before {
+  content: "";
+  position: absolute;
+  height: 5px;
+  width: 14%;
+  background: linear-gradient(
+    135deg,
+    var(--main-lightGreen),
+    var(--main-darkGreen)
+  );
+  left: 0;
+  bottom: -5px;
+}
+
+.form_container form .user__details {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  margin: 20px 0 0px 0;
+}
+/* inside the form user details */
+form .user__details .input__box {
+  width: calc(100% / 2 - 20px);
+  margin-bottom: 15px;
+}
+
+form .user__details .input__box.name__row {
+  width: 100%;
+  display: flex;
+  gap: 20px;
+}
+
+form .user__details .input__box.name__row div {
+  flex: 1;
+}
+
+form .user__details .input__box.name__row div span {
+  font-weight: 500;
+  margin-bottom: 5px;
+  display: block;
+}
+
+form .user__details .input__box.name__row div input {
+  height: 45px;
+  width: 100%;
+  outline: none;
+  border-radius: 5px;
+  border: 1px solid var(--main-grey);
+  padding-left: 15px;
+  font-size: 16px;
+  border-bottom-width: 2px;
+  transition: all 0.3s ease;
+}
+
+form .user__details .input__box.name__row div input:focus,
+form .user__details .input__box.name__row div input:valid {
+  border-color: var(--main-lightGreen);
+}
+
+.user__details .input__box .details {
+  font-weight: 500;
+  margin-bottom: 5px;
+  display: block;
+}
+
+form .user__details .input__box input {
+  height: 45px;
+  width: 100%;
+  outline: none;
+  border-radius: 5px;
+  border: 1px solid var(--main-grey);
+  padding-left: 15px;
+  font-size: 16px;
+  border-bottom-width: 2px;
+  transition: all 0.3s ease;
+}
+
+form .user__details .input__box input:focus,
+form .user__details .input__box input:valid {
+  border-color: var(--main-lightGreen);
+}
+
+input[name="studentId"] {
+  max-width: 66.5%;
+}
+
+/* Sex Section  */
+form .sex__details {
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  width: 50%;
+  position: relative;
+}
+
+form .sex__details .sex__title {
+  font-size: 16px;
+  font-weight: 500;
+  margin: 0;
+}
+
+form .sex__details .category {
+  display: flex;
+  width: auto;
+  margin: 0;
+  gap: 20px;
+}
+
+.sex__details .category label {
+  display: flex;
+  align-items: center;
+}
+
+.sex__details .category .dot {
+  height: 18px;
+  width: 18px;
+  background: var(--sub-grey);
+  border-radius: 50%;
+  margin: 0 8px 0 0;
+  border: 5px solid transparent;
+  transition: all 0.3s ease;
+}
+
+#dot-1:checked ~ .category .one,
+#dot-2:checked ~ .category .two {
+  border-color: var(--sub-grey);
+  background: var(--main-darkGreen);
+}
+
+form input[type="radio"] {
+  display: none;
+}
+/* Sex Section End */
+
+/* Academic Details */
+
+.academic__details {
+  margin-bottom: 20px;
+}
+
+form .academic__details .input__box {
+  width: calc(100% / 2 - 20px);
+  margin-bottom: 15px;
+}
+
+form .academic__details .input__box.name__row {
+  width: 100%;
+  display: flex;
+  gap: 20px;
+}
+
+form .academic__details .input__box.name__row div {
+  flex: 1;
+}
+
+form .academic__details .input__box.name__row div span {
+  font-weight: 500;
+  margin-bottom: 5px;
+  display: block;
+}
+
+form .academic__details .input__box.name__row div input {
+  height: 45px;
+  width: 100%;
+  outline: none;
+  border-radius: 5px;
+  border: 1px solid var(--main-grey);
+  padding-left: 15px;
+  font-size: 16px;
+  border-bottom-width: 2px;
+  transition: all 0.3s ease;
+}
+
+form .academic__details .input__box.name__row div input:focus,
+form .academic__details .input__box.name__row div input:valid {
+  border-color: var(--main-lightGreen);
+}
+
+.academic__details .input__box .details {
+  font-weight: 500;
+  margin-bottom: 5px;
+  display: block;
+}
+
+form .academic__details .input__box input {
+  height: 45px;
+  width: 100%;
+  outline: none;
+  border-radius: 5px;
+  border: 1px solid var(--main-grey);
+  padding-left: 15px;
+  font-size: 16px;
+  border-bottom-width: 2px;
+  transition: all 0.3s ease;
+}
+
+form .academic__details .input__box input:focus,
+form .academic__details .input__box input:valid {
+  border-color: var(--main-lightGreen);
+}
+
+.academic__details select {
+  height: 45px;
+  width: 100%;
+  outline: none;
+  border-radius: 5px;
+  border: 1px solid var(--main-grey);
+  padding-left: 15px;
+  font-size: 16px;
+  border-bottom-width: 2px;
+  transition: all 0.3s ease;
+  background-color: #fff;
+  cursor: pointer;
+  font-family: "Poppins", sans-serif;
+}
+
+.academic__details .course-box {
+  flex: 3;
+}
+
+.academic__details .input__box.name__row div:not(.course-box) {
+  flex: 0 1 175px;
+  width: fit-content;
+}
+
+.academic__details select:focus {
+  border-color: var(--main-lightGreen);
+}
+
+form .pass__details .input__box.name__row {
+  width: 100%;
+  display: flex;
+  gap: 20px;
+}
+
+form .pass__details .input__box.name__row div {
+  flex: 1;
+}
+
+form .pass__details .input__box.name__row div span {
+  font-weight: 500;
+  margin-bottom: 5px;
+  display: block;
+}
+
+.password-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+.password-container input {
+  height: 45px;
+  width: 100%;
+  outline: none;
+  border-radius: 5px;
+  border: 1px solid var(--main-grey);
+  padding-left: 15px;
+  padding-right: 50px;
+  font-size: 16px;
+  border-bottom-width: 2px;
+  transition: all 0.3s ease;
+}
+
+.password-container input:focus,
+.password-container input:valid {
+  border-color: var(--main-lightGreen);
+}
+
+.toggle-password {
+  position: absolute;
+  right: 10px;
+  background: none;
+  border: none;
+  color: var(--main-darkGreen);
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 5px 10px;
+  transition: all 0.3s ease;
+}
+
+.toggle-password:hover {
+  color: var(--main-lightGreen);
+}
+
+/* submit button */
+form .button {
+  height: 45px;
+  margin: 45px 0;
+  display: flex;
+  flex: 1;
+  gap: 20px;
+}
+
+form .button input {
+  height: 100%;
+  width: 100%;
+  padding: 0.5rem 1.5rem;
+  border-radius: 30px;
+  font-weight: 600;
+  font-size: 1.2rem;
+  background: #006e14;
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: 0.3s;
+}
+form .button .btn {
+  height: 100%;
+  width: 100%;
+  padding: 0.5rem 1.5rem;
+  border: 3px solid var(--main-darkGreen);
+  border-radius: 30px;
+  font-weight: 600;
+  font-size: 1.2rem;
+  background: #fff;
+  color: var(--main-darkGreen);
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+form .button .btn:hover{
+  background: var(--main-darkGreen);
+  border: none;
+  color: #fff;
+}
+
+form .button .btn:hover,
+form .button input:hover {
+  box-shadow: 0 0 25px #006e14;
+  background: var(--main-lightGreen);
+}
+
+@media only screen and (max-width: 584px) {
+  .container {
+    max-width: 100%;
+  }
+
+  form .user__details .input__box {
+    margin-bottom: 15px;
+    width: 100%;
+  }
+
+  form .category {
+    width: 100%;
+  }
+
+  .container form .user__details {
+    max-height: 300px;
+    overflow-y: scroll;
+  }
+
+  .user__details::-webkit-scrollbar {
+    width: 0;
+  }
+}
