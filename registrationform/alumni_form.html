@@ -5,15 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="../style.css" />
     <link
-      href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap"
       rel="stylesheet"
     />
     <link rel="stylesheet" type="text/css" href="registration_style.css" />
     <script src="registration_script.js" defer></script>
-    <title>Student Registration</title>
+    <title>Alumni Registration</title>
   </head>
   <body>
-    <!-- Dark shade overlay -->
     <div class="darkshade"></div>
     <nav class="navbar" id="navbar">
       <div class="nav-left">
@@ -28,8 +27,8 @@
 
       <ul class="nav-links">
         <li><a href="../index.html">Home</a></li>
-        <li><a href="#">Portfolio</a></li>
-        <li><a href="#">About</a></li>
+        <li><a href="#">Jobs</a></li>
+        <li><a href="#">Events</a></li>
       </ul>
 
       <div class="nav-right">
@@ -121,9 +120,14 @@
               <input
                 type="email"
                 name="email"
+                id="email"
                 placeholder="juandelacruz@gmail.com"
                 required
+                oninput="validateEmail()"
               />
+              <ul id="email-requirements">
+                <li id="req-email">Must include '@' and end in '.com'</li>
+              </ul>
             </div>
             <div>
               <span class="details">Phone Number</span>
@@ -132,13 +136,18 @@
                 pattern="^09\d{9}$"
                 placeholder="09171234567"
                 name="contactNum"
+                id="contactNum"
                 maxlength="11"
                 onkeypress="return /[0-9]/.test(event.key);"
                 required
+                oninput="validatePhone()"
               />
+              <ul id="phone-requirements">
+                <li id="req-phone">11 digits starting with '09'</li>
+              </ul>
             </div>
           </div>
-        </div>
+          </div>
 
         <div class="academic__details">
           <div class="input__box name__row">
