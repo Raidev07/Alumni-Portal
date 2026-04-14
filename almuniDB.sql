@@ -62,7 +62,7 @@ CREATE TABLE `courses` (
   UNIQUE KEY `course_code` (`course_code`),
   KEY `department_id` (`department_id`),
   CONSTRAINT `courses_ibfk_1` FOREIGN KEY (`department_id`) REFERENCES `departments` (`department_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -71,6 +71,7 @@ CREATE TABLE `courses` (
 
 LOCK TABLES `courses` WRITE;
 /*!40000 ALTER TABLE `courses` DISABLE KEYS */;
+INSERT INTO `courses` VALUES (1,'Bachelor of Science in Information Technology','BSIT',1),(2,'Bachelor of Science in Computer Science','BSCS',1),(3,'Bachelor of Science in Education Major in English','BSED-ENG',2),(4,'Bachelor of Science in Education Major in Filipino','BSED-FIL',2),(5,'Bachelor of Science in Education Major in Math','BSED-MATH',2),(6,'Bachelor of Science in Nursing','BSN',3),(7,'Bachelor of Science in Engineering','BSE',4),(8,'Bachelor of Science in Hospitality Management','BSHM',5),(9,'Bachelor of Science in Business and Accountancy','BSBA',6),(10,'Bachelor of Science in Psychology','BSP',7);
 /*!40000 ALTER TABLE `courses` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -85,7 +86,7 @@ CREATE TABLE `departments` (
   `department_id` int(11) NOT NULL AUTO_INCREMENT,
   `department_name` varchar(100) NOT NULL,
   PRIMARY KEY (`department_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -94,38 +95,8 @@ CREATE TABLE `departments` (
 
 LOCK TABLES `departments` WRITE;
 /*!40000 ALTER TABLE `departments` DISABLE KEYS */;
+INSERT INTO `departments` VALUES (1,'CCS'),(2,'COED'),(3,'CON'),(4,'COE'),(5,'CIHM'),(6,'CBA'),(7,'CAS');
 /*!40000 ALTER TABLE `departments` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `professors`
---
-
-DROP TABLE IF EXISTS `professors`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `professors` (
-  `professor_id` int(11) NOT NULL AUTO_INCREMENT,
-  `user_id` int(11) NOT NULL,
-  `employee_id` varchar(20) NOT NULL,
-  `department_id` int(11) DEFAULT NULL,
-  `employment_status` enum('full-time','part-time') DEFAULT NULL,
-  PRIMARY KEY (`professor_id`),
-  UNIQUE KEY `employee_id` (`employee_id`),
-  KEY `user_id` (`user_id`),
-  KEY `department_id` (`department_id`),
-  CONSTRAINT `professors_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`),
-  CONSTRAINT `professors_ibfk_2` FOREIGN KEY (`department_id`) REFERENCES `departments` (`department_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `professors`
---
-
-LOCK TABLES `professors` WRITE;
-/*!40000 ALTER TABLE `professors` DISABLE KEYS */;
-/*!40000 ALTER TABLE `professors` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -231,4 +202,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-04-12 14:59:28
+-- Dump completed on 2026-04-13  0:21:10
