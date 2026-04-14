@@ -1,11 +1,123 @@
-/* all */
-/* @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500&display=swap"); */
-
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: "Poppins", sans-serif;
+  font-family: "Roboto", sans-serif;
+}
+
+body {
+  background-image: url(../image/homepage_img.png);
+  background-position: center;
+  background-size: cover;
+  background-attachment: fixed;
+  position: relative;
+}
+
+.darkshade {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  pointer-events: none;
+  z-index: -1;
+}
+
+.navbar {
+  width: 100%;
+  padding: 0.8rem 5%;
+  background: white;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(100px);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  transition: all 0.3s ease;
+}
+
+.navbar.sticky {
+  padding: 0.4rem 5%;
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+}
+
+.nav-left {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.logo-link1 img {
+  width: 75px;
+  height: auto;
+  display: block;
+}
+
+.logo-link2 img {
+  width: 70px;
+  height: auto;
+  display: block;
+}
+
+.title {
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.title div:first-child {
+  font-size: 1rem;
+}
+
+.title div:last-child {
+  font-size: 1.7rem;
+  letter-spacing: 2px;
+}
+
+.nav-links {
+  list-style: none;
+  display: flex;
+  gap: 2rem;
+}
+
+.nav-links li a {
+  position: relative;
+  font-size: 1.05rem;
+  font-weight: 500;
+  text-decoration: none;
+  color: #0f172a;
+  transition: 0.3s;
+}
+
+.nav-links li a::after {
+  content: "";
+  position: absolute;
+  bottom: -6px;
+  left: 0;
+  width: 0%;
+  height: 2px;
+  background: #006e14;
+  box-shadow: 0 0 6px #006e14;
+  transition: 0.3s ease-in-out;
+}
+
+.nav-links li a:hover {
+  color: #006e14;
+  text-shadow: 0 0 10px #006e14;
+}
+
+.nav-links li a:hover::after {
+  width: 100%;
+}
+
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 1.4rem;
 }
 
 :root {
@@ -15,23 +127,21 @@
   --sub-grey: #d9d9d9;
 }
 
-body {
-  display: flex;
-  height: 100vh;
-  justify-content: center;
-  align-items: center;
-  background: rgba(40, 167, 69, 0.8);
-  padding: 10px;
-}
 /* container and form */
 .form_container {
-  margin: auto;
+  margin: 10vh auto;
   max-width: 150vh;
   width: auto;
   background: #fff;
   padding: 25px 30px;
-  border-radius: 5px;
+  border-radius: 20px;
+  border: 3px solid var(--main-darkGreen);
 }
+
+input, select {
+  scroll-margin-top: 200px;
+}
+
 .form_container .title {
   font-size: 2.5rem;
   font-weight: 500;
@@ -42,12 +152,8 @@ body {
   content: "";
   position: absolute;
   height: 5px;
-  width: 14%;
-  background: linear-gradient(
-    135deg,
-    var(--main-lightGreen),
-    var(--main-darkGreen)
-  );
+  width: 100%;
+  background: linear-gradient(135deg, var(--main-lightGreen), var(--main-darkGreen));
   left: 0;
   bottom: -5px;
 }
@@ -58,7 +164,7 @@ body {
   justify-content: space-between;
   margin: 20px 0 0px 0;
 }
-/* inside the form user details */
+
 form .user__details .input__box {
   width: calc(100% / 2 - 20px);
   margin-bottom: 15px;
@@ -89,7 +195,7 @@ form .user__details .input__box.name__row div input {
   padding-left: 15px;
   font-size: 16px;
   border-bottom-width: 2px;
-  transition: all 0.3s ease;
+  transition: box-shadow 0.3s ease, background 0.3s ease;
 }
 
 form .user__details .input__box.name__row div input:focus,
@@ -112,7 +218,7 @@ form .user__details .input__box input {
   padding-left: 15px;
   font-size: 16px;
   border-bottom-width: 2px;
-  transition: all 0.3s ease;
+  transition: box-shadow 0.3s ease, background 0.3s ease;
 }
 
 form .user__details .input__box input:focus,
@@ -124,7 +230,7 @@ input[name="studentId"] {
   max-width: 66.5%;
 }
 
-/* Sex Section  */
+/* Sex Section */
 form .sex__details {
   padding: 10px;
   display: flex;
@@ -171,10 +277,20 @@ form .sex__details .category {
 form input[type="radio"] {
   display: none;
 }
+
+.sex__warning {
+  color: red;
+  font-size: 0.8rem;
+  margin-top: 4px;
+  display: none;
+  position: absolute;
+  left: 10;
+  bottom: -10px;
+}
+
 /* Sex Section End */
 
 /* Academic Details */
-
 .academic__details {
   margin-bottom: 20px;
 }
@@ -209,7 +325,7 @@ form .academic__details .input__box.name__row div input {
   padding-left: 15px;
   font-size: 16px;
   border-bottom-width: 2px;
-  transition: all 0.3s ease;
+  transition: box-shadow 0.3s ease, background 0.3s ease;
 }
 
 form .academic__details .input__box.name__row div input:focus,
@@ -232,7 +348,7 @@ form .academic__details .input__box input {
   padding-left: 15px;
   font-size: 16px;
   border-bottom-width: 2px;
-  transition: all 0.3s ease;
+  transition: box-shadow 0.3s ease, background 0.3s ease;
 }
 
 form .academic__details .input__box input:focus,
@@ -249,7 +365,7 @@ form .academic__details .input__box input:valid {
   padding-left: 15px;
   font-size: 16px;
   border-bottom-width: 2px;
-  transition: all 0.3s ease;
+  transition: box-shadow 0.3s ease, background 0.3s ease;
   background-color: #fff;
   cursor: pointer;
   font-family: "Poppins", sans-serif;
@@ -268,6 +384,7 @@ form .academic__details .input__box input:valid {
   border-color: var(--main-lightGreen);
 }
 
+/* Password Details */
 form .pass__details .input__box.name__row {
   width: 100%;
   display: flex;
@@ -289,6 +406,7 @@ form .pass__details .input__box.name__row div span {
   display: flex;
   align-items: center;
 }
+
 .password-container input {
   height: 45px;
   width: 100%;
@@ -299,7 +417,7 @@ form .pass__details .input__box.name__row div span {
   padding-right: 50px;
   font-size: 16px;
   border-bottom-width: 2px;
-  transition: all 0.3s ease;
+  transition: box-shadow 0.3s ease, background 0.3s ease;
 }
 
 .password-container input:focus,
@@ -324,7 +442,30 @@ form .pass__details .input__box.name__row div span {
   color: var(--main-lightGreen);
 }
 
-/* submit button */
+#requirements li,
+#confirm-requirements li {
+  list-style: none;
+  color: red;
+  font-size: 0.8rem;
+  margin-top: 4px;
+}
+
+#requirements li.met,
+#confirm-requirements li.met {
+  color: green;
+}
+
+#requirements li::before,
+#confirm-requirements li::before {
+  content: "✗ ";
+}
+
+#requirements li.met::before,
+#confirm-requirements li.met::before {
+  content: "✓ ";
+}
+
+/* Submit Button */
 form .button {
   height: 45px;
   margin: 45px 0;
@@ -346,6 +487,7 @@ form .button input {
   cursor: pointer;
   transition: 0.3s;
 }
+
 form .button .btn {
   height: 100%;
   width: 100%;
@@ -360,16 +502,65 @@ form .button .btn {
   transition: 0.3s;
 }
 
-form .button .btn:hover{
-  background: var(--main-darkGreen);
-  border: none;
-  color: #fff;
-}
-
 form .button .btn:hover,
 form .button input:hover {
   box-shadow: 0 0 25px #006e14;
   background: var(--main-lightGreen);
+  border: none;
+  color: #fff;
+}
+
+/* Toast Notification */
+#toast {
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #e74c3c;
+  color: white;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-size: 14px;
+  z-index: 9999;
+  animation: fadeInOut 3s ease forwards;
+}
+
+@keyframes fadeInOut {
+  0%   { opacity: 0; transform: translateX(-50%) translateY(10px); }
+  15%  { opacity: 1; transform: translateX(-50%) translateY(0); }
+  80%  { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+/* Field Error Text */
+.field-error {
+  color: red;
+  font-size: 0.75rem;
+  margin-top: 3px;
+  display: none;
+}
+
+.field-error.visible {
+  display: block;
+}
+
+/* Input Error — must be last to override everything */
+input.input-error,
+input.input-error:focus,
+input.input-error:valid,
+input.input-error:invalid,
+select.input-error,
+select.input-error:focus,
+.password-container input.input-error,
+.password-container input.input-error:focus,
+.password-container input.input-error:valid {
+  border: 2px solid red !important;
+  border-bottom-width: 2px !important;
+  background: #fff5f5 !important;
+}
+
+input:not(.input-error):valid {
+  border-color: var(--main-lightGreen) !important;
 }
 
 @media only screen and (max-width: 584px) {

@@ -1,0 +1,266 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../style.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" type="text/css" href="registration_style.css" />
+    <script src="registration_script.js" defer></script>
+    <title>Student Registration</title>
+  </head>
+  <body>
+    <!-- Dark shade overlay -->
+    <div class="darkshade"></div>
+    <nav class="navbar" id="navbar">
+      <div class="nav-left">
+        <a href="#" class="logo-link1"
+          ><img src="../image/alumni-logo.png" alt="alumni Logo"
+        /></a>
+        <div class="title">
+          <div>Pamantasan ng Lungsod ng Pasig</div>
+          <div>ALUMNI</div>
+        </div>
+      </div>
+
+      <ul class="nav-links">
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="#">Portfolio</a></li>
+        <li><a href="#">About</a></li>
+      </ul>
+
+      <div class="nav-right">
+        <div class="btns">
+          <button class="btn">Login</button>
+          <button
+            class="btn"
+            onclick="document.getElementById('signUpDialog').showModal()"
+          >
+            Signup
+          </button>
+        </div>
+        <a href="#" class="logo-link2"
+          ><img src="../image/plplogo.png" alt="PLP Logo"
+        /></a>
+      </div>
+    </nav>
+
+    <div class="form_container">
+      <div class="title">Student Registration</div>
+      <form action="#" novalidate>
+        <div class="user__details">
+          <div class="input__box">
+            <span class="details">School ID</span>
+            <input
+              type="text"
+              name="studentId"
+              id="studentId"
+              placeholder="24-00123"
+              pattern="\d{2}-\d{5}"
+              maxlength="8"
+              required
+            />
+          </div>
+
+          <div class="input__box name__row">
+            <div>
+              <span class="details">First Name</span>
+              <input type="text" name="firstName" required />
+            </div>
+            <div>
+              <span class="details">Middle Name</span>
+              <input type="text" name="middleName" required />
+            </div>
+            <div>
+              <span class="details">Last Name</span>
+              <input type="text" name="lastName" required />
+            </div>
+          </div>
+
+          <div class="input__box name__row">
+            <div>
+              <span class="details">Address</span>
+              <input type="text" name="address" required />
+            </div>
+          </div>
+
+          <div class="input__box name__row">
+            <div>
+              <span class="details">Birth Date</span>
+              <input type="date" name="birthdate" required />
+            </div>
+
+            <div>
+              <span class="sex__title">Sex:</span>
+              <div class="sex__details">
+                <input type="radio" name="sex" id="dot-1" value="male" />
+                <input type="radio" name="sex" id="dot-2" value="female" />
+                <div class="category">
+                  <label for="dot-1">
+                    <span class="dot one"></span>
+                    <span>Male</span>
+                  </label>
+                  <label for="dot-2">
+                    <span class="dot two"></span>
+                    <span>Female</span>
+                  </label>
+                </div>
+                <span class="sex__warning" id="sexWarning" style="display: none"
+                  >Please select a sex</span
+                >
+              </div>
+            </div>
+          </div>
+
+          <div class="input__box name__row">
+            <div>
+              <span class="details">Email</span>
+              <input
+                type="email"
+                name="email"
+                placeholder="juandelacruz@gmail.com"
+                required
+              />
+            </div>
+            <div>
+              <span class="details">Phone Number</span>
+              <input
+                type="text"
+                pattern="^09\d{9}$"
+                placeholder="09171234567"
+                name="contactNum"
+                maxlength="11"
+                onkeypress="return /[0-9]/.test(event.key);"
+                required
+              />
+            </div>
+          </div>
+        </div>
+
+        <div class="academic__details">
+          <div class="input__box name__row">
+            <div class="course-box">
+              <span class="details">Course</span>
+              <select class="course" name="course" required>
+                <option value="">Select a Course</option>
+                <option value="1">
+                  Bachelor of Science in Information Technology
+                </option>
+                <option value="2">
+                  Bachelor of Science in Computer Science
+                </option>
+                <option value="3">
+                  Bachelor of Science in Education Major in English
+                </option>
+                <option value="4">
+                  Bachelor of Science in Education Major in Filipino
+                </option>
+                <option value="5">
+                  Bachelor of Science in Education Major in Math
+                </option>
+                <option value="6">Bachelor of Science in Nursing</option>
+                <option value="7">Bachelor of Science in Engineering</option>
+                <option value="8">
+                  Bachelor of Science in Hospitality Management
+                </option>
+                <option value="9">
+                  Bachelor of Science in Business and Accountancy
+                </option>
+                <option value="10">Bachelor of Science in Psychology</option>
+              </select>
+            </div>
+            <div>
+              <span class="details">Year Level</span>
+              <select name="yearLevel" required>
+                <option value="">Select Year Level</option>
+                <option value="1">1st Year</option>
+                <option value="2">2nd Year</option>
+                <option value="3">3rd Year</option>
+                <option value="4">4th Year</option>
+                <option value="5">5th Year</option>
+              </select>
+            </div>
+
+            <div>
+              <span class="details">Year Enrolled</span>
+              <select name="yearEnrolled" required>
+                <option value="">Select year</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="pass__details">
+          <div class="input__box name__row">
+            <div>
+              <span class="details">Password</span>
+              <div class="password-container">
+                <input
+                  type="password"
+                  name="password"
+                  id="password"
+                  required
+                  oninput="validatePassword()"
+                />
+                <button
+                  type="button"
+                  class="toggle-password"
+                  data-target="#password"
+                >
+                  Show
+                </button>
+              </div>
+
+              <!-- Requirements list -->
+              <ul id="requirements">
+                <li id="req-length">At least 8 and max 20 characters</li>
+                <li id="req-upper">At least one uppercase letter</li>
+                <li id="req-lower">At least one lowercase letter</li>
+                <li id="req-number">At least one number</li>
+                <li id="req-special">
+                  At least one special character (!@#$...)
+                </li>
+                <li id="req-space">No spaces</li>
+              </ul>
+            </div>
+
+            <div>
+              <span class="details">Confirm Password</span>
+              <div class="password-container">
+                <input
+                  type="password"
+                  id="confirmPassword"
+                  name="confirmPassword"
+                  required
+                  oninput="validateConfirm()"
+                />
+                <button
+                  type="button"
+                  class="toggle-password"
+                  data-target="#confirmPassword"
+                >
+                  Show
+                </button>
+              </div>
+
+              <!-- Confirm password warning -->
+              <ul id="confirm-requirements">
+                <li id="req-match">Passwords must match</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="button">
+          <button class="btn" onclick="window.location.href = '../index.html'">
+            Cancel
+          </button>
+          <input type="submit" value="Register" />
+        </div>
+      </form>
+    </div>
+  </body>
+</html>
