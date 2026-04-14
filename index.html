@@ -6,9 +6,10 @@
     <title>Alumni Portal</title>
     <link rel="icon" href="image/alumni-logo.png">
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"/>
+    <link rel="stylesheet" href="signUpDialog_style.css">
 </head>
 <body>
     <nav class="navbar" id="navbar">
@@ -21,19 +22,38 @@
             </div>
 
             <ul class="nav-links">
-                <li><a href="#">Home</a></li>
-                <li><a href="#">Portfolio</a></li>
-                <li><a href="#">About</a></li>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="jobs.html">Jobs</a></li>
+                <li><a href="events.html">Events</a></li>
             </ul>
 
             <div class="nav-right">
                 <div class="btns">
                     <button class="btn">Login</button>
-                    <button class="btn">Signup</button>
+                    <button class="btn" onclick="document.getElementById('signUpDialog').showModal()">
+                        Signup
+                    </button>
                 </div>
                 <a href="#" class="logo-link2"><img src="image/plplogo.png" alt="PLP Logo"></a>
             </div>
         </nav>
+
+    <!-- Sign Up Dialog Start -->
+    <dialog id="signUpDialog">
+        <div class="title">Sign Up As...</div>
+        <div class="registerButtons">
+            <button class="btn" onclick="window.location.href = 'registrationform/student_form.html'">
+                Register As Student
+            </button>
+            <button class="btn" onclick="window.location.href = 'registrationform/alumni_form.html'">
+                Register As Alumni
+            </button>
+        </div>
+        <button id="closeButton" class="btn" onclick="document.getElementById('signUpDialog').close()">
+            Close
+        </button>
+    </dialog>
+    <!-- Sign Up Dialog End -->
 
     <section class="header">
         <!-- Swiper Slider -->
