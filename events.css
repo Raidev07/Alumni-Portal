@@ -8,7 +8,7 @@
 }
 
 body {
-    background: white;
+  background: #f0f5f2;
     color: #0f172a;
 }
 html{
@@ -108,14 +108,16 @@ body.no-scroll {
     bottom: -6px;
     left: 0;
     width: 0%;
-    height: 2px;
+    height: 2.5px;
     background: #006E14;
-    box-shadow: 0 0 6px #006E14;
     transition: 0.3s ease-in-out;
 }
 
 .nav-links li a:hover { color: #006E14; }
 .nav-links li a:hover::after { width: 100%; }
+
+.nav-links li a.active { color: #006E14; }
+.nav-links li a.active::after { width: 100%; }
 
 .nav-right {
     display: flex;

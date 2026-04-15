@@ -1,14 +1,15 @@
-/**************** JOB PAGE - RESPONSIVE *****************/
+/**************** JOB PAGE*****************/
 
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
     font-family: 'Roboto', sans-serif;
+      border-color: #d9e8e3;
 }
 
 body {
-    background: white;
+    background: #f0f5f2;
     color: #0f172a;
     padding-bottom: 200px;
 }
@@ -19,7 +20,7 @@ html{
 body.no-scroll {
     overflow: hidden;
 }
-/* ─── HEADER ─────────────────────────────────────────────────────────────────── */
+
 .header {
     min-height: 95vh;
     width: 100%;
@@ -30,7 +31,7 @@ body.no-scroll {
     overflow: hidden;
 }
 
-/* ─── NAVBAR ─────────────────────────────────────────────────────────────────── */
+
 .navbar {
     width: 100%;
     padding: 0.8rem 5%;
@@ -109,14 +110,16 @@ body.no-scroll {
     bottom: -6px;
     left: 0;
     width: 0%;
-    height: 2px;
+    height: 2.5px;
     background: #006E14;
-    box-shadow: 0 0 6px #006E14;
     transition: 0.3s ease-in-out;
 }
 
 .nav-links li a:hover { color: #006E14; }
 .nav-links li a:hover::after { width: 100%; }
+
+.nav-links li a.active { color: #006E14; }
+.nav-links li a.active::after { width: 100%; }
 
 .nav-right {
     display: flex;

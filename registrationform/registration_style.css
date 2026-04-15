@@ -142,11 +142,11 @@ body {
     bottom: -6px;
     left: 0;
     width: 0%;
-    height: 2px;
+    height: 2.5px;
     background: #006E14;
-    box-shadow: 0 0 6px #006E14;
     transition: 0.3s ease-in-out;
 }
+
  
 .nav-links li a:hover { color: #006E14; }
 .nav-links li a:hover::after { width: 100%; }
