@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="../assets/image/alumni-logo.png" />
+    <link rel="stylesheet" href="../assets/css/style.css" />
+    <link rel="stylesheet" href="../assets/css/signUpDialog_style.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="../assets/css/registration_style.css" />
+    <title>Alumni Registration</title>
+</head>
+
+<body>
+    <div class="darkshade"></div>
+    <nav class="navbar" id="navbar">
+        <div class="nav-left">
+            <a href="https://plpasig.edu.ph/" class="logo-link1"><img src="../assets/image/alumni-logo.png" alt="alumni Logo" /></a>
+            <div class="title">
+                <div>Pamantasan ng Lungsod ng Pasig</div>
+                <div>ALUMNI</div>
+            </div>
+        </div>
+
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="jobs.html">Jobs</a></li>
+            <li><a href="events.html">Events</a></li>
+        </ul>
+
+        <div class="nav-right">
+            <div class="btns">
+                <button class="btn" onclick="window.location.href = 'login.html'">Login</button>
+                <button class="btn" onclick="document.getElementById('signUpDialog').showModal()">
+                    Signup
+                </button>
+            </div>
+            <a href="#" class="logo-link2"><img src="../assets/image/plplogo.png" alt="PLP Logo" /></a>
+        </div>
+    </nav>
+
+    <div class="form_container">
+        <div class="title">Alumni Registration</div>
+        <form action="#" novalidate>
+            <div class="user__details">
+                <div class="input__box">
+                    <span class="details">School ID</span>
+                    <input type="text" name="studentId" id="studentId" placeholder="24-00123" pattern="\d{2}-\d{5}"
+                        maxlength="8" required />
+                </div>
+
+                <div class="input__box name__row">
+                    <div>
+                        <span class="details">First Name</span>
+                        <input type="text" name="firstName" required />
+                    </div>
+                    <div>
+                        <span class="details">Middle Name</span>
+                        <input type="text" name="middleName" required />
+                    </div>
+                    <div>
+                        <span class="details">Last Name</span>
+                        <input type="text" name="lastName" required />
+                    </div>
+                </div>
+
+                <div class="input__box name__row">
+                    <div>
+                        <span class="details">Address</span>
+                        <input type="text" name="address" required />
+                    </div>
+                </div>
+
+                <div class="input__box name__row">
+                    <div>
+                        <span class="details">Birth Date</span>
+                        <input type="date" name="birthdate" required />
+                    </div>
+
+                    <div>
+                        <span class="sex__title">Sex:</span>
+                        <div class="sex__details">
+                            <input type="radio" name="sex" id="dot-1" value="male" />
+                            <input type="radio" name="sex" id="dot-2" value="female" />
+                            <div class="category">
+                                <label for="dot-1">
+                                    <span class="dot one"></span>
+                                    <span>Male</span>
+                                </label>
+                                <label for="dot-2">
+                                    <span class="dot two"></span>
+                                    <span>Female</span>
+                                </label>
+                            </div>
+                            <span class="sex__warning" id="sexWarning" style="display: none">Please select a sex</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="input__box name__row">
+                    <div>
+                        <span class="details">Email</span>
+                        <input type="email" name="email" id="email" placeholder="juandelacruz@gmail.com" required
+                            oninput="validateEmail()" />
+                        <ul id="email-requirements">
+                            <li id="req-email">Must include '@' and end in '.com'</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <span class="details">Phone Number</span>
+                        <input type="text" pattern="^09\d{9}$" placeholder="09171234567" name="contactNum"
+                            id="contactNum" maxlength="11" onkeypress="return /[0-9]/.test(event.key);" required
+                            oninput="validatePhone()" />
+                        <ul id="phone-requirements">
+                            <li id="req-phone">11 digits starting with '09'</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="academic__details">
+                <div class="input__box name__row">
+                    <div class="course-box">
+                        <span class="details">Course</span>
+                        <select class="course" name="course" required>
+                            <option value="">Select a Course</option>
+                            <option value="1">
+                                Bachelor of Science in Information Technology
+                            </option>
+                            <option value="2">
+                                Bachelor of Science in Computer Science
+                            </option>
+                            <option value="3">
+                                Bachelor of Science in Education Major in English
+                            </option>
+                            <option value="4">
+                                Bachelor of Science in Education Major in Filipino
+                            </option>
+                            <option value="5">
+                                Bachelor of Science in Education Major in Math
+                            </option>
+                            <option value="6">Bachelor of Science in Nursing</option>
+                            <option value="7">Bachelor of Science in Engineering</option>
+                            <option value="8">
+                                Bachelor of Science in Hospitality Management
+                            </option>
+                            <option value="9">
+                                Bachelor of Science in Business and Accountancy
+                            </option>
+                            <option value="10">Bachelor of Science in Psychology</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <span class="details">Year Graduated</span>
+                        <select name="yearEnrolled" required>
+                            <option value="">Select year</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pass__details">
+                <div class="input__box name__row">
+                    <div>
+                        <span class="details">Password</span>
+                        <div class="password-container">
+                            <input type="password" name="password" id="password" required
+                                oninput="validatePassword()" />
+                            <button type="button" class="toggle-password" data-target="#password">
+                                Show
+                            </button>
+                        </div>
+
+                        <!-- Requirements list -->
+                        <ul id="requirements">
+                            <li id="req-length">At least 8 and max 20 characters</li>
+                            <li id="req-upper">At least one uppercase letter</li>
+                            <li id="req-lower">At least one lowercase letter</li>
+                            <li id="req-number">At least one number</li>
+                            <li id="req-special">
+                                At least one special character (!@#$...)
+                            </li>
+                            <li id="req-space">No spaces</li>
+                        </ul>
+                    </div>
+
+                    <div>
+                        <span class="details">Confirm Password</span>
+                        <div class="password-container">
+                            <input type="password" id="confirmPassword" required oninput="validateConfirm()" />
+                            <button type="button" class="toggle-password" data-target="#confirmPassword">
+                                Show
+                            </button>
+                        </div>
+
+                        <!-- Confirm password warning -->
+                        <ul id="confirm-requirements">
+                            <li id="req-match">Passwords must match</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="button">
+                <button class="btn" onclick="window.location.href = 'index.html'">
+                    Cancel
+                </button>
+                <input type="submit" value="Register" />
+            </div>
+        </form>
+    </div>
+
+    <dialog id="signUpDialog">
+        <div class="title">Sign Up As...</div>
+        <div class="registerButtons">
+            <button onclick="window.location.href = 'student_form.html'">
+                Register As Student
+            </button>
+            <button onclick="window.location.href = 'alumni_form.html'">
+                Register As Alumni
+            </button>
+        </div>
+        <button id="closeButton" onclick="document.getElementById('signUpDialog').close()">
+            Close
+        </button>
+    </dialog>
+
+    <script src="../assets/js/registration_script.js" defer></script>
+</body>
+</html>
