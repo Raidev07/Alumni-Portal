@@ -105,6 +105,8 @@ Alumni-Portal/
 - Vanilla JS, no frameworks
 - 2-space indent
 
+## temporary domain
+- http://alumni-portal.xo.je
 ## License
 
 [MIT](LICENSE) - Free to use/modify.
