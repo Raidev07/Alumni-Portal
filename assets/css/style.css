@@ -14,7 +14,7 @@ body {
 .header {
     min-height: 95vh;
     width: 100%;
-    background-image: url(/assets/image/homepage_img.png);
+    background-image: url(/Alumni-Portal/assets/image/homepage_img.png);
     background-position: center;
     background-size: cover;
     position: relative;
