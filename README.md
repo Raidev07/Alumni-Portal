@@ -34,7 +34,7 @@ The **PLP Alumni Portal** is a PHP-based web application for **Pamantasan ng Lun
 | **Assets** | Custom CSS/JS in `assets/`, images |
 | **Responsive** | Mobile-first design (NOT ALL) |
 
-## Quick Start 🚀
+## Quick Start
 
 1. **Setup Local Server** (XAMPP/WAMP recommended):
    ```
