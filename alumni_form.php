@@ -42,7 +42,7 @@
 
     <div class="form_container">
         <div class="title">Alumni Registration</div>
-        <form action="#" novalidate>
+        <form action="backend/register_process.php" method="POST">
             <div class="user__details">
                 <div class="input__box">
                     <span class="details">School ID</span>
@@ -189,7 +189,7 @@
                     <div>
                         <span class="details">Confirm Password</span>
                         <div class="password-container">
-                            <input type="password" id="confirmPassword" required oninput="validateConfirm()" />
+                            <input type="password" id="confirmPassword" name="confirmPassword" required>
                             <button type="button" class="toggle-password" data-target="#confirmPassword">
                                 Show
                             </button>
@@ -204,7 +204,7 @@
             </div>
 
             <div class="button">
-                <button class="btn" onclick="window.location.href = 'index.html'">
+                <button class="btn" onclick="window.location.href = 'index.php'">
                     Cancel
                 </button>
                 <input type="submit" value="Register" />
@@ -215,10 +215,10 @@
     <dialog id="signUpDialog">
         <div class="title">Sign Up As...</div>
         <div class="registerButtons">
-            <button onclick="window.location.href = 'student_form.html'">
+            <button onclick="window.location.href = 'student_form.php'">
                 Register As Student
             </button>
-            <button onclick="window.location.href = 'alumni_form.html'">
+            <button onclick="window.location.href = 'alumni_form.php'">
                 Register As Alumni
             </button>
         </div>

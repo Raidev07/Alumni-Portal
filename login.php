@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Alumni Registration</title>
+    <title>Alumni Login</title>
     <link rel="icon" href="assets/image/alumni-logo.png">
     <link rel="stylesheet" href="assets/css/login.css">
     <link rel="stylesheet" href="assets/css/signUpDialog_style.css">
@@ -18,7 +18,7 @@
             <div>
                 <h2 class="login__title">Welcome Back</h2>
 
-                <form action="" method="post" class="login__form">
+                <form action="backend/login_process.php" method="POST" class="login__form">
                     <div class="login__group">
                         <div class="login__box">
                             <i class="ri-mail-fill login__icon"></i>
@@ -37,7 +37,7 @@
 
                     <a href="#" class="login__forgot">Forgot Password?</a>
 
-                    <button type="button" class="login__button">
+                    <button type="submit" class="login__button">
                         Log In <i class="ri-send-plane-2-fill"></i>
                     </button>
 
@@ -52,7 +52,7 @@
             </div>
 
             <div class="login__image">
-                <img src="assets/image/login.png" alt="" class="login__img" onclick="window.location.href='index.html'">
+                <img src="assets/image/login.png" alt="" class="login__img" onclick="window.location.href='index.php'">
             </div>
         </div>
     </section>
@@ -60,10 +60,10 @@
     <dialog id="signUpDialog">
         <div class="title">Sign Up As...</div>
         <div class="registerButtons">
-            <button onclick="window.location.href = 'student_form.html'">
+            <button onclick="window.location.href = 'student_form.php'">
                 Register As Student
             </button>
-            <button onclick="window.location.href = 'alumni_form.html'">
+            <button onclick="window.location.href = 'alumni_form.php'">
                 Register As Alumni
             </button>
         </div>

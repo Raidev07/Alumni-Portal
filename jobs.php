@@ -23,9 +23,9 @@
             </div>
         </div>
         <ul class="nav-links">
-            <li><a href="index.html">Home</a></li>
-            <li><a href="jobs.html">Jobs</a></li>
-            <li><a href="events.html">Events</a></li>
+            <li><a href="index.php">Home</a></li>
+            <li><a href="jobs.php">Jobs</a></li>
+            <li><a href="events.php">Events</a></li>
         </ul>
         <div class="nav-right">
             <div class="btns">
@@ -191,10 +191,10 @@
     <dialog id="signUpDialog">
         <div class="title">Sign Up As...</div>
         <div class="registerButtons">
-            <button onclick="window.location.href = 'student_form.html'">
+            <button onclick="window.location.href = 'student_form.php'">
                 Register As Student
             </button>
-            <button onclick="window.location.href = 'alumni_form.html'">
+            <button onclick="window.location.href = 'alumni_form.php'">
                 Register As Alumni
             </button>
         </div>

@@ -1,19 +1,4 @@
-// document.addEventListener("DOMContentLoaded", function () {
-//     console.log("DOM ready");
 
-//     const openSignUp = document.getElementById("openSignUp");
-//     const dialog = document.getElementById("signUpDialog");
-
-//     console.log(openSignUp, dialog);
-
-//     if (!openSignUp || !dialog) return;
-
-//     openSignUp.addEventListener("click", function (e) {
-//         e.preventDefault();
-//         console.log("clicked sign up");
-//         dialog.showModal();
-//     });
-// });
 /*=============== GSAP ANIMATION ===============*/
 const tl = gsap.timeline({});
 
