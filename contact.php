@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,8 +8,11 @@
     <link rel="icon" href="assets/image/alumni-logo.png">
     <link rel="stylesheet" href="assets/css/contact.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&family=DM+Serif+Display&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&family=DM+Serif+Display&display=swap"
+        rel="stylesheet">
 </head>
+
 <body>
     <!-- NAVBAR -->
     <nav class="navbar" id="navbar">
@@ -21,14 +25,14 @@
         </div>
 
         <ul class="nav-links">
-            <li><a href="index.html">Home</a></li>
-            <li><a href="jobs.html">Jobs</a></li>
-            <li><a href="events.html">Events</a></li>
+            <li><a href="index.php">Home</a></li>
+            <li><a href="jobs.php">Jobs</a></li>
+            <li><a href="events.php">Events</a></li>
         </ul>
 
         <div class="nav-right">
             <div class="btns">
-                <button class="btn" onclick="window.location.href='login.html'">Login</button>
+                <button class="btn" onclick="window.location.href='login.php'">Login</button>
                 <button class="btn" onclick="document.getElementById('signUpDialog').showModal()">Signup</button>
             </div>
             <a href="#" class="logo-link2"><img src="assets/image/plplogo.png" alt="PLP Logo"></a>
@@ -37,7 +41,10 @@
 
     <!-- MAP -->
     <section class="location">
-        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3861.648293414424!2d121.0721697102915!3d14.56209408586095!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3397c87941df8e2b%3A0xc7cd5073d3d73742!2sPamantasan%20ng%20Lungsod%20ng%20Pasig!5e0!3m2!1sen!2sph!4v1772607934052!5m2!1sen!2sph" width="600" height="420" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        <iframe
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3861.648293414424!2d121.0721697102915!3d14.56209408586095!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3397c87941df8e2b%3A0xc7cd5073d3d73742!2sPamantasan%20ng%20Lungsod%20ng%20Pasig!5e0!3m2!1sen!2sph!4v1772607934052!5m2!1sen!2sph"
+            width="600" height="420" style="border:0;" allowfullscreen="" loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"></iframe>
     </section>
 
     <!-- CONTACT SECTION -->
@@ -45,12 +52,13 @@
         <div class="contact-wrapper">
             <div class="contact-header">
                 <span class="section-tag">Contact Us</span>
-                <p class="section-sub">Have questions or concerns? We're here to help. Fill out the form below or reach us directly.</p>
+                <p class="section-sub">Have questions or concerns? We're here to help. Fill out the form below or reach
+                    us directly.</p>
             </div>
-                <div class="contact-form-card">
-                    <h3 class="form-title">Send a Message</h3>
-                    <p class="form-sub">We'll respond within 24 hours on business days.</p>
-                                    <div class="info-cards">
+            <div class="contact-form-card">
+                <h3 class="form-title">Send a Message</h3>
+                <p class="form-sub">We'll respond within 24 hours on business days.</p>
+                <div class="info-cards">
                     <div class="info-card">
                         <div class="info-icon"><i class="fas fa-map-marker-alt"></i></div>
                         <div class="info-text">
@@ -80,32 +88,33 @@
                         </div>
                     </div>
                 </div>
-                    <form action="form-handler.php" method="post" class="contact-form">
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="name">Full Name</label>
-                                <input type="text" id="name" name="name" placeholder="Juan dela Cruz" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="email">Email Address</label>
-                                <input type="email" id="email" name="email" placeholder="juan@email.com" required>
-                            </div>
+                <form action="form-handler.php" method="post" class="contact-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="name">Full Name</label>
+                            <input type="text" id="name" name="name" placeholder="Juan dela Cruz" required>
                         </div>
                         <div class="form-group">
-                            <label for="subject">Subject</label>
-                            <input type="text" id="subject" name="subject" placeholder="How can we help you?" required>
+                            <label for="email">Email Address</label>
+                            <input type="email" id="email" name="email" placeholder="juan@email.com" required>
                         </div>
-                        <div class="form-group">
-                            <label for="message">Message</label>
-                            <textarea id="message" name="message" rows="6" placeholder="Write your message here..." required></textarea>
-                        </div>
-                        <button type="submit" class="submit-btn">
-                            <span>Send Message</span>
-                            <i class="fas fa-paper-plane"></i>
-                        </button>
-                    </form>
-                </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="subject">Subject</label>
+                        <input type="text" id="subject" name="subject" placeholder="How can we help you?" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="message">Message</label>
+                        <textarea id="message" name="message" rows="6" placeholder="Write your message here..."
+                            required></textarea>
+                    </div>
+                    <button type="submit" class="submit-btn">
+                        <span>Send Message</span>
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </form>
             </div>
+        </div>
         </div>
     </section>
 
@@ -118,7 +127,8 @@
             <!-- Card 1 -->
             <div class="card" onclick="openModal('jonjesse')">
                 <div class="img-container">
-                    <img src="assets/image/1x1pic/tao.png" alt="John Jesse Escalona" onerror="this.style.display='none'; this.parentElement.textContent='JE'">
+                    <img src="assets/image/1x1pic/tao.png" alt="John Jesse Escalona"
+                        onerror="this.style.display='none'; this.parentElement.textContent='JE'">
                 </div>
                 <h3>John Jesse Escalona</h3>
                 <div class="card-role">Lead Developer</div>
@@ -128,20 +138,22 @@
 
             <!-- Card 2 -->
             <div class="card" onclick="openModal('sam')">
-                 <div class="img-container">
-                    <img src="assets/image/1x1pic/Gonzaga, Sam Aidan.jfif" alt="Sam Aidan Gonzaga" onerror="this.style.display='none'; this.parentElement.textContent='SA'">
+                <div class="img-container">
+                    <img src="assets/image/1x1pic/Gonzaga, Sam Aidan.jfif" alt="Sam Aidan Gonzaga"
+                        onerror="this.style.display='none'; this.parentElement.textContent='SA'">
                 </div>
                 <h3>Sam Aidan Gonzaga</h3>
                 <div class="card-role">Project Lead</div>
                 <div class="card-id">24-00662</div>
                 <div class="card-click-hint">View Profile</div>
             </div>
-                
+
 
             <!-- Card 3 -->
             <div class="card" onclick="openModal('bryle')">
-               <div class="img-container">
-                    <img src="assets/image/1x1pic/bryl.png"Justine Bryle Rollamas" onerror="this.style.display='none'; this.parentElement.textContent='JB'">
+                <div class="img-container">
+                    <img src="assets/image/1x1pic/bryl.png" Justine Bryle Rollamas"
+                        onerror="this.style.display='none'; this.parentElement.textContent='JB'">
                 </div>
                 <h3>Justine Bryle Rollamas</h3>
                 <div class="card-role">Project Manager</div>
@@ -152,7 +164,8 @@
             <!-- Card 4 -->
             <div class="card" onclick="openModal('vehniah')">
                 <div class="img-container">
-                    <img src="assets/image/1x1pic/VehniahSamson 1x1pic.jpg" alt="Vehniah P. Samson" onerror="this.style.display='none'; this.parentElement.textContent='VS'">
+                    <img src="assets/image/1x1pic/VehniahSamson 1x1pic.jpg" alt="Vehniah P. Samson"
+                        onerror="this.style.display='none'; this.parentElement.textContent='VS'">
                 </div>
                 <h3>Vehniah P. Samson</h3>
                 <div class="card-role">Senior Developer</div>
@@ -266,7 +279,7 @@
             avatarEl.appendChild(img);
 
             document.getElementById('modalName').textContent = m.name;
-            document.getElementById('modalRole').innerHTML = m.roles.map(r => 
+            document.getElementById('modalRole').innerHTML = m.roles.map(r =>
                 `<div class="modal-role-badge">${r}</div>`
             ).join('');
             document.getElementById('modalId').textContent = 'Student ID: ' + m.id;
@@ -282,10 +295,10 @@
             document.getElementById('modalSocials').innerHTML =
                 `<a class="social-btn" href="${m.fb}" target="_blank">
                     <i class="fab fa-facebook"></i> Facebook
-                 </a>
-                 <a class="social-btn" href="${m.email}" target="_blank">
+                </a>
+                <a class="social-btn" href="${m.email}" target="_blank">
                     <i class="fas fa-envelope"></i> Email
-                 </a>`;
+                </a>`;
 
             document.getElementById('modalOverlay').classList.add('open');
             document.body.style.overflow = 'hidden';
@@ -312,4 +325,5 @@
     </script>
 
 </body>
+
 </html>
