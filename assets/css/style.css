@@ -153,6 +153,7 @@ body {
 /* HEADER */
 .swipers,
 .swiper-container {
+    --swiper-navigation-color: #00ff00;
     width: 100%;
     height: 100%;
     position: absolute;
@@ -368,7 +369,7 @@ body {
 }
 
 .section-header .subtitle {
-    color: #6366f1;
+    color: #229e00;
     font-weight: 600;
     letter-spacing: 2px;
     text-transform: uppercase;
@@ -383,7 +384,7 @@ body {
 .section-header .line {
     width: 60px;
     height: 3px;
-    background: #6366f1;
+    background: #229e00;
     margin: 10px auto;
     border-radius: 5px;
 }
@@ -397,6 +398,7 @@ body {
     padding: 20px 10px;
     margin: 0 60px 35px;
     overflow: hidden;
+    --swiper-navigation-color: #00ff00;
 }
 
 .wrapper .card {
@@ -503,20 +505,23 @@ body {
 }
 
 .card .card-button {
-    color: #fff;
     padding: 10px 20px;
-    border-radius: 30px;
+    border-radius: 10px;
     font-size: 0.81rem;
     font-weight: 600;
+    color: #006e14;
+    background: #ffffff;
+    border: none;
+    outline: 1px solid #006e14;
     text-decoration: none;
-    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
-    box-shadow: 0 4px 10px rgba(99, 102, 241, 0.2);
+    box-shadow: 0 4px 10px rgba(113, 241, 99, 0.2);
     transition: all 0.3s ease;
 }
 
 .card .card-button:hover {
+    color: #ffffff;
     transform: translateY(-3px);
-    box-shadow: 0 8px 15px rgba(99, 102, 241, 0.3);
+    background: #006e14;
 }
 
 .wrapper .swiper-pagination-bullet {
@@ -526,10 +531,11 @@ body {
     overflow: hidden;
     position: relative;
     background: #b1b3f8;
+    
 }
 
 .wrapper .swiper-pagination-bullet-active {
-    background: #a4a7fd;
+    background: #a4fdaa;
 }
 
 /* Auto-play loading indicator */
@@ -540,7 +546,7 @@ body {
     left: 0;
     height: 100%;
     width: 100%;
-    background: #6366f1;
+    background: #42ea00;
     transform-origin: left center;
     transform: scaleX(0);
     animation: autoplay-loading 5s linear forwards;
@@ -561,13 +567,13 @@ body {
 }
 
 .wrapper :where(.swiper-button-prev, .swiper-button-next) {
-    color: #6366f1;
+    color: #133900;
     margin-top: -35px;
     transition: all 0.3s ease;
 }
 
 .wrapper :where(.swiper-button-prev, .swiper-button-next):hover {
-    color: #8b5cf6;
+    color: #18c800;
 }
 
 /* Responsive media query code for small screens */
