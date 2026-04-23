@@ -448,6 +448,10 @@ h1 {
     background: #fff3e0;
     color: #e65100;
 }
+.badge-in {
+    background-color: #e0f0ff;
+    color: #0066cc;
+}
 
 .apply-btn {
     background: #1a6b3a;
@@ -786,7 +790,8 @@ h1 {
 }
 
 .btn-back:hover {
-    background: #f5f5f5;
+    background:#1a6b3a;
+        color: #ffffff;
 }
 
 /* ─── RESPONSIVE BREAKPOINTS ─────────────────────────────────────────────────── */

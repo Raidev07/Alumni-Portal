@@ -432,7 +432,7 @@ body {
     top: 25px;
     left: 25px;
     font-size: 0.75rem;
-    color: #4caf50;
+    color: #006e14;
     padding: 5px 15px;
     border-radius: 30px;
     font-weight: 600;
@@ -506,7 +506,7 @@ body {
 
 .card .card-button {
     padding: 10px 20px;
-    border-radius: 10px;
+    border-radius: 5px;
     font-size: 0.81rem;
     font-weight: 600;
     color: #006e14;

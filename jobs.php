@@ -64,6 +64,7 @@
                         <option>Full-time</option>
                         <option>Part-time</option>
                         <option>Contract</option>
+                        <option>Internship</option>
                     </select>
                 </div>
                 <div class="form-group">
@@ -174,6 +175,7 @@
                 <div class="filter-item" data-filter="Full-time">Full-time</div>
                 <div class="filter-item" data-filter="Part-time">Part-time</div>
                 <div class="filter-item" data-filter="Contract">Contract</div>
+                <div class="filter-item" data-filter="Internship">Internship</div>
             </aside>
             <main class="main">
                 <div class="search-row">

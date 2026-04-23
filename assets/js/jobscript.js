@@ -16,7 +16,7 @@ const jobs = [
         req: "5+ years of experience in Node.js or Java. Strong understanding of REST APIs and microservices architecture.",
         benefits:
             "HMO coverage, performance bonus, paid leaves, hybrid options after probation.",
-        link: "https://jobstreet.com",
+        link: "https://mail.google.com/mail/?view=cm&fs=1&to=rollamas_justinebryle@plpasig.edu.ph",
         email: "hr@techcorp.com",
     },
     {
@@ -32,7 +32,7 @@ const jobs = [
         category: "Product",
         req: "3+ years in product management. Experience with Agile and data-driven decision making.",
         benefits: "Full remote setup, HMO, equipment allowance.",
-        link: "https://jobstreet.com",
+        link: "https://mail.google.com/mail/?view=cm&fs=1&to=rollamas_justinebryle@plpasig.edu.ph", 
         email: "careers@innovationlabs.ph",
     },
     {
@@ -48,7 +48,7 @@ const jobs = [
         category: "Marketing",
         req: "7+ years of marketing experience. Proven track record in brand management and team leadership.",
         benefits: "Car allowance, HMO, executive benefits package.",
-        link: "https://jobstreet.com",
+        link: "https://mail.google.com/mail/?view=cm&fs=1&to=rollamas_justinebryle@plpasig.edu.ph",
         email: "hr@globalsolutions.com",
     },
     {
@@ -64,7 +64,7 @@ const jobs = [
         category: "Engineering",
         req: "Proficiency in Python, SQL, and ML frameworks (TensorFlow/PyTorch). Experience with data pipelines and visualization tools.",
         benefits: "Remote-first culture, learning budget, stock options.",
-        link: "https://jobstreet.com",
+        link: "https://mail.google.com/mail/?view=cm&fs=1&to=rollamas_justinebryle@plpasig.edu.ph",
         email: "jobs@datavision.com",
     },
     {
@@ -80,7 +80,7 @@ const jobs = [
         category: "Design",
         req: "Portfolio required. Proficiency in Figma and experience working with design systems.",
         benefits: "Flexible hours, project-based completion bonuses.",
-        link: "https://jobstreet.com",
+        link: "https://mail.google.com/mail/?view=cm&fs=1&to=rollamas_justinebryle@plpasig.edu.ph",
         email: "studio@creative.ph",
     },
     {
@@ -96,7 +96,7 @@ const jobs = [
         category: "Finance",
         req: "CPA preferred. 2+ years in financial analysis or audit. Proficiency in Excel and financial modeling.",
         benefits: "Rice allowance, HMO, 13th month pay.",
-        link: "https://jobstreet.com",
+        link: "https://mail.google.com/mail/?view=cm&fs=1&to=rollamas_justinebryle@plpasig.edu.ph",
         email: "hr@capitalpartners.ph",
     },
     {
@@ -112,23 +112,23 @@ const jobs = [
         category: "Operations",
         req: "Excellent communication skills. Experience in customer-facing or administrative roles preferred.",
         benefits: "HMO, uniform allowance, paid leaves.",
-        link: "https://jobstreet.com",
+        link: "https://mail.google.com/mail/?view=cm&fs=1&to=rollamas_justinebryle@plpasig.edu.ph",
         email: "hr@defymedia.ph",
     },
     {
         id: 8,
         title: "Content Strategist",
         company: "MediaHouse",
-        type: "Part-time",
-        location: "Remote",
-        salary: "15,000 – 25,000",
+        type: "Internship",
+        location: "Onsite",
+        salary: "",
         posted: "3 days ago",
         desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-        modality: "Remote",
+        modality: "Onsite",
         category: "Marketing",
         req: "Strong writing and SEO skills. Experience with CMS tools such as WordPress or Contentful.",
         benefits: "Flexible schedule, project completion bonuses.",
-        link: "https://jobstreet.com",
+        link: "https://mail.google.com/mail/?view=cm&fs=1&to=rollamas_justinebryle@plpasig.edu.ph",
         email: "content@mediahouse.ph",
     },
     {
@@ -144,7 +144,7 @@ const jobs = [
         category: "Engineering",
         req: "Experience with MLOps, Kubernetes, and model serving frameworks. Strong Python expertise required.",
         benefits: "Stock options, comprehensive HMO, remote flexibility.",
-        link: "https://jobstreet.com",
+        link: "https://mail.google.com/mail/?view=cm&fs=1&to=rollamas_justinebryle@plpasig.edu.ph",
         email: "ml@aiventures.ph",
     },
     {
@@ -161,12 +161,29 @@ const jobs = [
         req: "3+ years in product design. Strong portfolio demonstrating both UX thinking and visual design skills.",
         benefits:
             "100% remote, equipment stipend, learning and development budget.",
-        link: "https://jobstreet.com",
+        link: "https://mail.google.com/mail/?view=cm&fs=1&to=rollamas_justinebryle@plpasig.edu.ph",
         email: "design@designfirst.ph",
+    },
+    {
+        id: 11,
+        title: "Desk Assistant",
+        company: "Venn Aiah",
+        type: "Internship",
+        location: "Onsite",
+        salary: "3,000 – 5,000",
+        posted: "2 week ago",
+        desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+        modality: "Onsite",
+        category: "Assistant",
+        req: "Individuals who are confident with their skills in speaking to clients via email, scheduling tasks, finishing deadlings are encouraged to apply.",
+        benefits:
+            "Free food and coffee within building premises, paid internship",
+        link: "https://mail.google.com/mail/?view=cm&fs=1&to=rollamas_justinebryle@plpasig.edu.ph",
+        email: "Venn_aiah@gmail.com.ph",
     },
 ];
 
-let activeType = "all"; // CURRENT FILTER STATE (ALL / FULL-TIME / PART-TIME / CONTRACT)
+let activeType = "all"; // CURRENT FILTER STATE (ALL / FULL-TIME / PART-TIME / CONTRACT / Internship)
 
 // RENDER JOBSSS FUNCTIONNN
 // RESPONSIBLE FOR DISPLAYING JOB CARDS BASED ON FILTER + SEARCH
@@ -247,8 +264,10 @@ function renderJobs() {
 function badgeClass(type) {
     if (type === "Full-time") return "badge-ft";
     if (type === "Part-time") return "badge-pt";
-    return "badge-ct"; // DEFAULT = CONTRACTTT
+    if (type === "Internship") return "badge-in"; 
+    return "badge-ct";
 }
+
 
 // OPEN DETAIL FUNCTION (SHOW WHEN SEE MORE BTN IS CLICKED)
 function openDetail(id) {
@@ -381,6 +400,7 @@ document.getElementById("postBtn").addEventListener("click", () => {
 // FILTER SIDEBARRR (CLICK EVENT)
 document.querySelectorAll(".filter-item").forEach((el) => {
     el.addEventListener("click", () => {
+        console.log("Filter clicked:", el.dataset.filter); // ADD THIS
         document
             .querySelectorAll(".filter-item")
             .forEach((e) => e.classList.remove("active"));
