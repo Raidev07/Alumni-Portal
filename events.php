@@ -26,7 +26,7 @@
         <ul class="nav-links">
             <li><a href="index.php">Home</a></li>
             <li><a href="jobs.php">Jobs</a></li>
-            <li><a href="events.php">Events</a></li>
+            <li><a href="events.php" class="active">Events</a></li>
         </ul>
         <div class="nav-right">
             <div class="btns">
