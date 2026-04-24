@@ -67,6 +67,7 @@ body {
 .title {
     font-weight: 700;
     color: #0f172a;
+    margin-top: 1.11rem;
 }
 
 .title div:first-child {

@@ -43,13 +43,23 @@
             flex-shrink: 0;
         }
  
-        .logo-link1 img, .logo-link2 img {
+        .logo-link1 img {
+            width: clamp(50px, 6vw, 75px);
+            height: auto;
+            display: block;
+        }
+
+        .logo-link2 img {
             width: clamp(45px, 5.5vw, 70px);
             height: auto;
             display: block;
         }
- 
-        .title { font-weight: 700; color: #0f172a; }
+
+        .title {
+            font-weight: 700;
+            color: #0f172a;
+        }
+
         .title div:first-child { font-size: clamp(0.75rem, 1vw, 1rem); }
         .title div:last-child { font-size: clamp(1.1rem, 1.5vw, 1.7rem); letter-spacing: 2px; }
  

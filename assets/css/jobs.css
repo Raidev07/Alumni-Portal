@@ -75,7 +75,8 @@ body.no-scroll {
 
 .title {
     font-weight: 700;
-    color: #0f172a;
+    color: #294891;
+    margin-top: 1.11rem;
 }
 
 .title div:first-child {
@@ -163,9 +164,7 @@ body.no-scroll {
 /* ─── PAGE WRAPPER ───────────────────────────────────────────────────────────── */
 .page {
     max-width: min(1000px, 95vw);
-    margin-top: 30px;
-    margin-left: clamp(1rem, 21%, 280px);
-    margin-right: auto;
+    margin: 30px auto 0;
     padding: 28px 20px 60px;
 }
 
@@ -509,11 +508,12 @@ h1 {
     inset: 0;
     background: rgba(0, 0, 0, 0.5);
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: center;
-    z-index: 200;
-    padding: 40px 16px;
+    z-index: 1100;
+    padding: 20px 16px 40px;
     overflow-y: auto;
+    overflow-x: hidden;
 }
 
 .overlay.hidden,
@@ -645,12 +645,12 @@ h1 {
 .detail-job {
     background: #fff;
     border-radius: 12px;
-    border: 1px solid #c8e6c9;
     width: 100%;
     max-width: min(700px, 94vw);
-    overflow: hidden;
-    margin-bottom: 40px;
-    margin-top: 20px;
+    max-height: calc(100vh - 80px);
+    overflow-y: auto;
+    margin: 20px auto 40px;
+    box-sizing: border-box;
 }
 
 .detail-header {
@@ -799,8 +799,9 @@ h1 {
 /* 125% zoom — sidebar + content starts to feel tight */
 @media (max-width: 1100px) {
     .page {
-        margin-left: clamp(1rem, 5%, 40px);
-        max-width: 98vw;
+        max-width: 95vw;
+        margin: 20px auto 0;
+        padding: 20px 16px 48px;
     }
 
     .sidebar {
@@ -811,8 +812,8 @@ h1 {
 /* 150% zoom (~960px effective) — collapse sidebar to horizontal pill row */
 @media (max-width: 960px) {
     .page {
-        margin-left: 1rem;
-        margin-right: 1rem;
+        max-width: 100%;
+        margin: 0 auto;
         padding: 20px 12px 48px;
     }
 

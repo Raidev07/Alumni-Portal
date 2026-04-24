@@ -21,9 +21,9 @@
             </div>
         </div>
         <ul class="nav-links">
-            <li><a href="index.html">Home</a></li>
-            <li><a href="jobs.html">Jobs</a></li>
-            <li><a href="events.html">Events</a></li>
+            <li><a href="index.php">Home</a></li>
+            <li><a href="jobs.php">Jobs</a></li>
+            <li><a href="events.php">Events</a></li>
         </ul>
         <div class="nav-right">
             <div class="btns">
