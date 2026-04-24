@@ -100,6 +100,42 @@ INSERT INTO `departments` VALUES (1,'CCS'),(2,'COED'),(3,'CON'),(4,'COE'),(5,'CI
 UNLOCK TABLES;
 
 --
+-- Table structure for table `events`
+--
+
+DROP TABLE IF EXISTS `events`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `events` (
+  `event_id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) NOT NULL,
+  `event_title` varchar(150) NOT NULL,
+  `event_date` date NOT NULL,
+  `event_time` time NOT NULL,
+  `location` varchar(255) NOT NULL,
+  `event_type` enum('Networking','Workshop','Seminar','Reunion') NOT NULL,
+  `max_attendees` int(11) DEFAULT NULL,
+  `registration_deadline` date DEFAULT NULL,
+  `contact_email` varchar(100) DEFAULT NULL,
+  `event_description` text DEFAULT NULL,
+  `status` enum('upcoming','ongoing','completed','cancelled') DEFAULT 'upcoming',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`event_id`),
+  KEY `user_id` (`user_id`),
+  CONSTRAINT `events_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `events`
+--
+
+LOCK TABLES `events` WRITE;
+/*!40000 ALTER TABLE `events` DISABLE KEYS */;
+/*!40000 ALTER TABLE `events` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `jobpostings`
 --
 
@@ -239,4 +275,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-04-24 23:35:03
+-- Dump completed on 2026-04-25  0:06:34
