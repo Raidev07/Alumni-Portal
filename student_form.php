@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="assets/css/style.css" />
     <link rel="icon" href="assets/image/alumni-logo.png" />
     <link rel="stylesheet" type="text/css" href="assets/css/registration_style.css" />
+    <link rel="stylesheet" href="assets/css/signUpDialog_style.css" />
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet" />
     <title>Student Registration</title>
 </head>
