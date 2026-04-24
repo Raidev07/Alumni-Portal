@@ -98,6 +98,45 @@ LOCK TABLES `departments` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `jobpostings`
+--
+
+DROP TABLE IF EXISTS `jobpostings`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `jobpostings` (
+  `job_id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) NOT NULL,
+  `job_title` varchar(100) NOT NULL,
+  `company_name` varchar(100) NOT NULL,
+  `location` varchar(100) DEFAULT NULL,
+  `job_type` enum('Full-time','Part-time','Contract','Internship') NOT NULL,
+  `modality` enum('Onsite','Remote','Hybrid') NOT NULL,
+  `category` enum('Engineering','Marketing','Product','Theater','Programming','HR','Finance','Design','Operations','Other') NOT NULL,
+  `salary_range` varchar(50) DEFAULT NULL,
+  `application_link` varchar(255) DEFAULT NULL,
+  `contact_email` varchar(100) DEFAULT NULL,
+  `job_description` text NOT NULL,
+  `requirements_qualifications` text DEFAULT NULL,
+  `benefits` text DEFAULT NULL,
+  `status` enum('active','closed','archived') DEFAULT 'active',
+  `posted_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`job_id`),
+  KEY `user_id` (`user_id`),
+  CONSTRAINT `jobpostings_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `jobpostings`
+--
+
+LOCK TABLES `jobpostings` WRITE;
+/*!40000 ALTER TABLE `jobpostings` DISABLE KEYS */;
+/*!40000 ALTER TABLE `jobpostings` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `studentdetails`
 --
 
@@ -198,4 +237,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-04-24 23:23:38
+-- Dump completed on 2026-04-24 23:32:47
