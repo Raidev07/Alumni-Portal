@@ -67,6 +67,38 @@ LOCK TABLES `departments` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `userprofile`
+--
+
+DROP TABLE IF EXISTS `userprofile`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `userprofile` (
+  `profile_id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) NOT NULL,
+  `first_name` varchar(50) NOT NULL,
+  `last_name` varchar(50) NOT NULL,
+  `middle_name` varchar(50) DEFAULT NULL,
+  `contact_number` varchar(11) DEFAULT NULL,
+  `address` varchar(255) DEFAULT NULL,
+  `birthdate` date DEFAULT NULL,
+  `gender` enum('Male','Female') DEFAULT NULL,
+  PRIMARY KEY (`profile_id`),
+  UNIQUE KEY `user_id` (`user_id`),
+  CONSTRAINT `userprofile_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `userprofile`
+--
+
+LOCK TABLES `userprofile` WRITE;
+/*!40000 ALTER TABLE `userprofile` DISABLE KEYS */;
+/*!40000 ALTER TABLE `userprofile` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `users`
 --
 
@@ -103,4 +135,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-04-24 23:11:57
+-- Dump completed on 2026-04-24 23:15:18
