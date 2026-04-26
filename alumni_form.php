@@ -42,7 +42,7 @@
 
     <div class="form_container">
         <div class="title">Alumni Registration</div>
-        <form action="backend/register_process.php" method="POST">
+        <form action="backend/register_process.php" method="POST" novalidate>
             <div class="user__details">
                 <div class="input__box">
                     <span class="details">School ID</span>
