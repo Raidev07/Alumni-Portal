@@ -198,38 +198,6 @@ LOCK TABLES `jobpostings` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `studentdetails`
---
-
-DROP TABLE IF EXISTS `studentdetails`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `studentdetails` (
-  `student_id` int(11) NOT NULL AUTO_INCREMENT,
-  `user_id` int(11) NOT NULL,
-  `student_number` varchar(20) NOT NULL,
-  `course_id` int(11) DEFAULT NULL,
-  `year_level` int(11) NOT NULL,
-  `year_enrolled` year(4) NOT NULL,
-  PRIMARY KEY (`student_id`),
-  UNIQUE KEY `user_id` (`user_id`),
-  UNIQUE KEY `student_number` (`student_number`),
-  KEY `course_id` (`course_id`),
-  CONSTRAINT `studentdetails_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `studentdetails_ibfk_2` FOREIGN KEY (`course_id`) REFERENCES `courses` (`course_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `studentdetails`
---
-
-LOCK TABLES `studentdetails` WRITE;
-/*!40000 ALTER TABLE `studentdetails` DISABLE KEYS */;
-/*!40000 ALTER TABLE `studentdetails` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `userprofile`
 --
 
@@ -272,7 +240,7 @@ CREATE TABLE `users` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `email` varchar(100) NOT NULL,
   `password` varchar(255) NOT NULL,
-  `role` enum('student','alumni','admin') NOT NULL,
+  `role` enum('alumni','admin') NOT NULL,
   `status` enum('active','pending','inactive') DEFAULT 'pending',
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   PRIMARY KEY (`id`),
@@ -298,4 +266,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-04-25  0:38:07
+-- Dump completed on 2026-04-27 15:16:50
