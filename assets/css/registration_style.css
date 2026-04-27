@@ -265,7 +265,6 @@ form .pass__details .input__box.name__row div span {
     letter-spacing: 0.01em;
 }
 
-/*  Inputs (shared)  */
 form input[type="text"],
 form input[type="email"],
 form input[type="date"],
@@ -310,8 +309,8 @@ input[name="studentId"] {
     max-width: 66%;
 }
 
-/*  Selects  */
-.academic__details select {
+.academic__details select,
+form .user__details .input__box.name__row .suffix-box select {
     height: 44px;
     width: 100%;
     outline: none;
@@ -332,7 +331,14 @@ input[name="studentId"] {
         box-shadow var(--transition);
 }
 
-.academic__details select:focus {
+.suffix-box select {
+    width: 10px;
+    background-position: right 10px center;
+    padding-right: 32px;
+}
+
+.academic__details select:focus,
+form .user__details .input__box.name__row .suffix-box select:focus {
     border-color: var(--green-500);
     background-color: var(--neutral-0);
     box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.12);
@@ -345,7 +351,6 @@ input[name="studentId"] {
     flex: 0 1 160px;
 }
 
-/* Sex / Radio btn */
 form .sex__details {
     display: flex;
     align-items: center;
@@ -408,15 +413,38 @@ form input[type="radio"] {
 
 .sex__warning {
     color: #ef4444;
-    font-size: 0.76rem;
-    margin-top: 4px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    line-height: 1.5;
     display: none;
+    align-items: center;
+    margin-bottom: 6px;
     position: absolute;
     left: 0;
     bottom: -18px;
 }
 
-/*  Password  */
+.sex__warning::before {
+    content: "X";
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 16px;
+    height: 16px;
+    margin-right: 10px;
+    font-size: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    background-color: #fee2e2;
+    color: #ef4444;
+    border: 1px solid #fecaca;
+}
+
+.sex__details .category.sex-error label {
+    border-color: #ef4444;
+    background: #fff5f5;
+}
+
 form .pass__details .input__box.name__row {
     width: 100%;
     display: flex;
@@ -478,7 +506,6 @@ form .pass__details .input__box.name__row div {
     background: var(--green-50);
 }
 
-/* Password, Email, and Phone Requirements  */
 #requirements,
 #confirm-requirements,
 #email-requirements,
@@ -502,7 +529,6 @@ form .pass__details .input__box.name__row div {
     transition: all 0.3s ease;
 }
 
-/* Correct State */
 #requirements li.met,
 #confirm-requirements li.met,
 #email-requirements li.met,
@@ -547,7 +573,6 @@ form .pass__details .input__box.name__row div {
     transform: scale(1.1);
 }
 
-/* BTN*/
 form .button {
     height: 48px;
     margin: 40px 0 8px;
@@ -653,6 +678,16 @@ select.input-error:focus,
     box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1) !important;
 }
 
+form .user__details .input__box.name__row .suffix-box {
+    flex: 0 0 auto;
+    min-width: fit-content;
+}
+
+form .user__details .input__box.name__row .suffix-box select {
+    width: auto;
+    min-width: 120px;
+}
+
 @media only screen and (max-width: 640px) {
     .form_container {
         padding: 28px 20px 24px;
@@ -668,6 +703,14 @@ select.input-error:focus,
     form .academic__details .input__box.name__row,
     form .pass__details .input__box.name__row {
         flex-direction: column;
+    }
+
+    form .user__details .input__box.name__row .suffix-box {
+        flex: 1;
+    }
+
+    form .user__details .input__box.name__row .suffix-box select {
+        width: 100%;
     }
 
     form .sex__details {

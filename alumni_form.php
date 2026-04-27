@@ -63,6 +63,18 @@
                         <span class="details">Last Name</span>
                         <input type="text" name="lastName" required />
                     </div>
+                    <div class="suffix-box">
+                        <span class="details">Suffix</span>
+                        <select name="suffix">
+                            <option value="">None</option>
+                            <option value="Jr">Jr</option>
+                            <option value="Sr">Sr</option>
+                            <option value="II">II</option>
+                            <option value="III">III</option>
+                            <option value="IV">IV</option>
+                            <option value="V">V</option>
+                        </select>
+                    </div>
                 </div>
 
                 <div class="input__box name__row">
@@ -125,29 +137,15 @@
                         <span class="details">Course</span>
                         <select class="course" name="course" required>
                             <option value="">Select a Course</option>
-                            <option value="1">
-                                Bachelor of Science in Information Technology
-                            </option>
-                            <option value="2">
-                                Bachelor of Science in Computer Science
-                            </option>
-                            <option value="3">
-                                Bachelor of Science in Education Major in English
-                            </option>
-                            <option value="4">
-                                Bachelor of Science in Education Major in Filipino
-                            </option>
-                            <option value="5">
-                                Bachelor of Science in Education Major in Math
-                            </option>
+                            <option value="1">Bachelor of Science in Information Technology</option>
+                            <option value="2">Bachelor of Science in Computer Science</option>
+                            <option value="3">Bachelor of Science in Education Major in English</option>
+                            <option value="4">Bachelor of Science in Education Major in Filipino</option>
+                            <option value="5">Bachelor of Science in Education Major in Math</option>
                             <option value="6">Bachelor of Science in Nursing</option>
                             <option value="7">Bachelor of Science in Engineering</option>
-                            <option value="8">
-                                Bachelor of Science in Hospitality Management
-                            </option>
-                            <option value="9">
-                                Bachelor of Science in Business and Accountancy
-                            </option>
+                            <option value="8">Bachelor of Science in Hospitality Management</option>
+                            <option value="9">Bachelor of Science in Business and Accountancy</option>
                             <option value="10">Bachelor of Science in Psychology</option>
                         </select>
                     </div>
@@ -172,16 +170,12 @@
                                 Show
                             </button>
                         </div>
-
-                        <!-- Requirements list -->
                         <ul id="requirements">
                             <li id="req-length">At least 8 and max 20 characters</li>
                             <li id="req-upper">At least one uppercase letter</li>
                             <li id="req-lower">At least one lowercase letter</li>
                             <li id="req-number">At least one number</li>
-                            <li id="req-special">
-                                At least one special character (!@#$...)
-                            </li>
+                            <li id="req-special">At least one special character (!@#$...)</li>
                             <li id="req-space">No spaces</li>
                         </ul>
                     </div>
@@ -194,8 +188,6 @@
                                 Show
                             </button>
                         </div>
-
-                        <!-- Confirm password warning -->
                         <ul id="confirm-requirements">
                             <li id="req-match">Passwords must match</li>
                         </ul>
