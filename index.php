@@ -32,7 +32,7 @@
         <div class="nav-right">
             <div class="btns">
                 <button class="btn" onclick="window.location.href = 'login.php'">Login</button>
-                <button class="btn" onclick="document.getElementById('signUpDialog').showModal()">
+                <button class="btn" onclick="window.location.href = 'DPA.php'">
                     Signup
                 </button>
             </div>
@@ -40,22 +40,6 @@
         </div>
     </nav>
 
-    <!-- Sign Up Dialog Start -->
-    <dialog id="signUpDialog">
-        <div class="title">Sign Up As...</div>
-        <div class="registerButtons">
-            <button onclick="window.location.href = 'student_form.php'">
-                Register As Student
-            </button>
-            <button onclick="window.location.href = 'alumni_form.php'">
-                Register As Alumni
-            </button>
-        </div>
-        <button id="closeButton" onclick="document.getElementById('signUpDialog').close()">
-            Close
-        </button>
-    </dialog>
-    <!-- Sign Up Dialog End -->
 
     <section class="header">
         <!-- Swiper Slider -->

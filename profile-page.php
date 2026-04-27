@@ -25,10 +25,12 @@
             <li><a href="jobs.php">Jobs</a></li>
             <li><a href="events.php">Events</a></li>
         </ul>
-        <div class="nav-right">
+ <div class="nav-right">
             <div class="btns">
-                <button class="btn">Login</button>
-                <button class="btn">Signup</button>
+                <button class="btn" onclick="window.location.href = 'login.php'">Login</button>
+                <button class="btn" onclick="window.location.href = 'DPA.php'">
+                    Signup
+                </button>
             </div>
             <a href="#" class="logo-link2"><img src="assets/image/plplogo.png" alt="PLP Logo"></a>
         </div>
