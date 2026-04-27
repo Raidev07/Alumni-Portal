@@ -232,6 +232,7 @@ CREATE TABLE `userprofile` (
   `user_id` int(11) NOT NULL,
   `first_name` varchar(50) NOT NULL,
   `last_name` varchar(50) NOT NULL,
+  `suffix` varchar(10) DEFAULT NULL,
   `middle_name` varchar(50) DEFAULT NULL,
   `contact_number` varchar(11) DEFAULT NULL,
   `address` varchar(255) DEFAULT NULL,
@@ -290,4 +291,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-04-27 15:26:59
+-- Dump completed on 2026-04-27 19:49:38
