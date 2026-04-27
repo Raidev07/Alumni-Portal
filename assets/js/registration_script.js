@@ -1,4 +1,3 @@
-
 // ========================
 // School ID Format
 // ========================
@@ -27,7 +26,6 @@ if (studentId) {
 // DOM Ready
 // ========================
 document.addEventListener("DOMContentLoaded", function () {
-
     var form = document.querySelector("form");
 
     // ========================
@@ -39,7 +37,9 @@ document.addEventListener("DOMContentLoaded", function () {
         toggleButtons[i].addEventListener("click", function (e) {
             e.preventDefault();
 
-            var target = document.querySelector(this.getAttribute("data-target"));
+            var target = document.querySelector(
+                this.getAttribute("data-target"),
+            );
 
             if (!target) return;
 
@@ -80,7 +80,19 @@ document.addEventListener("DOMContentLoaded", function () {
     if (email) email.addEventListener("input", validateEmail);
     if (phone) phone.addEventListener("input", validatePhone);
     if (password) password.addEventListener("input", validatePassword);
-    if (confirmPassword) confirmPassword.addEventListener("input", validateConfirm);
+    if (confirmPassword)
+        confirmPassword.addEventListener("input", validateConfirm);
+
+    // ========================
+    // Remove error on focus  
+    // ========================
+    var allInputs = form.querySelectorAll("input, select");
+
+    for (var i = 0; i < allInputs.length; i++) {
+        allInputs[i].addEventListener("focus", function () {
+            this.classList.remove("input-error");
+        });
+    }
 
     // ========================
     // Sex warning remove
@@ -94,10 +106,9 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // ========================
-    // FORM SUBMIT (ONLY ONE)
+    // FORM SUBMIT
     // ========================
     form.addEventListener("submit", function (e) {
-
         var hasError = false;
 
         var fields = form.querySelectorAll("input[required], select[required]");
@@ -129,7 +140,7 @@ document.addEventListener("DOMContentLoaded", function () {
             /[a-z]/.test(pass),
             /[0-9]/.test(pass),
             /[!@#$%^&*(),.?":{}|<>]/.test(pass),
-            !/\s/.test(pass)
+            !/\s/.test(pass),
         ];
 
         var allPass = true;
@@ -145,7 +156,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
         if (!allPass || !match) {
             document.getElementById("password").classList.add("input-error");
-            document.getElementById("confirmPassword").classList.add("input-error");
+            document
+                .getElementById("confirmPassword")
+                .classList.add("input-error");
             hasError = true;
         }
 
@@ -166,9 +179,7 @@ function validateEmail() {
     var req = document.getElementById("req-email");
     if (req) req.classList.toggle("met", valid);
 
-    if (valid) {
-        email.classList.remove("input-error");
-    }
+    email.classList.toggle("input-error", !valid && email.value.length > 0);
 }
 
 function validatePhone() {
@@ -178,9 +189,7 @@ function validatePhone() {
     var req = document.getElementById("req-phone");
     if (req) req.classList.toggle("met", valid);
 
-    if (valid) {
-        phone.classList.remove("input-error");
-    }
+    phone.classList.toggle("input-error", !valid && phone.value.length > 0);
 }
 
 function validatePassword() {
@@ -192,7 +201,7 @@ function validatePassword() {
         "req-lower": /[a-z]/.test(pass),
         "req-number": /[0-9]/.test(pass),
         "req-special": /[!@#$%^&*(),.?":{}|<>]/.test(pass),
-        "req-space": !/\s/.test(pass)
+        "req-space": !/\s/.test(pass),
     };
 
     for (var key in rules) {
@@ -209,9 +218,9 @@ function validatePassword() {
         }
     }
 
-    if (allMet) {
-        document.getElementById("password").classList.remove("input-error");
-    }
+    document
+        .getElementById("password")
+        .classList.toggle("input-error", !allMet && pass.length > 0);
 
     validateConfirm();
 }
@@ -225,9 +234,9 @@ function validateConfirm() {
     var el = document.getElementById("req-match");
     if (el) el.classList.toggle("met", match);
 
-    if (match) {
-        document.getElementById("confirmPassword").classList.remove("input-error");
-    }
+    document
+        .getElementById("confirmPassword")
+        .classList.toggle("input-error", !match && confirm.length > 0);
 }
 
 // ========================
