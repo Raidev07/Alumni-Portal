@@ -84,7 +84,7 @@ document.addEventListener("DOMContentLoaded", function () {
         confirmPassword.addEventListener("input", validateConfirm);
 
     // ========================
-    // Remove error on focus  
+    // Remove error on focus
     // ========================
     var allInputs = form.querySelectorAll("input, select");
 
@@ -102,6 +102,7 @@ document.addEventListener("DOMContentLoaded", function () {
     for (var s = 0; s < sexRadios.length; s++) {
         sexRadios[s].addEventListener("change", function () {
             document.getElementById("sexWarning").style.display = "none";
+            document.querySelector('.sex__details .category').classList.remove('sex-error');
         });
     }
 
@@ -126,7 +127,8 @@ document.addEventListener("DOMContentLoaded", function () {
         var sex = document.querySelector('input[name="sex"]:checked');
 
         if (!sex) {
-            document.getElementById("sexWarning").style.display = "block";
+            document.getElementById("sexWarning").style.display = "flex";
+            document.querySelector('.sex__details .category').classList.add('sex-error');
             hasError = true;
         }
 
