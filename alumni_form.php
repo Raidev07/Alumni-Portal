@@ -31,12 +31,12 @@
 
         <div class="nav-right">
             <div class="btns">
-                <button class="btn" onclick="window.location.href = 'login.html'">Login</button>
-                <button class="btn" onclick="document.getElementById('signUpDialog').showModal()">
+                <button class="btn" onclick="window.location.href = 'login.php'">Login</button>
+                <button class="btn" onclick="window.location.href = 'DPA.php'">
                     Signup
                 </button>
             </div>
-            <a href="#" class="logo-link2"><img src="assets/image/plplogo.png" alt="PLP Logo" /></a>
+            <a href="#" class="logo-link2"><img src="assets/image/plplogo.png" alt="PLP Logo"></a>
         </div>
     </nav>
 

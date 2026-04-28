@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Alumni Portal</title>
     <link rel="icon" href="assets/image/alumni-logo.png">
-    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/alumni_homepage.css">
     <link rel="stylesheet" href="assets/css/signUpDialog_style.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.css" />
@@ -30,15 +30,42 @@
         </ul>
 
         <div class="nav-right">
-            <div class="btns">
-                <button class="btn" onclick="window.location.href = 'login.php'">Login</button>
-                <button class="btn" onclick="window.location.href = 'DPA.php'">
-                    Signup
+ 
+            <!-- Profile Icon -->
+            <a href="profile-page.php" class="profile-icon" title="My Profile">
+                <i class="fas fa-user"></i>
+            </a>
+ 
+            <!-- Hamburger Menu -->
+            <div class="hamburger-wrapper">
+                <button class="hamburger-btn" id="hamburgerBtn" aria-label="Open menu" aria-expanded="false">
+                    <span></span>
+                    <span></span>
+                    <span></span>
                 </button>
+ 
+                <div class="hamburger-dropdown" id="hamburgerDropdown">
+                    <ul>
+                        <li>
+                            <a href="contact.php">
+                                Contact Us
+                            </a>
+                        </li>
+                        <li>
+                            <a href="index.php">
+                                Logout
+                            </a>
+                        </li>
+                    </ul>
+                </div>
             </div>
-            <a href="#" class="logo-link2"><img src="assets/image/plplogo.png" alt="PLP Logo"></a>
+ 
+            <a href="#" class="logo-link2">
+                <img src="assets/image/plplogo.png" alt="PLP Logo">
+            </a>
         </div>
     </nav>
+
 
 
     <section class="header">
@@ -300,7 +327,7 @@
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
-    <script src="assets/js/script.js"></script>
+    <script src="assets/js/alumni_homepage.js"></script>
 </body>
 
 </html>

@@ -31,7 +31,7 @@
         <div class="nav-right">
             <div class="btns">
                 <button class="btn" onclick="window.location.href = 'login.php'">Login</button>
-                <button class="btn" onclick="document.getElementById('signUpDialog').showModal()">
+                <button class="btn" onclick="window.location.href = 'DPA.php'">
                     Signup
                 </button>
             </div>

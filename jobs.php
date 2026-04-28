@@ -27,10 +27,10 @@
             <li><a href="jobs.php" class="active">Jobs</a></li>
             <li><a href="events.php">Events</a></li>
         </ul>
-        <div class="nav-right">
+<div class="nav-right">
             <div class="btns">
-                <button class="btn" onclick="window.location.href = 'login.html'">Login</button>
-                <button class="btn" onclick="document.getElementById('signUpDialog').showModal()">
+                <button class="btn" onclick="window.location.href = 'login.php'">Login</button>
+                <button class="btn" onclick="window.location.href = 'DPA.php'">
                     Signup
                 </button>
             </div>
