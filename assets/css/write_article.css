@@ -1,0 +1,256 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&family=Roboto+Slab:wght@600;700&display=swap');
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --g-900: #003a0a;
+  --g-800: #005210;
+  --g-700: #006e14;   /* PRIMARY */
+  --g-600: #008a1a;
+  --g-500: #00a61f;
+  --g-400: #33bb4d;
+  --g-300: #66cc7a;
+  --g-200: #b3e2bb;
+  --g-100: #ccedcf;
+  --g-50:  #e6f5e9;   /* LIGHT */
+  --g-25:  #f2faf3;
+
+  --ink:       #0a1f0d;
+  --ink-muted: #2d4d32;
+  --ink-faint: #5a7a5f;
+  --border:    #c8deca;
+  --surface:   #ffffff;
+  --page:      #f0f5f2;
+
+  --font:         'Roboto', sans-serif;
+  --font-display: 'Roboto Slab', serif;
+  --r:    12px;
+  --r-sm: 8px;
+  --r-xs: 6px;
+}
+
+/* ── BASE ───────────────────────────────────────────────────────── */
+html { overflow-y: scroll; scrollbar-gutter: stable; }
+
+body {
+  font-family: var(--font);
+  background: var(--page);
+  color: var(--ink);
+  min-height: 100vh;
+  line-height: 1.6;
+}
+
+/* ── BLOCK / LAYOUT ─────────────────────────────────────────────── */
+.block {
+  min-height: 100vh;
+  padding: 3rem 1.5rem 6rem;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.container { width: 100%; }
+
+.form-wrap {
+  max-width: 760px;
+  margin: 0 auto;
+}
+
+/* ── PAGE HEAD ──────────────────────────────────────────────────── */
+.page-head {
+  margin-bottom: 2.25rem;
+}
+
+.section-eyebrow {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--g-700);
+  margin-bottom: 0.4rem;
+}
+
+.page-head h1 {
+  font-family: var(--font-display);
+  font-size: clamp(1.75rem, 3vw, 2.4rem);
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.2;
+  margin-bottom: 0.5rem;
+}
+
+.page-head p {
+  font-size: 0.95rem;
+  color: var(--ink-faint);
+  max-width: 540px;
+  line-height: 1.65;
+}
+
+/* ── FORM CARD ──────────────────────────────────────────────────── */
+.form {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 2.25rem 2.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.4rem;
+}
+
+/* ── ROW (2-col) ────────────────────────────────────────────────── */
+.row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem;
+}
+
+/* ── FIELD ──────────────────────────────────────────────────────── */
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.field label {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--ink-muted);
+  letter-spacing: 0.01em;
+}
+
+/* ── INPUTS / TEXTAREA / SELECT ─────────────────────────────────── */
+.field input,
+.field textarea,
+.field select {
+  font-family: var(--font);
+  font-size: 0.92rem;
+  color: var(--ink);
+  background: var(--g-25);
+  border: 1.5px solid var(--border);
+  border-radius: var(--r-sm);
+  padding: 0.6rem 0.875rem;
+  width: 100%;
+  outline: none;
+  transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
+  line-height: 1.55;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.field input::placeholder,
+.field textarea::placeholder {
+  color: var(--ink-faint);
+  opacity: 0.8;
+}
+
+.field input:hover,
+.field textarea:hover,
+.field select:hover {
+  border-color: var(--g-400);
+  background: #fff;
+}
+
+.field input:focus,
+.field textarea:focus,
+.field select:focus {
+  border-color: var(--g-700);
+  background: #fff;
+  box-shadow: 0 0 0 3px rgba(0, 110, 20, 0.10);
+}
+
+/* Select arrow */
+.field select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%235a7a5f' stroke-width='1.8' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.875rem center;
+  padding-right: 2.25rem;
+  cursor: pointer;
+}
+
+.field textarea {
+  resize: vertical;
+  min-height: 72px;
+}
+
+.field textarea[rows="10"] {
+  min-height: 220px;
+}
+
+/* Required star hint */
+.field label::after {
+  content: '';
+}
+
+/* ── FORM ACTIONS ───────────────────────────────────────────────── */
+.form-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--g-50);
+  margin-top: 0.25rem;
+  flex-wrap: wrap;
+}
+
+/* ── BUTTONS ────────────────────────────────────────────────────── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 0.6rem 1.5rem;
+  border-radius: var(--r-sm);
+  font-family: var(--font);
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  border: 1.5px solid transparent;
+  transition: all 0.2s;
+  white-space: nowrap;
+  line-height: 1;
+}
+
+.btn-primary {
+  background: var(--g-700);
+  color: #fff;
+  border-color: var(--g-700);
+}
+.btn-primary:hover {
+  background: var(--g-800);
+  border-color: var(--g-800);
+  box-shadow: 0 4px 14px rgba(0, 110, 20, 0.25);
+}
+.btn-primary:active { transform: scale(0.98); }
+
+.btn-outline {
+  background: transparent;
+  color: var(--ink-muted);
+  border-color: var(--border);
+}
+.btn-outline:hover {
+  background: var(--g-50);
+  color: var(--g-700);
+  border-color: var(--g-300);
+}
+
+/* ── DIVIDER LINE between sections ─────────────────────────────── */
+.form-divider {
+  height: 1px;
+  background: var(--g-50);
+  margin: 0.25rem 0;
+}
+
+/* ── RESPONSIVE ─────────────────────────────────────────────────── */
+@media (max-width: 640px) {
+  .block { padding: 2rem 1rem 5rem; }
+
+  .form { padding: 1.5rem 1.25rem; gap: 1.1rem; }
+
+  .row { grid-template-columns: 1fr; gap: 1.1rem; }
+
+  .form-actions { flex-direction: column; align-items: stretch; }
+  .form-actions .btn { width: 100%; justify-content: center; }
+
+  .page-head h1 { font-size: 1.6rem; }
+}

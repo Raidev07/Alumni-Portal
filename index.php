@@ -27,6 +27,7 @@
             <li><a href="index.php" class="active">Home</a></li>
             <li><a href="jobs.php">Jobs</a></li>
             <li><a href="events.php">Events</a></li>
+            <li><a href="DPA.php">Highlights</a></li>
         </ul>
 
         <div class="nav-right">
@@ -144,7 +145,7 @@
                                         <span class="card-profile-role">UI Designer</span>
                                     </div>
                                 </div>
-                                <a href="#" class="card-button">Read More</a>
+                                <a href="DPA.php" class="card-button">Read More</a>
                             </div>
                         </div>
                     </div>
@@ -167,7 +168,7 @@
                                         <span class="card-profile-role">Developer</span>
                                     </div>
                                 </div>
-                                <a href="#" class="card-button">Read More</a>
+                                <a href="DPA.php" class="card-button">Read More</a>
                             </div>
                         </div>
                     </div>
@@ -190,7 +191,7 @@
                                         <span class="card-profile-role">UX Researcher</span>
                                     </div>
                                 </div>
-                                <a href="#" class="card-button">Read More</a>
+                                <a href="DPA.php" class="card-button">Read More</a>
                             </div>
                         </div>
                     </div>
@@ -213,7 +214,7 @@
                                         <span class="card-profile-role">Interior Designer</span>
                                     </div>
                                 </div>
-                                <a href="#" class="card-button">Read More</a>
+                                <a href="DPA.php" class="card-button">Read More</a>
                             </div>
                         </div>
                     </div>
@@ -236,7 +237,7 @@
                                         <span class="card-profile-role">Motion Designer</span>
                                     </div>
                                 </div>
-                                <a href="#" class="card-button">Read More</a>
+                                <a href="DPA.php" class="card-button">Read More</a>
                             </div>
                         </div>
                     </div>
