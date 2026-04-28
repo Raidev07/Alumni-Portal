@@ -716,4 +716,17 @@ form .user__details .input__box.name__row .suffix-box select {
     form .sex__details {
         width: 100%;
     }
+
+    .error-box {
+        background: #fff0f0;
+        border: 1px solid #e74c3c;
+        border-radius: 6px;
+        padding: 12px 16px;
+        margin-bottom: 16px;
+    }
+    .error-msg {
+        color: #c0392b;
+        margin: 4px 0;
+        font-size: 0.9rem;
+    }
 }

@@ -1,3 +1,12 @@
+<?php
+session_start();
+
+$errors = $_SESSION['reg_errors'] ?? [];
+$old = $_SESSION['reg_old'] ?? [];
+
+unset($_SESSION['reg_errors'], $_SESSION['reg_old']);
+?>
+
 <!doctype html>
 <html lang="en">
 
@@ -16,7 +25,8 @@
     <div class="darkshade"></div>
     <nav class="navbar" id="navbar">
         <div class="nav-left">
-            <a href="https://plpasig.edu.ph/" class="logo-link1"><img src="assets/image/alumni-logo.png" alt="alumni Logo" /></a>
+            <a href="https://plpasig.edu.ph/" class="logo-link1"><img src="assets/image/alumni-logo.png"
+                    alt="alumni Logo" /></a>
             <div class="title">
                 <div>Pamantasan ng Lungsod ng Pasig</div>
                 <div>ALUMNI</div>
@@ -42,6 +52,17 @@
 
     <div class="form_container">
         <div class="title">Alumni Registration</div>
+
+        <?php if (!empty($errors)): ?>
+            <div class="error-box">
+                <?php foreach ($errors as $err): ?>
+                    <p class="error-msg">⚠
+                        <?= htmlspecialchars($err) ?>
+                    </p>
+                <?php endforeach; ?>
+            </div>
+        <?php endif; ?>
+        
         <form action="backend/register_process.php" method="POST" novalidate>
             <div class="user__details">
                 <div class="input__box">
@@ -221,4 +242,5 @@
 
     <script src="assets/js/registration_script.js" defer></script>
 </body>
+
 </html>
