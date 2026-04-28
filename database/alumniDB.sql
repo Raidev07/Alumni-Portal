@@ -281,6 +281,211 @@ LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Dumping events for database 'alumniDB'
+--
+/*!50106 SET @save_time_zone= @@TIME_ZONE */ ;
+/*!50106 DROP EVENT IF EXISTS `evt_UpdateEventStatus` */;
+DELIMITER ;;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;;
+/*!50003 SET character_set_client  = utf8mb4 */ ;;
+/*!50003 SET character_set_results = utf8mb4 */ ;;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;;
+/*!50003 SET sql_mode              = 'NO_ZERO_IN_DATE,NO_ZERO_DATE,NO_ENGINE_SUBSTITUTION' */ ;;
+/*!50003 SET @saved_time_zone      = @@time_zone */ ;;
+/*!50003 SET time_zone             = 'SYSTEM' */ ;;
+/*!50106 CREATE*/ /*!50117 DEFINER=`root`@`localhost`*/ /*!50106 EVENT `evt_UpdateEventStatus` ON SCHEDULE EVERY 1 DAY STARTS '2026-04-28 00:00:00' ON COMPLETION NOT PRESERVE ENABLE DO UPDATE Events 
+  SET status = 'completed' 
+  WHERE event_date < CURRENT_DATE AND status = 'upcoming' */ ;;
+/*!50003 SET time_zone             = @saved_time_zone */ ;;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;;
+/*!50003 SET character_set_results = @saved_cs_results */ ;;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;;
+DELIMITER ;
+/*!50106 SET TIME_ZONE= @save_time_zone */ ;
+
+--
+-- Dumping routines for database 'alumniDB'
+--
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'NO_ZERO_IN_DATE,NO_ZERO_DATE,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `sp_FilterEvents` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_FilterEvents`(IN p_event_type VARCHAR(50))
+BEGIN
+    IF p_event_type = 'All' THEN
+        SELECT * FROM Events WHERE status != 'cancelled' ORDER BY event_date ASC;
+    ELSE
+        SELECT * FROM Events 
+        WHERE event_type = p_event_type 
+        AND status != 'cancelled' 
+        ORDER BY event_date ASC;
+    END IF;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'NO_ZERO_IN_DATE,NO_ZERO_DATE,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `sp_FilterJobs` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_FilterJobs`(IN p_type VARCHAR(50), IN p_modality VARCHAR(50))
+BEGIN
+    SELECT * FROM JobPostings
+    WHERE (job_type = p_type OR p_type = 'All')
+    AND (modality = p_modality OR p_modality = 'All')
+    AND status = 'active'
+    ORDER BY posted_at DESC;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'NO_ZERO_IN_DATE,NO_ZERO_DATE,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `sp_RegisterAlumni` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_RegisterAlumni`(
+    
+    IN p_email VARCHAR(100),
+    IN p_password VARCHAR(255),
+    
+    
+    IN p_first_name VARCHAR(50),
+    IN p_last_name VARCHAR(50),
+    IN p_suffix VARCHAR(10),
+    IN p_middle_name VARCHAR(50), 
+    IN p_contact_number VARCHAR(11),
+    IN p_address VARCHAR(255),
+    IN p_birthdate DATE,
+    IN p_gender ENUM('Male','Female'),
+    
+    
+    IN p_student_number VARCHAR(20),
+    IN p_course_id INT,
+    IN p_year_graduated YEAR
+)
+BEGIN
+    DECLARE v_new_user_id INT;
+
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION 
+    BEGIN
+        ROLLBACK;
+        RESIGNAL; 
+    END;
+
+    START TRANSACTION;
+
+    INSERT INTO users (email, password, role) 
+    VALUES (p_email, p_password, 'alumni');
+
+    SET v_new_user_id = LAST_INSERT_ID();
+
+    INSERT INTO userprofile (
+        user_id, first_name, last_name, suffix, middle_name, 
+        contact_number, address, birthdate, gender
+    ) 
+    VALUES (
+        v_new_user_id, p_first_name, p_last_name, p_suffix, p_middle_name, 
+        p_contact_number, p_address, p_birthdate, p_gender
+    );
+
+    INSERT INTO alumnidetails (user_id, student_number, course_id, year_graduated) 
+    VALUES (v_new_user_id, p_student_number, p_course_id, p_year_graduated);
+
+    COMMIT;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'NO_ZERO_IN_DATE,NO_ZERO_DATE,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `sp_SearchEvents` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_SearchEvents`(IN p_query VARCHAR(100))
+BEGIN
+    SET @term = CONCAT('%', p_query, '%');
+    SELECT e.*, p.first_name, p.last_name, p.suffix 
+    FROM Events e
+    JOIN UserProfile p ON e.user_id = p.user_id
+    WHERE (e.event_title LIKE @term 
+       OR e.event_description LIKE @term 
+       OR e.location LIKE @term 
+       OR e.event_type LIKE @term
+       OR p.first_name LIKE @term 
+       OR p.last_name LIKE @term 
+       OR p.suffix LIKE @term)
+    AND e.status != 'cancelled'
+    ORDER BY e.event_date ASC;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'NO_ZERO_IN_DATE,NO_ZERO_DATE,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `sp_SearchJobs` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_SearchJobs`(IN p_query VARCHAR(100))
+BEGIN
+    SET @term = CONCAT('%', p_query, '%');
+    SELECT * FROM JobPostings
+    WHERE (job_title LIKE @term 
+       OR company_name LIKE @term 
+       OR job_description LIKE @term 
+       OR requirements LIKE @term 
+       OR benefits LIKE @term 
+       OR location LIKE @term 
+       OR category LIKE @term)
+    AND status = 'active'
+    ORDER BY posted_at DESC;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -291,4 +496,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-04-28  8:04:11
+-- Dump completed on 2026-04-28  8:21:44
