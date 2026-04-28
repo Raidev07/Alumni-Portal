@@ -414,223 +414,232 @@ body {
             color: #fff;
         }
  
-        /* ── HAMBURGER BUTTON ──────────────────────────────────────────── */
-        .hamburger-wrapper {
-            position: relative;
-            flex-shrink: 0;
-        }
-        .hamburger-btn {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            gap: 5px;
-            width: 38px;
-            height: 38px;
-            border-radius: 8px;
-            background: #f0f5f2;
-            border: 1.5px solid #a8d5b0;
-            cursor: pointer;
-            padding: 0;
-            transition: all 0.25s;
-        }
-        .hamburger-btn span {
-            display: block;
-            width: 18px;
-            height: 2px;
-            background: #006e14;
-            border-radius: 2px;
-            transition: all 0.3s ease;
-            transform-origin: center;
-        }
-        .hamburger-btn:hover {
-            background: #006e14;
-            border-color: #006e14;
-        }
-        .hamburger-btn:hover span {
-            background: #fff;
-        }
-        /* Animated X state */
-        .hamburger-btn.open span:nth-child(1) {
-            transform: translateY(7px) rotate(45deg);
-        }
-        .hamburger-btn.open span:nth-child(2) {
-            opacity: 0;
-            transform: scaleX(0);
-        }
-        .hamburger-btn.open span:nth-child(3) {
-            transform: translateY(-7px) rotate(-45deg);
-        }
- 
-        /* ── DROPDOWN MENU ─────────────────────────────────────────────── */
-        .hamburger-dropdown {
-            position: absolute;
-            top: calc(100% + 10px);
-            right: 0;
-            width: 215px;
-            background: #fff;
-            border-radius: 12px;
-            box-shadow: 0 8px 28px rgba(0, 0, 0, 0.12);
-            border: 1px solid #e8ede9;
-            overflow: hidden;
-            opacity: 0;
-            transform: translateY(-8px) scale(0.97);
-            pointer-events: none;
-            transition: opacity 0.22s ease, transform 0.22s ease;
-            z-index: 2000;
-        }
-        .hamburger-dropdown.show {
-            opacity: 1;
-            transform: translateY(0) scale(1);
-            pointer-events: all;
-        }
-        .hamburger-dropdown ul {
-            list-style: none;
-            margin: 0;
-            padding: 6px 0;
-        }
-        .hamburger-dropdown ul li a {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            padding: 0.65rem 1.1rem;
-            font-size: 0.9rem;
-            font-weight: 500;
-            color: #0f172a;
-            text-decoration: none;
-            transition: background 0.18s, color 0.18s;
-        }
-        .hamburger-dropdown ul li a i {
-            width: 17px;
-            text-align: center;
-            color: #006e14;
-            font-size: 0.95rem;
-            flex-shrink: 0;
-            transition: color 0.18s;
-        }
-        .hamburger-dropdown ul li a:hover {
-            background: #f0f9f1;
-            color: #006e14;
-        }
-        /* Divider after Sign Up (2nd item) */
-        .hamburger-dropdown ul li:nth-child(2) {
-            border-bottom: 1px solid #e8ede9;
-            padding-bottom: 6px;
-            margin-bottom: 6px;
-        }
- 
-        /* Divider above Logout */
-        .dropdown-divider-top {
-            border-top: 1px solid #e8ede9;
-            margin-top: 6px;
-            padding-top: 6px;
-        }
-        .dropdown-divider-top a {
-            color: #dc2626 !important;
-        }
-        .dropdown-divider-top a i {
-            color: #dc2626 !important;
-        }
-        .dropdown-divider-top a:hover {
-            background: #fff5f5 !important;
-            color: #b91c1c !important;
-        }
- 
-        /* ── LOGOUT MODAL OVERLAY ──────────────────────────────────────── */
-        .logout-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.45);
-            backdrop-filter: blur(3px);
-            -webkit-backdrop-filter: blur(3px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 9999;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.25s ease;
-        }
-        .logout-overlay.show {
-            opacity: 1;
-            pointer-events: all;
-        }
- 
-        /* ── MODAL BOX ─────────────────────────────────────────────────── */
-        .logout-modal {
-            background: #fff;
-            border-radius: 16px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.18);
-            padding: 2rem 2rem 1.6rem;
-            width: 100%;
-            max-width: 380px;
-            margin: 1rem;
-            text-align: center;
-            transform: translateY(18px) scale(0.97);
-            transition: transform 0.28s ease, opacity 0.25s ease;
-            opacity: 0;
-        }
-        .logout-overlay.show .logout-modal {
-            transform: translateY(0) scale(1);
-            opacity: 1;
-        }
- 
-        /* Icon circle */
-        .logout-modal-icon {
-            width: 62px;
-            height: 62px;
-            border-radius: 50%;
-            background: #fff5f5;
-            border: 2px solid #fecaca;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 1.1rem;
-            font-size: 1.55rem;
-            color: #dc2626;
-        }
- 
-        .logout-modal h3 {
-            font-size: 1.15rem;
-            font-weight: 700;
-            color: #0f172a;
-            margin-bottom: 0.45rem;
-        }
-        .logout-modal p {
-            font-size: 0.88rem;
-            color: #64748b;
-            line-height: 1.55;
-            margin-bottom: 1.6rem;
-        }
- 
-        /* Button row */
-        .logout-modal-btns {
-            display: flex;
-            gap: 0.75rem;
-        }
-        .logout-modal-btns button {
-            flex: 1;
-            padding: 0.6rem 1rem;
-            border-radius: 8px;
-            font-size: 0.92rem;
-            font-weight: 600;
-            cursor: pointer;
-            border: none;
-            transition: all 0.22s;
-        }
-        .logout-btn-no {
-            background: #f1f5f9;
-            color: #475569;
-            outline: 1.5px solid #e2e8f0;
-        }
-        .logout-btn-no:hover {
-            background: #e2e8f0;
-            color: #0f172a;
-        }
-        .logout-btn-yes {
-            background: #dc2626;
-            color: #fff;
-        }
-        .logout-btn-yes:hover {
-            background: #b91c1c;
-        }
+ /* ── HAMBURGER BUTTON ──────────────────────────────────────────── */
+.hamburger-wrapper {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.hamburger-btn {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  width: 38px;
+  height: 38px;
+  border-radius: 8px;
+  background: #f0f5f2;
+  border: 1.5px solid #a8d5b0;
+  cursor: pointer;
+  padding: 0;
+  transition: all 0.25s;
+}
+
+.hamburger-btn span {
+  display: block;
+  width: 18px;
+  height: 2px;
+  background: #006e14;
+  border-radius: 2px;
+  transition: all 0.3s ease;
+  transform-origin: center;
+}
+
+.hamburger-btn:hover {
+  background: #006e14;
+  border-color: #006e14;
+}
+
+.hamburger-btn:hover span {
+  background: #fff;
+}
+
+/* Animated X when open */
+.hamburger-btn.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.hamburger-btn.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+.hamburger-btn.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+/* ── DROPDOWN MENU ─────────────────────────────────────────────── */
+.hamburger-dropdown {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  width: 215px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.12);
+  border: 1px solid #e8ede9;
+  overflow: hidden;
+  opacity: 0;
+  transform: translateY(-8px) scale(0.97);
+  pointer-events: none;
+  transition: opacity 0.22s ease, transform 0.22s ease;
+  z-index: 2000;
+}
+
+.hamburger-dropdown.show {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  pointer-events: all;
+}
+
+.hamburger-dropdown ul {
+  list-style: none;
+  margin: 0;
+  padding: 6px 0;
+}
+
+.hamburger-dropdown ul li a {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.65rem 1.1rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #0f172a;
+  text-decoration: none;
+  transition: background 0.18s, color 0.18s;
+}
+
+.hamburger-dropdown ul li a i {
+  width: 17px;
+  text-align: center;
+  color: #006e14;
+  font-size: 0.95rem;
+  flex-shrink: 0;
+  transition: color 0.18s;
+}
+
+.hamburger-dropdown ul li a:hover {
+  background: #f0f9f1;
+  color: #006e14;
+}
+
+/* Logout row — red styling */
+.dropdown-divider-top {
+  border-top: 1px solid #e8ede9;
+  margin-top: 6px;
+  padding-top: 6px;
+}
+
+.dropdown-divider-top a {
+  color: #dc2626 !important;
+}
+
+.dropdown-divider-top a i {
+  color: #dc2626 !important;
+}
+
+.dropdown-divider-top a:hover {
+  background: #fff5f5 !important;
+  color: #b91c1c !important;
+}
+
+/* ── LOGOUT MODAL OVERLAY ──────────────────────────────────────── */
+.logout-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+}
+
+.logout-overlay.show {
+  opacity: 1;
+  pointer-events: all;
+}
+
+/* ── MODAL BOX ─────────────────────────────────────────────────── */
+.logout-modal {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.18);
+  padding: 2rem 2rem 1.6rem;
+  width: 100%;
+  max-width: 380px;
+  margin: 1rem;
+  text-align: center;
+  transform: translateY(18px) scale(0.97);
+  transition: transform 0.28s ease, opacity 0.25s ease;
+  opacity: 0;
+}
+
+.logout-overlay.show .logout-modal {
+  transform: translateY(0) scale(1);
+  opacity: 1;
+}
+
+/* Icon circle */
+.logout-modal-icon {
+  width: 62px;
+  height: 62px;
+  border-radius: 50%;
+  background: #fff5f5;
+  border: 2px solid #fecaca;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1.1rem;
+  font-size: 1.55rem;
+  color: #dc2626;
+}
+
+.logout-modal h3 {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 0.45rem;
+}
+
+.logout-modal p {
+  font-size: 0.88rem;
+  color: #64748b;
+  line-height: 1.55;
+  margin-bottom: 1.6rem;
+}
+
+/* Button row */
+.logout-modal-btns {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.logout-modal-btns button {
+  flex: 1;
+  padding: 0.6rem 1rem;
+  border-radius: 8px;
+  font-size: 0.92rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: all 0.22s;
+  font-family: inherit;
+}
+
+.logout-btn-no {
+  background: #f1f5f9;
+  color: #475569;
+  outline: 1.5px solid #e2e8f0;
+}
+
+.logout-btn-no:hover {
+  background: #e2e8f0;
+  color: #0f172a;
+}
+
+.logout-btn-yes {
+  background: #dc2626;
+  color: #fff;
+}
+
+.logout-btn-yes:hover {
+  background: #b91c1c;
+}

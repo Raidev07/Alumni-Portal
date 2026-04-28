@@ -37,29 +37,29 @@
                 <i class="fas fa-user"></i>
             </a>
  
-            <!-- Hamburger Menu -->
             <div class="hamburger-wrapper">
                 <button class="hamburger-btn" id="hamburgerBtn" aria-label="Open menu" aria-expanded="false">
                     <span></span>
                     <span></span>
                     <span></span>
                 </button>
- 
+                
                 <div class="hamburger-dropdown" id="hamburgerDropdown">
                     <ul>
-                        <li>
-                            <a href="contact.php">
-                                Contact Us
-                            </a>
-                        </li>
-                        <li>
-                            <a href="index.php">
-                                Logout
-                            </a>
-                        </li>
+                    <li>
+                        <a href="contact.php">
+                        <i class="fas fa-envelope"></i> Contact Us
+                        </a>
+                    </li>
+                    <li class="dropdown-divider-top">
+                        <a href="#" id="logoutTrigger">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                        </a>
+                    </li>
                     </ul>
                 </div>
-            </div>
+                </div>
+
  
             <a href="#" class="logo-link2">
                 <img src="assets/image/plplogo.png" alt="PLP Logo">
@@ -326,7 +326,19 @@
             <p>© 2026 PLP Alumni Portal | All Rights Reserved</p>
         </div>
     </footer>
-
+    <div class="logout-overlay" id="logoutOverlay" role="dialog" aria-modal="true" aria-labelledby="logoutTitle">
+    <div class="logout-modal">
+        <div class="logout-modal-icon">
+        <i class="fas fa-sign-out-alt"></i>
+        </div>
+        <h3 id="logoutTitle">Logging out?</h3>
+        <p>Are you sure you want to log out of your account?</p>
+        <div class="logout-modal-btns">
+        <button class="logout-btn-no" id="logoutNo">Cancel</button>
+        <button class="logout-btn-yes" id="logoutYes">Yes, log out</button>
+        </div>
+    </div>
+    </div>
     <script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
     <script src="assets/js/alumni_homepage.js"></script>
 </body>
