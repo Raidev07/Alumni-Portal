@@ -80,8 +80,7 @@ document.addEventListener("DOMContentLoaded", function () {
     if (email) email.addEventListener("input", validateEmail);
     if (phone) phone.addEventListener("input", validatePhone);
     if (password) password.addEventListener("input", validatePassword);
-    if (confirmPassword)
-        confirmPassword.addEventListener("input", validateConfirm);
+    if (confirmPassword) confirmPassword.addEventListener("input", validateConfirm);
 
     // ========================
     // Remove error on focus
@@ -107,11 +106,14 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // ========================
-    // FORM SUBMIT
+    // FORM SUBMIT (AJAX)
     // ========================
     form.addEventListener("submit", function (e) {
+        e.preventDefault(); // Always stop default — we use fetch instead
+
         var hasError = false;
 
+        // Required field check
         var fields = form.querySelectorAll("input[required], select[required]");
 
         for (var i = 0; i < fields.length; i++) {
@@ -145,31 +147,77 @@ document.addEventListener("DOMContentLoaded", function () {
             !/\s/.test(pass),
         ];
 
-        var allPass = true;
-
-        for (var r = 0; r < rules.length; r++) {
-            if (!rules[r]) {
-                allPass = false;
-                break;
-            }
-        }
-
+        var allPass = rules.every(Boolean);
         var match = pass === confirm && confirm.length > 0;
 
         if (!allPass || !match) {
             document.getElementById("password").classList.add("input-error");
-            document
-                .getElementById("confirmPassword")
-                .classList.add("input-error");
+            document.getElementById("confirmPassword").classList.add("input-error");
             hasError = true;
         }
 
         if (hasError) {
-            e.preventDefault();
             showToast("Please fix all errors before submitting.");
+            return;
         }
+
+        // ── AJAX Submit ──────────────────────────────────────────────────────
+        var submitBtn = form.querySelector('input[type="submit"]');
+        submitBtn.disabled = true;
+        submitBtn.value = "Registering...";
+
+        var formData = new FormData(form);
+
+        fetch(form.action, { method: "POST", body: formData })
+            .then(function (res) { return res.json(); })
+            .then(function (data) {
+                submitBtn.disabled = false;
+                submitBtn.value = "Register";
+
+                if (data.success) {
+                    showRegModal(
+                        "✅",
+                        "Registration Successful!",
+                        "Your account has been created. You can now log in.",
+                        function () {
+                            window.location.href = "login.php?registered=1";
+                        }
+                    );
+                } else {
+                    var msg = data.errors.join("<br>");
+                    showRegModal("⚠️", "Registration Failed", msg, null);
+                }
+            })
+            .catch(function () {
+                submitBtn.disabled = false;
+                submitBtn.value = "Register";
+                showRegModal(
+                    "❌",
+                    "Network Error",
+                    "Could not reach the server. Please check your connection and try again.",
+                    null
+                );
+            });
     });
 });
+
+// ========================
+// MODAL HELPERS
+// ========================
+var regModalCallback = null;
+
+function showRegModal(icon, title, body, callback) {
+    document.getElementById("regModalIcon").textContent = icon;
+    document.getElementById("regModalTitle").textContent = title;
+    document.getElementById("regModalBody").innerHTML = body;
+    document.getElementById("regModal").style.display = "flex";
+    regModalCallback = callback || null;
+}
+
+function closeRegModal() {
+    document.getElementById("regModal").style.display = "none";
+    if (regModalCallback) regModalCallback();
+}
 
 // ========================
 // VALIDATION FUNCTIONS
@@ -211,14 +259,7 @@ function validatePassword() {
         if (el) el.classList.toggle("met", rules[key]);
     }
 
-    var allMet = true;
-
-    for (var k in rules) {
-        if (!rules[k]) {
-            allMet = false;
-            break;
-        }
-    }
+    var allMet = Object.values(rules).every(Boolean);
 
     document
         .getElementById("password")

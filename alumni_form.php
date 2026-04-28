@@ -62,8 +62,7 @@ unset($_SESSION['reg_errors'], $_SESSION['reg_old']);
                 <?php endforeach; ?>
             </div>
         <?php endif; ?>
-        
-        <form action="backend/register_process.php" method="POST" novalidate>
+            <form action="backend/register_process.php" method="POST" novalidate>
             <div class="user__details">
                 <div class="input__box">
                     <span class="details">School ID</span>
@@ -240,6 +239,19 @@ unset($_SESSION['reg_errors'], $_SESSION['reg_old']);
         </button>
     </dialog>
 
+    <!-- Error/Success Modal -->
+    <div id="regModal"
+        style="display:none; position:fixed; inset:0; z-index:9999; align-items:center; justify-content:center; background:rgba(0,0,0,0.5);">
+        <div
+            style="background:#fff; border-radius:16px; padding:36px 32px; max-width:420px; width:90%; box-shadow:0 12px 40px rgba(0,0,0,0.2); text-align:center;">
+            <div id="regModalIcon" style="font-size:2.5rem; margin-bottom:12px;"></div>
+            <div id="regModalTitle" style="font-size:1.25rem; font-weight:700; color:#0f172a; margin-bottom:10px;">
+            </div>
+            <div id="regModalBody" style="font-size:0.92rem; color:#475569; line-height:1.6;"></div>
+            <button onclick="closeRegModal()"
+                style="margin-top:24px; padding:10px 32px; background:#15803d; color:#fff; border:none; border-radius:8px; font-weight:600; font-size:0.95rem; cursor:pointer;">OK</button>
+        </div>
+    </div>
     <script src="assets/js/registration_script.js" defer></script>
 </body>
 
