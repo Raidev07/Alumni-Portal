@@ -70,6 +70,35 @@ DELIMITER ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
 
 --
+-- Table structure for table `audit_logs`
+--
+
+DROP TABLE IF EXISTS `audit_logs`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `audit_logs` (
+  `log_id` int(11) NOT NULL AUTO_INCREMENT,
+  `table_name` varchar(50) NOT NULL,
+  `record_id` int(11) NOT NULL,
+  `action_type` enum('INSERT','UPDATE','DELETE') NOT NULL,
+  `user_id` int(11) DEFAULT NULL,
+  `action_timestamp` timestamp NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`log_id`),
+  KEY `user_id` (`user_id`),
+  CONSTRAINT `audit_logs_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `audit_logs`
+--
+
+LOCK TABLES `audit_logs` WRITE;
+/*!40000 ALTER TABLE `audit_logs` DISABLE KEYS */;
+/*!40000 ALTER TABLE `audit_logs` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `courses`
 --
 
@@ -238,6 +267,7 @@ CREATE TABLE `userprofile` (
   `address` varchar(255) DEFAULT NULL,
   `birthdate` date DEFAULT NULL,
   `gender` enum('Male','Female') DEFAULT NULL,
+  `profile_picture` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`profile_id`),
   UNIQUE KEY `user_id` (`user_id`),
   CONSTRAINT `userprofile_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
@@ -252,6 +282,27 @@ LOCK TABLES `userprofile` WRITE;
 /*!40000 ALTER TABLE `userprofile` DISABLE KEYS */;
 /*!40000 ALTER TABLE `userprofile` ENABLE KEYS */;
 UNLOCK TABLES;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'NO_ZERO_IN_DATE,NO_ZERO_DATE,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER trg_audit_profile_update
+AFTER UPDATE ON userprofile
+FOR EACH ROW
+BEGIN
+    INSERT INTO audit_logs (table_name, record_id, action_type, user_id)
+    VALUES ('userprofile', NEW.profile_id, 'UPDATE', NEW.user_id);
+END */;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 
 --
 -- Table structure for table `users`
@@ -281,6 +332,51 @@ LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'NO_ZERO_IN_DATE,NO_ZERO_DATE,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER trg_audit_user_security
+AFTER UPDATE ON users
+FOR EACH ROW
+BEGIN
+    
+    IF OLD.status <> NEW.status OR OLD.role <> NEW.role THEN
+        INSERT INTO audit_logs (table_name, record_id, action_type, user_id)
+        VALUES ('users', NEW.id, 'UPDATE', NEW.id);
+    END IF;
+END */;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'NO_ZERO_IN_DATE,NO_ZERO_DATE,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER trg_audit_user_delete
+BEFORE DELETE ON users
+FOR EACH ROW
+BEGIN
+    INSERT INTO audit_logs (table_name, record_id, action_type, user_id)
+    VALUES ('users', OLD.id, 'DELETE', OLD.id);
+END */;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 
 --
 -- Dumping events for database 'alumniDB'
@@ -372,10 +468,8 @@ DELIMITER ;
 /*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_RegisterAlumni`(
-    
     IN p_email VARCHAR(100),
     IN p_password VARCHAR(255),
-    
     
     IN p_first_name VARCHAR(50),
     IN p_last_name VARCHAR(50),
@@ -385,7 +479,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_RegisterAlumni`(
     IN p_address VARCHAR(255),
     IN p_birthdate DATE,
     IN p_gender ENUM('Male','Female'),
-    
+    IN p_profile_picture VARCHAR(255), 
     
     IN p_student_number VARCHAR(20),
     IN p_course_id INT,
@@ -407,13 +501,14 @@ BEGIN
 
     SET v_new_user_id = LAST_INSERT_ID();
 
+    
     INSERT INTO userprofile (
         user_id, first_name, last_name, suffix, middle_name, 
-        contact_number, address, birthdate, gender
+        contact_number, address, birthdate, gender, profile_picture
     ) 
     VALUES (
         v_new_user_id, p_first_name, p_last_name, p_suffix, p_middle_name, 
-        p_contact_number, p_address, p_birthdate, p_gender
+        p_contact_number, p_address, p_birthdate, p_gender, p_profile_picture
     );
 
     INSERT INTO alumnidetails (user_id, student_number, course_id, year_graduated) 
@@ -439,7 +534,9 @@ DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_SearchEvents`(IN p_query VARCHAR(100))
 BEGIN
     SET @term = CONCAT('%', p_query, '%');
-    SELECT e.*, p.first_name, p.last_name, p.suffix 
+    
+    
+    SELECT e.*, p.first_name, p.last_name, p.suffix, p.profile_picture 
     FROM Events e
     JOIN UserProfile p ON e.user_id = p.user_id
     WHERE (e.event_title LIKE @term 
@@ -496,4 +593,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-04-28  8:21:44
+-- Dump completed on 2026-04-29 12:02:33
