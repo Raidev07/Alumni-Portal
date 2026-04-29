@@ -163,7 +163,8 @@ CREATE TABLE `events` (
   `user_id` int(11) NOT NULL,
   `event_title` varchar(150) NOT NULL,
   `event_date` date NOT NULL,
-  `event_time` time NOT NULL,
+  `start_time` time NOT NULL,
+  `end_time` time NOT NULL,
   `location` varchar(255) NOT NULL,
   `event_type` enum('Networking','Workshop','Seminar','Reunion') NOT NULL,
   `max_attendees` int(11) DEFAULT NULL,
@@ -202,6 +203,35 @@ BEGIN
     IF NEW.registration_deadline > NEW.event_date THEN
         SIGNAL SQLSTATE '45000' 
         SET MESSAGE_TEXT = 'Error: Registration deadline cannot be later than the event date.';
+    END IF;
+END */;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'NO_ZERO_IN_DATE,NO_ZERO_DATE,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER trg_audit_event_update
+AFTER UPDATE ON events
+FOR EACH ROW
+BEGIN
+    
+    IF NEW.event_date <> OLD.event_date 
+       OR NEW.start_time <> OLD.start_time 
+       OR NEW.end_time <> OLD.end_time 
+       OR NOT (NEW.registration_deadline <=> OLD.registration_deadline) THEN
+       
+        INSERT INTO audit_logs (table_name, record_id, action_type, user_id)
+        VALUES ('events', NEW.event_id, 'UPDATE', NEW.user_id);
+        
     END IF;
 END */;;
 DELIMITER ;
@@ -248,6 +278,33 @@ LOCK TABLES `jobpostings` WRITE;
 /*!40000 ALTER TABLE `jobpostings` DISABLE KEYS */;
 /*!40000 ALTER TABLE `jobpostings` ENABLE KEYS */;
 UNLOCK TABLES;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'NO_ZERO_IN_DATE,NO_ZERO_DATE,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER trg_audit_job_update
+AFTER UPDATE ON jobpostings
+FOR EACH ROW
+BEGIN
+    
+    IF NEW.modality <> OLD.modality 
+       OR NOT (NEW.contact_email <=> OLD.contact_email) THEN
+       
+        INSERT INTO audit_logs (table_name, record_id, action_type, user_id)
+        VALUES ('jobpostings', NEW.job_id, 'UPDATE', NEW.user_id);
+        
+    END IF;
+END */;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 
 --
 -- Table structure for table `userprofile`
@@ -382,7 +439,7 @@ DELIMITER ;
 -- Dumping events for database 'alumniDB'
 --
 /*!50106 SET @save_time_zone= @@TIME_ZONE */ ;
-/*!50106 DROP EVENT IF EXISTS `evt_UpdateEventStatus` */;
+/*!50106 DROP EVENT IF EXISTS `evt_AutomateEventStatus` */;
 DELIMITER ;;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;;
@@ -394,9 +451,35 @@ DELIMITER ;;
 /*!50003 SET sql_mode              = 'NO_ZERO_IN_DATE,NO_ZERO_DATE,NO_ENGINE_SUBSTITUTION' */ ;;
 /*!50003 SET @saved_time_zone      = @@time_zone */ ;;
 /*!50003 SET time_zone             = 'SYSTEM' */ ;;
-/*!50106 CREATE*/ /*!50117 DEFINER=`root`@`localhost`*/ /*!50106 EVENT `evt_UpdateEventStatus` ON SCHEDULE EVERY 1 DAY STARTS '2026-04-28 00:00:00' ON COMPLETION NOT PRESERVE ENABLE DO UPDATE Events 
-  SET status = 'completed' 
-  WHERE event_date < CURRENT_DATE AND status = 'upcoming' */ ;;
+/*!50106 CREATE*/ /*!50117 DEFINER=`root`@`localhost`*/ /*!50106 EVENT `evt_AutomateEventStatus` ON SCHEDULE EVERY 15 MINUTE STARTS '2026-04-29 12:11:11' ON COMPLETION PRESERVE ENABLE DO BEGIN
+    
+    UPDATE events 
+    SET status = 'completed' 
+    WHERE status NOT IN ('completed', 'cancelled') 
+      AND (
+          event_date < CURRENT_DATE 
+          OR (event_date = CURRENT_DATE AND CURRENT_TIME > end_time)
+      );
+
+    
+    UPDATE events 
+    SET status = 'ongoing' 
+    WHERE status = 'upcoming' 
+      AND event_date = CURRENT_DATE 
+      AND CURRENT_TIME >= start_time 
+      AND CURRENT_TIME <= end_time;
+
+    
+    UPDATE events 
+    SET status = 'upcoming' 
+    WHERE status IN ('ongoing', 'completed')
+      AND status != 'cancelled'
+      AND (
+          event_date > CURRENT_DATE 
+          OR (event_date = CURRENT_DATE AND CURRENT_TIME < start_time)
+      );
+
+END */ ;;
 /*!50003 SET time_zone             = @saved_time_zone */ ;;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;;
@@ -593,4 +676,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-04-29 12:02:33
+-- Dump completed on 2026-04-29 12:18:53
