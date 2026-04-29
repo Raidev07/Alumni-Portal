@@ -1,3 +1,23 @@
+<?php
+session_start();
+require_once "backend/db.php";
+
+// Redirect to login if not authenticated
+if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'alumni') {
+    header("Location: login.php");
+    exit();    
+}
+
+// Fetch alumni's name
+$uid = $_SESSION['user_id'];
+$profile_stmt = $conn->prepare("SELECT first_name, last_name FROM userprofile WHERE user_id = ?");
+$profile_stmt->bind_param("i", $uid);
+$profile_stmt->execute();
+$profile_result = $profile_stmt->get_result();
+$profile = $profile_result->fetch_assoc();
+$full_name = $profile ? htmlspecialchars($profile['first_name'] . ' ' . $profile['last_name']) : 'Alumni';
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -67,8 +87,8 @@
         </div>
     </nav>
 
-
-
+    <!-- The Greeting to User -->
+    <span class="user-greeting">Welcome, <?= $full_name ?>!</span>
     <section class="header">
         <!-- Swiper Slider -->
         <div class="swipers">

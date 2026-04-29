@@ -1,3 +1,13 @@
+<?php
+$error = '';
+if (isset($_GET['error'])) {
+    if ($_GET['error'] === 'wrong_password') {
+        $error = 'Incorrect password. Please try again.';
+    } elseif ($_GET['error'] === 'user_not_found') {
+        $error = 'No account found with that email.';
+    }
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -36,6 +46,14 @@
                     </div>
 
                     <a href="#" class="login__forgot">Forgot Password?</a>
+
+                    <!-- Login Process -->
+                    <?php if ($error): ?>
+                        <div class="login__error">
+                            <i class="ri-error-warning-fill"></i>
+                            <?= htmlspecialchars($error) ?>
+                        </div>
+                    <?php endif; ?>
 
                     <button type="submit" class="login__button">
                         Log In <i class="ri-send-plane-2-fill"></i>

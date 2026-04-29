@@ -220,3 +220,23 @@ img {
         overflow: hidden;
     }
 }
+
+/* login error */
+.login__error {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background-color: #fff0f0;
+    color: #cc0000 !important;
+    border: 1px solid #ffcccc;
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 0.875rem;
+    margin-bottom: 10px;
+}
+
+.login__error i {
+    font-size: 1rem;
+    color: #cc0000 !important;
+    flex-shrink: 0;
+}
