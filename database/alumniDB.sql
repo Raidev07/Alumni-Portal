@@ -68,6 +68,27 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'NO_ZERO_IN_DATE,NO_ZERO_DATE,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER trg_PreventAlumniDetailsUpdate
+BEFORE UPDATE ON alumnidetails
+FOR EACH ROW
+BEGIN
+    SIGNAL SQLSTATE '45000'
+    SET MESSAGE_TEXT = 'Error: Alumni academic details are permanent graduate records and cannot be modified.';
+END */;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 
 --
 -- Table structure for table `audit_logs`
@@ -562,7 +583,6 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_RegisterAlumni`(
     IN p_address VARCHAR(255),
     IN p_birthdate DATE,
     IN p_gender ENUM('Male','Female'),
-    IN p_profile_picture VARCHAR(255), 
     
     IN p_student_number VARCHAR(20),
     IN p_course_id INT,
@@ -579,6 +599,7 @@ BEGIN
 
     START TRANSACTION;
 
+    
     INSERT INTO users (email, password, role) 
     VALUES (p_email, p_password, 'alumni');
 
@@ -587,13 +608,14 @@ BEGIN
     
     INSERT INTO userprofile (
         user_id, first_name, last_name, suffix, middle_name, 
-        contact_number, address, birthdate, gender, profile_picture
+        contact_number, address, birthdate, gender
     ) 
     VALUES (
         v_new_user_id, p_first_name, p_last_name, p_suffix, p_middle_name, 
-        p_contact_number, p_address, p_birthdate, p_gender, p_profile_picture
+        p_contact_number, p_address, p_birthdate, p_gender
     );
 
+    
     INSERT INTO alumnidetails (user_id, student_number, course_id, year_graduated) 
     VALUES (v_new_user_id, p_student_number, p_course_id, p_year_graduated);
 
@@ -654,7 +676,7 @@ BEGIN
     WHERE (job_title LIKE @term 
        OR company_name LIKE @term 
        OR job_description LIKE @term 
-       OR requirements LIKE @term 
+       OR requirements_qualifications LIKE @term 
        OR benefits LIKE @term 
        OR location LIKE @term 
        OR category LIKE @term)
@@ -676,4 +698,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-04-29 12:18:53
+-- Dump completed on 2026-04-30 10:14:19
