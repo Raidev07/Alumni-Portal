@@ -51,12 +51,12 @@ $full_name = $profile ? htmlspecialchars($profile['first_name'] . ' ' . $profile
         </ul>
 
         <div class="nav-right">
- 
+
             <!-- Profile Icon -->
             <a href="profile-page.php" class="profile-icon" title="My Profile">
                 <i class="fas fa-user"></i>
             </a>
- 
+
             <div class="hamburger-wrapper">
                 <button class="hamburger-btn" id="hamburgerBtn" aria-label="Open menu" aria-expanded="false">
                     <span></span>
