@@ -62,6 +62,7 @@ document.addEventListener("DOMContentLoaded", function () {
         var currentYear = new Date().getFullYear();
 
         for (var y = currentYear; y >= 2000; y--) {
+            // ← back to 2000
             var opt = document.createElement("option");
             opt.value = y;
             opt.textContent = y;
@@ -69,6 +70,24 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
+    // ========================
+    // Birthdate restriction (last 10 years)
+    // ========================
+    var birthdateInput = document.querySelector('input[name="birthdate"]');
+
+    if (birthdateInput) {
+        var today = new Date();
+
+        var maxDate = new Date(today);
+        maxDate.setFullYear(today.getFullYear() - 10); // ← must be at least 10 yrs old
+
+        var format = function (d) {
+            return d.toISOString().split("T")[0];
+        };
+
+        birthdateInput.max = format(maxDate); // latest selectable date = 10 years ago
+        // no min set — allows any older birthdate
+    }
     // ========================
     // Live Validation Events
     // ========================
@@ -80,7 +99,8 @@ document.addEventListener("DOMContentLoaded", function () {
     if (email) email.addEventListener("input", validateEmail);
     if (phone) phone.addEventListener("input", validatePhone);
     if (password) password.addEventListener("input", validatePassword);
-    if (confirmPassword) confirmPassword.addEventListener("input", validateConfirm);
+    if (confirmPassword)
+        confirmPassword.addEventListener("input", validateConfirm);
 
     // ========================
     // Remove error on focus
@@ -101,7 +121,9 @@ document.addEventListener("DOMContentLoaded", function () {
     for (var s = 0; s < sexRadios.length; s++) {
         sexRadios[s].addEventListener("change", function () {
             document.getElementById("sexWarning").style.display = "none";
-            document.querySelector('.sex__details .category').classList.remove('sex-error');
+            document
+                .querySelector(".sex__details .category")
+                .classList.remove("sex-error");
         });
     }
 
@@ -130,7 +152,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
         if (!sex) {
             document.getElementById("sexWarning").style.display = "flex";
-            document.querySelector('.sex__details .category').classList.add('sex-error');
+            document
+                .querySelector(".sex__details .category")
+                .classList.add("sex-error");
             hasError = true;
         }
 
@@ -152,7 +176,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
         if (!allPass || !match) {
             document.getElementById("password").classList.add("input-error");
-            document.getElementById("confirmPassword").classList.add("input-error");
+            document
+                .getElementById("confirmPassword")
+                .classList.add("input-error");
             hasError = true;
         }
 
@@ -169,7 +195,9 @@ document.addEventListener("DOMContentLoaded", function () {
         var formData = new FormData(form);
 
         fetch(form.action, { method: "POST", body: formData })
-            .then(function (res) { return res.json(); })
+            .then(function (res) {
+                return res.json();
+            })
             .then(function (data) {
                 submitBtn.disabled = false;
                 submitBtn.value = "Register";
@@ -181,7 +209,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         "Your account has been created. You can now log in.",
                         function () {
                             window.location.href = "login.php?registered=1";
-                        }
+                        },
                     );
                 } else {
                     var msg = data.errors.join("<br>");
@@ -195,7 +223,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     "❌",
                     "Network Error",
                     "Could not reach the server. Please check your connection and try again.",
-                    null
+                    null,
                 );
             });
     });
