@@ -80,9 +80,6 @@
       <h1 class="page-title">All Alumni Stories</h1>
       <p class="page-desc">Browse achievements, milestones, and moments from our community of graduates.</p>
     </div>
-    <a href="view_article.php" class="new-article-btn">
-      <span class="plus">+</span> New article
-    </a>
   </div>
 
   <!-- FILTER BAR -->

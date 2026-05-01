@@ -1,6 +1,5 @@
 // v MAPAPALITAN RIN ITO PAG MAY DB NA, TEMPLATE LANG MUNA FOR UI
 // v FAKE DATA MUNA (NAKA ARRAY, FIXED)
-// In terms of the "posted" variable, unsure pako kung mas madali ba kung date nalang (ie. 4/11/2026) or ung days counted itself (ie. 2 days ago)
 const events = [
     {
         id: 1,
@@ -8,7 +7,8 @@ const events = [
         organizer: "PLP Alumni Association",
         type: "Reunion",
         date: "2025-06-14",
-        time: "17:00",
+        timeStart: "17:00",
+        timeEnd: "21:00",
         location: "PLP Main Campus, Pasig",
         maxAttendees: 300,
         deadline: "2025-06-07",
@@ -22,7 +22,8 @@ const events = [
         organizer: "PLP CS & IT Alumni Chapter",
         type: "Networking",
         date: "2025-05-23",
-        time: "18:00",
+        timeStart: "18:00",
+        timeEnd: "20:30",
         location: "The Axon, Pasig",
         maxAttendees: 80,
         deadline: "2025-05-20",
@@ -36,7 +37,8 @@ const events = [
         organizer: "PLP Business Alumni",
         type: "Workshop",
         date: "2025-05-31",
-        time: "09:00",
+        timeStart: "09:00",
+        timeEnd: "12:00",
         location: "PLP AVR, Pasig",
         maxAttendees: 50,
         deadline: "2025-05-28",
@@ -50,7 +52,8 @@ const events = [
         organizer: "PLP Entrepreneurs Guild",
         type: "Seminar",
         date: "2025-06-07",
-        time: "13:00",
+        timeStart: "13:00",
+        timeEnd: "16:00",
         location: "Online (Zoom)",
         maxAttendees: 200,
         deadline: "2025-06-05",
@@ -64,7 +67,8 @@ const events = [
         organizer: "PLP Medical & Nursing Alumni",
         type: "Networking",
         date: "2025-06-21",
-        time: "16:00",
+        timeStart: "16:00",
+        timeEnd: "19:00",
         location: "The Medical City, Pasig",
         maxAttendees: 60,
         deadline: "2025-06-18",
@@ -78,7 +82,8 @@ const events = [
         organizer: "PLP Marketing Alumni",
         type: "Workshop",
         date: "2025-07-05",
-        time: "10:00",
+        timeStart: "10:00",
+        timeEnd: "13:00",
         location: "PLP Function Hall, Pasig",
         maxAttendees: 40,
         deadline: "2025-07-01",
@@ -111,6 +116,15 @@ function formatTime(timeStr) {
     return `${display}:${m} ${ampm}`;
 }
 
+// FORMAT TIME RANGE (e.g. 9:00 AM – 12:00 PM)
+function formatTimeRange(timeStart, timeEnd) {
+    const start = formatTime(timeStart);
+    const end = formatTime(timeEnd);
+    if (start === "TBD" && end === "TBD") return "TBD";
+    if (end === "TBD") return start;
+    return `${start} – ${end}`;
+}
+
 // FOR CSS TEXT BADGE CATEGORY
 function typeBadgeClass(type) {
     switch (type) {
@@ -128,9 +142,9 @@ function typeBadgeClass(type) {
 }
 
 function renderEvents() {
-    const list = document.getElementById("jobsList"); // MAIN CONTAINER (REUSED FROM JOBSSS)
-    const empty = document.getElementById("emptyState"); // EMPTY STATE MESSAGEEE
-    const query = document.getElementById("searchInput").value.toLowerCase(); // SEARCH INPUTTT
+    const list = document.getElementById("jobsList");
+    const empty = document.getElementById("emptyState");
+    const query = document.getElementById("searchInput").value.toLowerCase();
 
     // FILTER LOGIC
     const filtered = events.filter((e) => {
@@ -153,7 +167,7 @@ function renderEvents() {
 
     empty.classList.remove("show");
 
-    // GENERATEE EVENT CARDSS
+    // GENERATE EVENT CARDS
     list.innerHTML = filtered
         .map(
             (e) => `
@@ -162,12 +176,12 @@ function renderEvents() {
         <div class="job-title">${e.title}</div>
         <div class="job-company">${e.organizer}</div>
 
-        <!-- SHORT DESCRIPTIONNN (TRUNCATEDDD) -->
+        <!-- SHORT DESCRIPTION (TRUNCATED) -->
         <p class="job-desc">
           ${e.desc.length > 110 ? e.desc.slice(0, 110) + "…" : e.desc}
         </p>
 
-        <!-- EVENT META INFO (TYPE, DATE, TIME, LOCATION, SLOTS) -->
+        <!-- EVENT META INFO -->
         <div class="job-meta">
           <span class="meta-item">
             <span class="meta-icon"><i class="fa-solid fa-tag"></i></span>
@@ -181,7 +195,7 @@ function renderEvents() {
 
           <span class="meta-item">
             <span class="meta-icon"><i class="fa-regular fa-clock"></i></span>
-            ${formatTime(e.time)}
+            ${formatTimeRange(e.timeStart, e.timeEnd)}
           </span>
 
           <span class="meta-item">
@@ -196,7 +210,7 @@ function renderEvents() {
         </div>
       </div>
 
-      <!-- SEE MORE BUTTONNN (OPENS DETAIL MODALLL) -->
+      <!-- SEE MORE BUTTON (OPENS DETAIL MODAL) -->
       <button class="apply-btn" onclick="openDetail(${e.id})">See More</button>
     </div>
   `,
@@ -206,26 +220,28 @@ function renderEvents() {
 
 // OPEN EVENT DETAILS (SHOW WHEN SEE MORE BTN IS CLICKED)
 function openDetail(id) {
-    const e = events.find((x) => x.id === id); // FIND EVENT BY IDDD
+    const e = events.find((x) => x.id === id);
     if (!e) return;
 
-    //
     document.getElementById("d-type-badge").innerHTML =
         `<span class="detail-event-type-badge ${typeBadgeClass(e.type)}">${e.type}</span>`;
 
-    // BASIC INFOOO STUFF
     document.getElementById("d-title").textContent = e.title;
     document.getElementById("d-organizer").textContent = e.organizer;
 
-    // META INFO CARDS
+    // META INFO CARDS — now split into Time Start and Time End
     document.getElementById("d-meta").innerHTML = `
     <div class="detail-meta-card">
       <div class="dmc-label"><i class="fa-solid fa-calendar-days"></i> Date</div>
       <div class="dmc-value">${formatDate(e.date)}</div>
     </div>
     <div class="detail-meta-card">
-      <div class="dmc-label"><i class="fa-regular fa-clock"></i> Time</div>
-      <div class="dmc-value">${formatTime(e.time)}</div>
+      <div class="dmc-label"><i class="fa-regular fa-clock"></i> Time Start</div>
+      <div class="dmc-value">${formatTime(e.timeStart)}</div>
+    </div>
+    <div class="detail-meta-card">
+      <div class="dmc-label"><i class="fa-regular fa-clock"></i> Time End</div>
+      <div class="dmc-value">${formatTime(e.timeEnd)}</div>
     </div>
     <div class="detail-meta-card">
       <div class="dmc-label"><i class="fa-solid fa-location-dot"></i> Location</div>
@@ -245,10 +261,9 @@ function openDetail(id) {
     </div>
   `;
 
-    // EVENT DESC
     document.getElementById("d-desc").textContent = e.desc;
 
-    // REGISTER BUTTONNN (OPENS EMAIL CLIENTTT)
+    // REGISTER BUTTON (OPENS EMAIL CLIENT)
     document.getElementById("d-register").onclick = () => {
         window.open(
             "mailto:" +
@@ -258,45 +273,41 @@ function openDetail(id) {
         );
     };
 
-    // SHOW CONTAINER
     document.getElementById("detailOverlay").classList.remove("hidden");
 }
 
-// CLOSE DETAIL MODALLL
+// CLOSE DETAIL MODAL
 document.getElementById("closeDetail").addEventListener("click", () => {
     document.getElementById("detailOverlay").classList.add("hidden");
 });
 
-// OPEN POSTTT EVENT MODALL
-
+// OPEN POST EVENT MODAL
 document.getElementById("openPostBtn").addEventListener("click", () => {
     document.getElementById("postOverlay").classList.remove("hidden");
 });
 
-// CLOSE CONTAINER (CANCEL BUTTONNN)
+// CLOSE MODAL (CANCEL BUTTON)
 document.getElementById("cancelBtn").addEventListener("click", () => {
     document.getElementById("postOverlay").classList.add("hidden");
 });
 
 // POST AN EVENT FUNCTION
-// CREATES NEW JOB OBJECT AND ADDS TO ARRAYYY
 document.getElementById("postBtn").addEventListener("click", () => {
     const title = document.getElementById("f-title").value.trim();
 
-    // VALIDATIONNNS
     if (!title) {
         alert("Event title is required.");
         return;
     }
 
-    // CREATE NEW EVENT OBJECTTT
     const newEvent = {
         id: Date.now(),
         title,
         organizer: "PLP Alumni",
         type: document.getElementById("f-type").value,
         date: document.getElementById("f-date").value || "",
-        time: document.getElementById("f-time").value || "",
+        timeStart: document.getElementById("f-time-start").value || "",
+        timeEnd: document.getElementById("f-time-end").value || "",
         location: document.getElementById("f-location").value.trim() || "TBD",
         maxAttendees: parseInt(document.getElementById("f-max").value) || 0,
         deadline: document.getElementById("f-deadline").value || "",
@@ -307,14 +318,14 @@ document.getElementById("postBtn").addEventListener("click", () => {
         posted: "Just now",
     };
 
-    // ADD NEW EVENTS TO TOP OF ARRAY
     events.unshift(newEvent);
 
-    // RESETS THE FORM AFTER POSTING
+    // RESET FORM
     [
         "f-title",
         "f-date",
-        "f-time",
+        "f-time-start",
+        "f-time-end",
         "f-location",
         "f-max",
         "f-deadline",
@@ -324,12 +335,11 @@ document.getElementById("postBtn").addEventListener("click", () => {
         document.getElementById(id).value = "";
     });
 
-    // CLOSE MODAL + REFRESH LISTTT
     document.getElementById("postOverlay").classList.add("hidden");
     renderEvents();
 });
 
-// SIDEBAR FILTERSSS
+// SIDEBAR FILTERS
 document.querySelectorAll(".filter-item").forEach((el) => {
     el.addEventListener("click", () => {
         document
@@ -341,7 +351,7 @@ document.querySelectorAll(".filter-item").forEach((el) => {
     });
 });
 
-// LIVE SEARCH (PARA REAL-TIME UNG PAG SEARCH)
+// LIVE SEARCH
 document.getElementById("searchInput").addEventListener("input", renderEvents);
 
 renderEvents();

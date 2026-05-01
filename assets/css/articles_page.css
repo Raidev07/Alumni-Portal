@@ -197,10 +197,12 @@ body {
   border-radius: var(--r-sm);
   font-family: var(--font); font-size: 0.9rem; font-weight: 600;
   cursor: pointer; border: none;
-  transition: background 0.2s; white-space: nowrap;
+  transition: 0.3s;
   text-decoration: none;
 }
-.new-article-btn:hover { background: var(--g-800); }
+.new-article-btn:hover {     background: #155c30;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15); }
 .new-article-btn .plus { font-size: 1.1rem; line-height: 1; }
 
 /* ── FILTER BAR ──────────────────────────────────────────────── */

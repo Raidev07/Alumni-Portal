@@ -199,7 +199,7 @@ body {
   justify-content: center;
   gap: 6px;
   padding: 0.6rem 1.5rem;
-  border-radius: var(--r-sm);
+  border-radius: 5px;
   font-family: var(--font);
   font-size: 0.9rem;
   font-weight: 600;
@@ -217,9 +217,9 @@ body {
   border-color: var(--g-700);
 }
 .btn-primary:hover {
-  background: var(--g-800);
-  border-color: var(--g-800);
-  box-shadow: 0 4px 14px rgba(0, 110, 20, 0.25);
+    background: #155c30;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
 }
 .btn-primary:active { transform: scale(0.98); }
 

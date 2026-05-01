@@ -56,10 +56,6 @@
                     <input id="f-date" type="date">
                 </div>
                 <div class="form-group">
-                    <label for="f-time">Time</label>
-                    <input id="f-time" type="time">
-                </div>
-                <div class="form-group">
                     <label for="f-type">Event Type</label>
                     <select id="f-type">
                         <option>Networking</option>
@@ -67,6 +63,14 @@
                         <option>Seminar</option>
                         <option>Reunion</option>
                     </select>
+                </div>
+                <div class="form-group">
+                    <label for="f-time-start">Time Start</label>
+                    <input id="f-time-start" type="time">
+                </div>
+                <div class="form-group">
+                    <label for="f-time-end">Time End</label>
+                    <input id="f-time-end" type="time">
                 </div>
                 <div class="form-group">
                     <label for="f-location">Location</label>
