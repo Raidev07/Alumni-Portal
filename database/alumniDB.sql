@@ -1,529 +1,31 @@
--- MariaDB dump 10.19  Distrib 10.4.32-MariaDB, for Win64 (AMD64)
+-- phpMyAdmin SQL Dump
+-- version 5.2.1
+-- https://www.phpmyadmin.net/
 --
--- Host: localhost    Database: alumniDB
--- ------------------------------------------------------
--- Server version	10.4.32-MariaDB
+-- Host: 127.0.0.1
+-- Generation Time: May 01, 2026 at 05:50 PM
+-- Server version: 10.4.32-MariaDB
+-- PHP Version: 8.2.12
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+START TRANSACTION;
+SET time_zone = "+00:00";
+
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
 /*!40101 SET NAMES utf8mb4 */;
-/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
-/*!40103 SET TIME_ZONE='+00:00' */;
-/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
-/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
-/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
-/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `alumnidetails`
+-- Database: `alumnidb`
 --
 
-DROP TABLE IF EXISTS `alumnidetails`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `alumnidetails` (
-  `alumni_id` int(11) NOT NULL AUTO_INCREMENT,
-  `user_id` int(11) NOT NULL,
-  `student_number` varchar(20) NOT NULL,
-  `course_id` int(11) DEFAULT NULL,
-  `year_graduated` year(4) NOT NULL,
-  PRIMARY KEY (`alumni_id`),
-  UNIQUE KEY `user_id` (`user_id`),
-  UNIQUE KEY `student_number` (`student_number`),
-  KEY `course_id` (`course_id`),
-  CONSTRAINT `alumnidetails_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `alumnidetails_ibfk_2` FOREIGN KEY (`course_id`) REFERENCES `courses` (`course_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
+DELIMITER $$
 --
--- Dumping data for table `alumnidetails`
+-- Procedures
 --
-
-LOCK TABLES `alumnidetails` WRITE;
-/*!40000 ALTER TABLE `alumnidetails` DISABLE KEYS */;
-/*!40000 ALTER TABLE `alumnidetails` ENABLE KEYS */;
-UNLOCK TABLES;
-/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
-/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
-/*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8mb4 */ ;
-/*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
-/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'NO_ZERO_IN_DATE,NO_ZERO_DATE,NO_ENGINE_SUBSTITUTION' */ ;
-DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER trg_PreventDuplicateAlumni
-BEFORE INSERT ON AlumniDetails
-FOR EACH ROW
-BEGIN
-    IF EXISTS (SELECT 1 FROM AlumniDetails WHERE student_number = NEW.student_number) THEN
-        SIGNAL SQLSTATE '45000'
-        SET MESSAGE_TEXT = 'Error: This Student Number is already registered to an alumni account.';
-    END IF;
-END */;;
-DELIMITER ;
-/*!50003 SET sql_mode              = @saved_sql_mode */ ;
-/*!50003 SET character_set_client  = @saved_cs_client */ ;
-/*!50003 SET character_set_results = @saved_cs_results */ ;
-/*!50003 SET collation_connection  = @saved_col_connection */ ;
-/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
-/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
-/*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8mb4 */ ;
-/*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
-/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'NO_ZERO_IN_DATE,NO_ZERO_DATE,NO_ENGINE_SUBSTITUTION' */ ;
-DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER trg_PreventAlumniDetailsUpdate
-BEFORE UPDATE ON alumnidetails
-FOR EACH ROW
-BEGIN
-    SIGNAL SQLSTATE '45000'
-    SET MESSAGE_TEXT = 'Error: Alumni academic details are permanent graduate records and cannot be modified.';
-END */;;
-DELIMITER ;
-/*!50003 SET sql_mode              = @saved_sql_mode */ ;
-/*!50003 SET character_set_client  = @saved_cs_client */ ;
-/*!50003 SET character_set_results = @saved_cs_results */ ;
-/*!50003 SET collation_connection  = @saved_col_connection */ ;
-
---
--- Table structure for table `audit_logs`
---
-
-DROP TABLE IF EXISTS `audit_logs`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `audit_logs` (
-  `log_id` int(11) NOT NULL AUTO_INCREMENT,
-  `table_name` varchar(50) NOT NULL,
-  `record_id` int(11) NOT NULL,
-  `action_type` enum('INSERT','UPDATE','DELETE') NOT NULL,
-  `user_id` int(11) DEFAULT NULL,
-  `action_timestamp` timestamp NOT NULL DEFAULT current_timestamp(),
-  PRIMARY KEY (`log_id`),
-  KEY `user_id` (`user_id`),
-  CONSTRAINT `audit_logs_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE SET NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `audit_logs`
---
-
-LOCK TABLES `audit_logs` WRITE;
-/*!40000 ALTER TABLE `audit_logs` DISABLE KEYS */;
-/*!40000 ALTER TABLE `audit_logs` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `courses`
---
-
-DROP TABLE IF EXISTS `courses`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `courses` (
-  `course_id` int(11) NOT NULL AUTO_INCREMENT,
-  `course_name` varchar(100) NOT NULL,
-  `course_code` varchar(20) NOT NULL,
-  `department_id` int(11) DEFAULT NULL,
-  PRIMARY KEY (`course_id`),
-  UNIQUE KEY `course_code` (`course_code`),
-  KEY `department_id` (`department_id`),
-  CONSTRAINT `courses_ibfk_1` FOREIGN KEY (`department_id`) REFERENCES `departments` (`department_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `courses`
---
-
-LOCK TABLES `courses` WRITE;
-/*!40000 ALTER TABLE `courses` DISABLE KEYS */;
-INSERT INTO `courses` VALUES (1,'Bachelor of Science in Information Technology','BSIT',1),(2,'Bachelor of Science in Computer Science','BSCS',1),(3,'Bachelor of Science in Education Major in English','BSED-ENG',2),(4,'Bachelor of Science in Education Major in Filipino','BSED-FIL',2),(5,'Bachelor of Science in Education Major in Math','BSED-MATH',2),(6,'Bachelor of Science in Nursing','BSN',3),(7,'Bachelor of Science in Engineering','BSE',4),(8,'Bachelor of Science in Hospitality Management','BSHM',5),(9,'Bachelor of Science in Business and Accountancy','BSBA',6),(10,'Bachelor of Science in Psychology','BSP',7);
-/*!40000 ALTER TABLE `courses` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `departments`
---
-
-DROP TABLE IF EXISTS `departments`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `departments` (
-  `department_id` int(11) NOT NULL AUTO_INCREMENT,
-  `department_name` varchar(100) NOT NULL,
-  PRIMARY KEY (`department_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `departments`
---
-
-LOCK TABLES `departments` WRITE;
-/*!40000 ALTER TABLE `departments` DISABLE KEYS */;
-INSERT INTO `departments` VALUES (1,'CCS'),(2,'COED'),(3,'CON'),(4,'COE'),(5,'CIHM'),(6,'CBA'),(7,'CAS');
-/*!40000 ALTER TABLE `departments` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `events`
---
-
-DROP TABLE IF EXISTS `events`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `events` (
-  `event_id` int(11) NOT NULL AUTO_INCREMENT,
-  `user_id` int(11) NOT NULL,
-  `event_title` varchar(150) NOT NULL,
-  `event_date` date NOT NULL,
-  `start_time` time NOT NULL,
-  `end_time` time NOT NULL,
-  `location` varchar(255) NOT NULL,
-  `event_type` enum('Networking','Workshop','Seminar','Reunion') NOT NULL,
-  `max_attendees` int(11) DEFAULT NULL,
-  `registration_deadline` date DEFAULT NULL,
-  `contact_email` varchar(100) DEFAULT NULL,
-  `event_description` text DEFAULT NULL,
-  `status` enum('upcoming','ongoing','completed','cancelled') DEFAULT 'upcoming',
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  PRIMARY KEY (`event_id`),
-  KEY `user_id` (`user_id`),
-  CONSTRAINT `events_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `events`
---
-
-LOCK TABLES `events` WRITE;
-/*!40000 ALTER TABLE `events` DISABLE KEYS */;
-/*!40000 ALTER TABLE `events` ENABLE KEYS */;
-UNLOCK TABLES;
-/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
-/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
-/*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8mb4 */ ;
-/*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
-/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'NO_ZERO_IN_DATE,NO_ZERO_DATE,NO_ENGINE_SUBSTITUTION' */ ;
-DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER trg_CheckEventDates
-BEFORE INSERT ON Events
-FOR EACH ROW
-BEGIN
-    IF NEW.registration_deadline > NEW.event_date THEN
-        SIGNAL SQLSTATE '45000' 
-        SET MESSAGE_TEXT = 'Error: Registration deadline cannot be later than the event date.';
-    END IF;
-END */;;
-DELIMITER ;
-/*!50003 SET sql_mode              = @saved_sql_mode */ ;
-/*!50003 SET character_set_client  = @saved_cs_client */ ;
-/*!50003 SET character_set_results = @saved_cs_results */ ;
-/*!50003 SET collation_connection  = @saved_col_connection */ ;
-/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
-/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
-/*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8mb4 */ ;
-/*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
-/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'NO_ZERO_IN_DATE,NO_ZERO_DATE,NO_ENGINE_SUBSTITUTION' */ ;
-DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER trg_audit_event_update
-AFTER UPDATE ON events
-FOR EACH ROW
-BEGIN
-    
-    IF NEW.event_date <> OLD.event_date 
-       OR NEW.start_time <> OLD.start_time 
-       OR NEW.end_time <> OLD.end_time 
-       OR NOT (NEW.registration_deadline <=> OLD.registration_deadline) THEN
-       
-        INSERT INTO audit_logs (table_name, record_id, action_type, user_id)
-        VALUES ('events', NEW.event_id, 'UPDATE', NEW.user_id);
-        
-    END IF;
-END */;;
-DELIMITER ;
-/*!50003 SET sql_mode              = @saved_sql_mode */ ;
-/*!50003 SET character_set_client  = @saved_cs_client */ ;
-/*!50003 SET character_set_results = @saved_cs_results */ ;
-/*!50003 SET collation_connection  = @saved_col_connection */ ;
-
---
--- Table structure for table `jobpostings`
---
-
-DROP TABLE IF EXISTS `jobpostings`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `jobpostings` (
-  `job_id` int(11) NOT NULL AUTO_INCREMENT,
-  `user_id` int(11) NOT NULL,
-  `job_title` varchar(100) NOT NULL,
-  `company_name` varchar(100) NOT NULL,
-  `location` varchar(100) DEFAULT NULL,
-  `job_type` enum('Full-time','Part-time','Contract','Internship') NOT NULL,
-  `modality` enum('Onsite','Remote','Hybrid') NOT NULL,
-  `category` enum('Engineering','Marketing','Product','Theater','Programming','HR','Finance','Design','Operations','Other') NOT NULL,
-  `salary_range` varchar(50) DEFAULT NULL,
-  `application_link` varchar(255) DEFAULT NULL,
-  `contact_email` varchar(100) DEFAULT NULL,
-  `job_description` text NOT NULL,
-  `requirements_qualifications` text DEFAULT NULL,
-  `benefits` text DEFAULT NULL,
-  `status` enum('active','closed','archived') DEFAULT 'active',
-  `posted_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  PRIMARY KEY (`job_id`),
-  KEY `user_id` (`user_id`),
-  CONSTRAINT `jobpostings_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `jobpostings`
---
-
-LOCK TABLES `jobpostings` WRITE;
-/*!40000 ALTER TABLE `jobpostings` DISABLE KEYS */;
-/*!40000 ALTER TABLE `jobpostings` ENABLE KEYS */;
-UNLOCK TABLES;
-/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
-/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
-/*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8mb4 */ ;
-/*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
-/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'NO_ZERO_IN_DATE,NO_ZERO_DATE,NO_ENGINE_SUBSTITUTION' */ ;
-DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER trg_audit_job_update
-AFTER UPDATE ON jobpostings
-FOR EACH ROW
-BEGIN
-    
-    IF NEW.modality <> OLD.modality 
-       OR NOT (NEW.contact_email <=> OLD.contact_email) THEN
-       
-        INSERT INTO audit_logs (table_name, record_id, action_type, user_id)
-        VALUES ('jobpostings', NEW.job_id, 'UPDATE', NEW.user_id);
-        
-    END IF;
-END */;;
-DELIMITER ;
-/*!50003 SET sql_mode              = @saved_sql_mode */ ;
-/*!50003 SET character_set_client  = @saved_cs_client */ ;
-/*!50003 SET character_set_results = @saved_cs_results */ ;
-/*!50003 SET collation_connection  = @saved_col_connection */ ;
-
---
--- Table structure for table `userprofile`
---
-
-DROP TABLE IF EXISTS `userprofile`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `userprofile` (
-  `profile_id` int(11) NOT NULL AUTO_INCREMENT,
-  `user_id` int(11) NOT NULL,
-  `first_name` varchar(50) NOT NULL,
-  `last_name` varchar(50) NOT NULL,
-  `suffix` varchar(10) DEFAULT NULL,
-  `middle_name` varchar(50) DEFAULT NULL,
-  `contact_number` varchar(11) DEFAULT NULL,
-  `address` varchar(255) DEFAULT NULL,
-  `birthdate` date DEFAULT NULL,
-  `gender` enum('Male','Female') DEFAULT NULL,
-  `profile_picture` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`profile_id`),
-  UNIQUE KEY `user_id` (`user_id`),
-  CONSTRAINT `userprofile_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `userprofile`
---
-
-LOCK TABLES `userprofile` WRITE;
-/*!40000 ALTER TABLE `userprofile` DISABLE KEYS */;
-/*!40000 ALTER TABLE `userprofile` ENABLE KEYS */;
-UNLOCK TABLES;
-/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
-/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
-/*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8mb4 */ ;
-/*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
-/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'NO_ZERO_IN_DATE,NO_ZERO_DATE,NO_ENGINE_SUBSTITUTION' */ ;
-DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER trg_audit_profile_update
-AFTER UPDATE ON userprofile
-FOR EACH ROW
-BEGIN
-    INSERT INTO audit_logs (table_name, record_id, action_type, user_id)
-    VALUES ('userprofile', NEW.profile_id, 'UPDATE', NEW.user_id);
-END */;;
-DELIMITER ;
-/*!50003 SET sql_mode              = @saved_sql_mode */ ;
-/*!50003 SET character_set_client  = @saved_cs_client */ ;
-/*!50003 SET character_set_results = @saved_cs_results */ ;
-/*!50003 SET collation_connection  = @saved_col_connection */ ;
-
---
--- Table structure for table `users`
---
-
-DROP TABLE IF EXISTS `users`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `users` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `email` varchar(100) NOT NULL,
-  `password` varchar(255) NOT NULL,
-  `role` enum('alumni','admin') NOT NULL,
-  `status` enum('active','pending','inactive') DEFAULT 'pending',
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `email` (`email`),
-  KEY `idx_user_email` (`email`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `users`
---
-
-LOCK TABLES `users` WRITE;
-/*!40000 ALTER TABLE `users` DISABLE KEYS */;
-/*!40000 ALTER TABLE `users` ENABLE KEYS */;
-UNLOCK TABLES;
-/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
-/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
-/*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8mb4 */ ;
-/*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
-/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'NO_ZERO_IN_DATE,NO_ZERO_DATE,NO_ENGINE_SUBSTITUTION' */ ;
-DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER trg_audit_user_security
-AFTER UPDATE ON users
-FOR EACH ROW
-BEGIN
-    
-    IF OLD.status <> NEW.status OR OLD.role <> NEW.role THEN
-        INSERT INTO audit_logs (table_name, record_id, action_type, user_id)
-        VALUES ('users', NEW.id, 'UPDATE', NEW.id);
-    END IF;
-END */;;
-DELIMITER ;
-/*!50003 SET sql_mode              = @saved_sql_mode */ ;
-/*!50003 SET character_set_client  = @saved_cs_client */ ;
-/*!50003 SET character_set_results = @saved_cs_results */ ;
-/*!50003 SET collation_connection  = @saved_col_connection */ ;
-/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
-/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
-/*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8mb4 */ ;
-/*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
-/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'NO_ZERO_IN_DATE,NO_ZERO_DATE,NO_ENGINE_SUBSTITUTION' */ ;
-DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER trg_audit_user_delete
-BEFORE DELETE ON users
-FOR EACH ROW
-BEGIN
-    INSERT INTO audit_logs (table_name, record_id, action_type, user_id)
-    VALUES ('users', OLD.id, 'DELETE', OLD.id);
-END */;;
-DELIMITER ;
-/*!50003 SET sql_mode              = @saved_sql_mode */ ;
-/*!50003 SET character_set_client  = @saved_cs_client */ ;
-/*!50003 SET character_set_results = @saved_cs_results */ ;
-/*!50003 SET collation_connection  = @saved_col_connection */ ;
-
---
--- Dumping events for database 'alumniDB'
---
-/*!50106 SET @save_time_zone= @@TIME_ZONE */ ;
-/*!50106 DROP EVENT IF EXISTS `evt_AutomateEventStatus` */;
-DELIMITER ;;
-/*!50003 SET @saved_cs_client      = @@character_set_client */ ;;
-/*!50003 SET @saved_cs_results     = @@character_set_results */ ;;
-/*!50003 SET @saved_col_connection = @@collation_connection */ ;;
-/*!50003 SET character_set_client  = utf8mb4 */ ;;
-/*!50003 SET character_set_results = utf8mb4 */ ;;
-/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;;
-/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;;
-/*!50003 SET sql_mode              = 'NO_ZERO_IN_DATE,NO_ZERO_DATE,NO_ENGINE_SUBSTITUTION' */ ;;
-/*!50003 SET @saved_time_zone      = @@time_zone */ ;;
-/*!50003 SET time_zone             = 'SYSTEM' */ ;;
-/*!50106 CREATE*/ /*!50117 DEFINER=`root`@`localhost`*/ /*!50106 EVENT `evt_AutomateEventStatus` ON SCHEDULE EVERY 15 MINUTE STARTS '2026-04-29 12:11:11' ON COMPLETION PRESERVE ENABLE DO BEGIN
-    
-    UPDATE events 
-    SET status = 'completed' 
-    WHERE status NOT IN ('completed', 'cancelled') 
-      AND (
-          event_date < CURRENT_DATE 
-          OR (event_date = CURRENT_DATE AND CURRENT_TIME > end_time)
-      );
-
-    
-    UPDATE events 
-    SET status = 'ongoing' 
-    WHERE status = 'upcoming' 
-      AND event_date = CURRENT_DATE 
-      AND CURRENT_TIME >= start_time 
-      AND CURRENT_TIME <= end_time;
-
-    
-    UPDATE events 
-    SET status = 'upcoming' 
-    WHERE status IN ('ongoing', 'completed')
-      AND status != 'cancelled'
-      AND (
-          event_date > CURRENT_DATE 
-          OR (event_date = CURRENT_DATE AND CURRENT_TIME < start_time)
-      );
-
-END */ ;;
-/*!50003 SET time_zone             = @saved_time_zone */ ;;
-/*!50003 SET sql_mode              = @saved_sql_mode */ ;;
-/*!50003 SET character_set_client  = @saved_cs_client */ ;;
-/*!50003 SET character_set_results = @saved_cs_results */ ;;
-/*!50003 SET collation_connection  = @saved_col_connection */ ;;
-DELIMITER ;
-/*!50106 SET TIME_ZONE= @save_time_zone */ ;
-
---
--- Dumping routines for database 'alumniDB'
---
-/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'NO_ZERO_IN_DATE,NO_ZERO_DATE,NO_ENGINE_SUBSTITUTION' */ ;
-/*!50003 DROP PROCEDURE IF EXISTS `sp_FilterEvents` */;
-/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
-/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
-/*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8mb4 */ ;
-/*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
-DELIMITER ;;
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_FilterEvents`(IN p_event_type VARCHAR(50))
-BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_FilterEvents` (IN `p_event_type` VARCHAR(50))   BEGIN
     IF p_event_type = 'All' THEN
         SELECT * FROM Events WHERE status != 'cancelled' ORDER BY event_date ASC;
     ELSE
@@ -532,63 +34,17 @@ BEGIN
         AND status != 'cancelled' 
         ORDER BY event_date ASC;
     END IF;
-END ;;
-DELIMITER ;
-/*!50003 SET sql_mode              = @saved_sql_mode */ ;
-/*!50003 SET character_set_client  = @saved_cs_client */ ;
-/*!50003 SET character_set_results = @saved_cs_results */ ;
-/*!50003 SET collation_connection  = @saved_col_connection */ ;
-/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'NO_ZERO_IN_DATE,NO_ZERO_DATE,NO_ENGINE_SUBSTITUTION' */ ;
-/*!50003 DROP PROCEDURE IF EXISTS `sp_FilterJobs` */;
-/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
-/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
-/*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8mb4 */ ;
-/*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
-DELIMITER ;;
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_FilterJobs`(IN p_type VARCHAR(50), IN p_modality VARCHAR(50))
-BEGIN
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_FilterJobs` (IN `p_type` VARCHAR(50), IN `p_modality` VARCHAR(50))   BEGIN
     SELECT * FROM JobPostings
     WHERE (job_type = p_type OR p_type = 'All')
     AND (modality = p_modality OR p_modality = 'All')
     AND status = 'active'
     ORDER BY posted_at DESC;
-END ;;
-DELIMITER ;
-/*!50003 SET sql_mode              = @saved_sql_mode */ ;
-/*!50003 SET character_set_client  = @saved_cs_client */ ;
-/*!50003 SET character_set_results = @saved_cs_results */ ;
-/*!50003 SET collation_connection  = @saved_col_connection */ ;
-/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'NO_ZERO_IN_DATE,NO_ZERO_DATE,NO_ENGINE_SUBSTITUTION' */ ;
-/*!50003 DROP PROCEDURE IF EXISTS `sp_RegisterAlumni` */;
-/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
-/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
-/*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8mb4 */ ;
-/*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
-DELIMITER ;;
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_RegisterAlumni`(
-    IN p_email VARCHAR(100),
-    IN p_password VARCHAR(255),
-    
-    IN p_first_name VARCHAR(50),
-    IN p_last_name VARCHAR(50),
-    IN p_suffix VARCHAR(10),
-    IN p_middle_name VARCHAR(50), 
-    IN p_contact_number VARCHAR(11),
-    IN p_address VARCHAR(255),
-    IN p_birthdate DATE,
-    IN p_gender ENUM('Male','Female'),
-    
-    IN p_student_number VARCHAR(20),
-    IN p_course_id INT,
-    IN p_year_graduated YEAR
-)
-BEGIN
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_RegisterAlumni` (IN `p_email` VARCHAR(100), IN `p_password` VARCHAR(255), IN `p_first_name` VARCHAR(50), IN `p_last_name` VARCHAR(50), IN `p_suffix` VARCHAR(10), IN `p_middle_name` VARCHAR(50), IN `p_contact_number` VARCHAR(11), IN `p_address` VARCHAR(255), IN `p_birthdate` DATE, IN `p_gender` ENUM('Male','Female'), IN `p_student_number` VARCHAR(20), IN `p_course_id` INT, IN `p_year_graduated` YEAR)   BEGIN
     DECLARE v_new_user_id INT;
 
     DECLARE EXIT HANDLER FOR SQLEXCEPTION 
@@ -620,24 +76,9 @@ BEGIN
     VALUES (v_new_user_id, p_student_number, p_course_id, p_year_graduated);
 
     COMMIT;
-END ;;
-DELIMITER ;
-/*!50003 SET sql_mode              = @saved_sql_mode */ ;
-/*!50003 SET character_set_client  = @saved_cs_client */ ;
-/*!50003 SET character_set_results = @saved_cs_results */ ;
-/*!50003 SET collation_connection  = @saved_col_connection */ ;
-/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'NO_ZERO_IN_DATE,NO_ZERO_DATE,NO_ENGINE_SUBSTITUTION' */ ;
-/*!50003 DROP PROCEDURE IF EXISTS `sp_SearchEvents` */;
-/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
-/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
-/*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8mb4 */ ;
-/*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
-DELIMITER ;;
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_SearchEvents`(IN p_query VARCHAR(100))
-BEGIN
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_SearchEvents` (IN `p_query` VARCHAR(100))   BEGIN
     SET @term = CONCAT('%', p_query, '%');
     
     
@@ -653,24 +94,9 @@ BEGIN
        OR p.suffix LIKE @term)
     AND e.status != 'cancelled'
     ORDER BY e.event_date ASC;
-END ;;
-DELIMITER ;
-/*!50003 SET sql_mode              = @saved_sql_mode */ ;
-/*!50003 SET character_set_client  = @saved_cs_client */ ;
-/*!50003 SET character_set_results = @saved_cs_results */ ;
-/*!50003 SET collation_connection  = @saved_col_connection */ ;
-/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'NO_ZERO_IN_DATE,NO_ZERO_DATE,NO_ENGINE_SUBSTITUTION' */ ;
-/*!50003 DROP PROCEDURE IF EXISTS `sp_SearchJobs` */;
-/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
-/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
-/*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8mb4 */ ;
-/*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
-DELIMITER ;;
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_SearchJobs`(IN p_query VARCHAR(100))
-BEGIN
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_SearchJobs` (IN `p_query` VARCHAR(100))   BEGIN
     SET @term = CONCAT('%', p_query, '%');
     SELECT * FROM JobPostings
     WHERE (job_title LIKE @term 
@@ -682,20 +108,518 @@ BEGIN
        OR category LIKE @term)
     AND status = 'active'
     ORDER BY posted_at DESC;
-END ;;
-DELIMITER ;
-/*!50003 SET sql_mode              = @saved_sql_mode */ ;
-/*!50003 SET character_set_client  = @saved_cs_client */ ;
-/*!50003 SET character_set_results = @saved_cs_results */ ;
-/*!50003 SET collation_connection  = @saved_col_connection */ ;
-/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+END$$
 
-/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
-/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
-/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+DELIMITER ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `alumnidetails`
+--
+
+CREATE TABLE `alumnidetails` (
+  `alumni_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `student_number` varchar(20) NOT NULL,
+  `course_id` int(11) DEFAULT NULL,
+  `year_graduated` year(4) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `alumnidetails`
+--
+
+INSERT INTO `alumnidetails` (`alumni_id`, `user_id`, `student_number`, `course_id`, `year_graduated`) VALUES
+(1, 1, '24-00580', 1, '2024'),
+(3, 4, '13-31312', 5, '2011'),
+(4, 5, '12-31231', 4, '2023'),
+(5, 7, '43-44112', 7, '2032');
+
+--
+-- Triggers `alumnidetails`
+--
+DELIMITER $$
+CREATE TRIGGER `trg_PreventAlumniDetailsUpdate` BEFORE UPDATE ON `alumnidetails` FOR EACH ROW BEGIN
+
+    IF OLD.student_number <> NEW.student_number THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Student number cannot be modified.';
+    END IF;
+
+    IF OLD.course_id <> NEW.course_id THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Course cannot be modified.';
+    END IF;
+
+    IF OLD.year_graduated <> NEW.year_graduated THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Year graduated cannot be modified.';
+    END IF;
+
+END
+$$
+DELIMITER ;
+DELIMITER $$
+CREATE TRIGGER `trg_PreventDuplicateAlumni` BEFORE INSERT ON `alumnidetails` FOR EACH ROW BEGIN
+    IF EXISTS (SELECT 1 FROM AlumniDetails WHERE student_number = NEW.student_number) THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Error: This Student Number is already registered to an alumni account.';
+    END IF;
+END
+$$
+DELIMITER ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `audit_logs`
+--
+
+CREATE TABLE `audit_logs` (
+  `log_id` int(11) NOT NULL,
+  `table_name` varchar(50) NOT NULL,
+  `record_id` int(11) NOT NULL,
+  `action_type` enum('INSERT','UPDATE','DELETE') NOT NULL,
+  `user_id` int(11) DEFAULT NULL,
+  `action_timestamp` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `audit_logs`
+--
+
+INSERT INTO `audit_logs` (`log_id`, `table_name`, `record_id`, `action_type`, `user_id`, `action_timestamp`) VALUES
+(1, 'userprofile', 3, 'UPDATE', 4, '2026-05-01 11:30:30'),
+(2, 'users', 2, 'DELETE', NULL, '2026-05-01 14:08:00');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `courses`
+--
+
+CREATE TABLE `courses` (
+  `course_id` int(11) NOT NULL,
+  `course_name` varchar(100) NOT NULL,
+  `course_code` varchar(20) NOT NULL,
+  `department_id` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `courses`
+--
+
+INSERT INTO `courses` (`course_id`, `course_name`, `course_code`, `department_id`) VALUES
+(1, 'Bachelor of Science in Information Technology', 'BSIT', 1),
+(2, 'Bachelor of Science in Computer Science', 'BSCS', 1),
+(3, 'Bachelor of Science in Education Major in English', 'BSED-ENG', 2),
+(4, 'Bachelor of Science in Education Major in Filipino', 'BSED-FIL', 2),
+(5, 'Bachelor of Science in Education Major in Math', 'BSED-MATH', 2),
+(6, 'Bachelor of Science in Nursing', 'BSN', 3),
+(7, 'Bachelor of Science in Engineering', 'BSE', 4),
+(8, 'Bachelor of Science in Hospitality Management', 'BSHM', 5),
+(9, 'Bachelor of Science in Business and Accountancy', 'BSBA', 6),
+(10, 'Bachelor of Science in Psychology', 'BSP', 7);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `departments`
+--
+
+CREATE TABLE `departments` (
+  `department_id` int(11) NOT NULL,
+  `department_name` varchar(100) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `departments`
+--
+
+INSERT INTO `departments` (`department_id`, `department_name`) VALUES
+(1, 'CCS'),
+(2, 'COED'),
+(3, 'CON'),
+(4, 'COE'),
+(5, 'CIHM'),
+(6, 'CBA'),
+(7, 'CAS');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `events`
+--
+
+CREATE TABLE `events` (
+  `event_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `event_title` varchar(150) NOT NULL,
+  `event_date` date NOT NULL,
+  `start_time` time NOT NULL,
+  `end_time` time NOT NULL,
+  `location` varchar(255) NOT NULL,
+  `event_type` enum('Networking','Workshop','Seminar','Reunion') NOT NULL,
+  `max_attendees` int(11) DEFAULT NULL,
+  `registration_deadline` date DEFAULT NULL,
+  `contact_email` varchar(100) DEFAULT NULL,
+  `event_description` text DEFAULT NULL,
+  `status` enum('upcoming','ongoing','completed','cancelled') DEFAULT 'upcoming',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Triggers `events`
+--
+DELIMITER $$
+CREATE TRIGGER `trg_CheckEventDates` BEFORE INSERT ON `events` FOR EACH ROW BEGIN
+    IF NEW.registration_deadline > NEW.event_date THEN
+        SIGNAL SQLSTATE '45000' 
+        SET MESSAGE_TEXT = 'Error: Registration deadline cannot be later than the event date.';
+    END IF;
+END
+$$
+DELIMITER ;
+DELIMITER $$
+CREATE TRIGGER `trg_audit_event_update` AFTER UPDATE ON `events` FOR EACH ROW BEGIN
+    
+    IF NEW.event_date <> OLD.event_date 
+       OR NEW.start_time <> OLD.start_time 
+       OR NEW.end_time <> OLD.end_time 
+       OR NOT (NEW.registration_deadline <=> OLD.registration_deadline) THEN
+       
+        INSERT INTO audit_logs (table_name, record_id, action_type, user_id)
+        VALUES ('events', NEW.event_id, 'UPDATE', NEW.user_id);
+        
+    END IF;
+END
+$$
+DELIMITER ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `jobpostings`
+--
+
+CREATE TABLE `jobpostings` (
+  `job_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `job_title` varchar(100) NOT NULL,
+  `company_name` varchar(100) NOT NULL,
+  `location` varchar(100) DEFAULT NULL,
+  `job_type` enum('Full-time','Part-time','Contract','Internship') NOT NULL,
+  `modality` enum('Onsite','Remote','Hybrid') NOT NULL,
+  `category` enum('Engineering','Marketing','Product','Theater','Programming','HR','Finance','Design','Operations','Other') NOT NULL,
+  `salary_range` varchar(50) DEFAULT NULL,
+  `application_link` varchar(255) DEFAULT NULL,
+  `contact_email` varchar(100) DEFAULT NULL,
+  `job_description` text NOT NULL,
+  `requirements_qualifications` text DEFAULT NULL,
+  `benefits` text DEFAULT NULL,
+  `status` enum('active','closed','archived') DEFAULT 'active',
+  `posted_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Triggers `jobpostings`
+--
+DELIMITER $$
+CREATE TRIGGER `trg_audit_job_update` AFTER UPDATE ON `jobpostings` FOR EACH ROW BEGIN
+    
+    IF NEW.modality <> OLD.modality 
+       OR NOT (NEW.contact_email <=> OLD.contact_email) THEN
+       
+        INSERT INTO audit_logs (table_name, record_id, action_type, user_id)
+        VALUES ('jobpostings', NEW.job_id, 'UPDATE', NEW.user_id);
+        
+    END IF;
+END
+$$
+DELIMITER ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `userprofile`
+--
+
+CREATE TABLE `userprofile` (
+  `profile_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `first_name` varchar(50) NOT NULL,
+  `last_name` varchar(50) NOT NULL,
+  `suffix` varchar(10) DEFAULT NULL,
+  `middle_name` varchar(50) DEFAULT NULL,
+  `contact_number` varchar(11) DEFAULT NULL,
+  `address` varchar(255) DEFAULT NULL,
+  `birthdate` date DEFAULT NULL,
+  `gender` enum('Male','Female') DEFAULT NULL,
+  `profile_picture` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `userprofile`
+--
+
+INSERT INTO `userprofile` (`profile_id`, `user_id`, `first_name`, `last_name`, `suffix`, `middle_name`, `contact_number`, `address`, `birthdate`, `gender`, `profile_picture`) VALUES
+(1, 1, 'Vehniah', 'Samson', '', 'Perol', '09929952041', 'Callejon 2', '2006-09-11', 'Male', NULL),
+(3, 4, 'Mark Venice', 'Escalomos', 'Sr.', 'Ash', '09324424232', 'hello', '2015-10-01', 'Male', NULL),
+(4, 5, 'hello', 'john', '', 'its me', '09927756044', 'sdad', '2026-01-07', 'Male', NULL),
+(5, 7, 'Mark Venice', 'Samson', 'Sr.', 'Ash', '09927756044', 'tao', '2026-03-25', 'Male', NULL);
+
+--
+-- Triggers `userprofile`
+--
+DELIMITER $$
+CREATE TRIGGER `trg_audit_profile_update` AFTER UPDATE ON `userprofile` FOR EACH ROW BEGIN
+    INSERT INTO audit_logs (table_name, record_id, action_type, user_id)
+    VALUES ('userprofile', NEW.profile_id, 'UPDATE', NEW.user_id);
+END
+$$
+DELIMITER ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `users`
+--
+
+CREATE TABLE `users` (
+  `id` int(11) NOT NULL,
+  `email` varchar(100) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `role` enum('alumni','admin') NOT NULL,
+  `status` enum('active','pending','inactive') DEFAULT 'pending',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `users`
+--
+
+INSERT INTO `users` (`id`, `email`, `password`, `role`, `status`, `created_at`) VALUES
+(1, 'vehniahsamson11@gmail.com', '$2y$10$AVpzAFJ052lgkIMI/1sdS.uJyfq6mI0q/BKLbpXzhk8e2DEPYH.nW', 'alumni', 'pending', '2026-04-30 14:59:11'),
+(3, 'admin@plpasig.com', '$2y$10$fz/M1Ji7xtwDBRDAeL6ptOQHpKXyABKpXe98RsyvdxWUH2ks6ym6O', 'admin', 'pending', '2026-05-01 01:49:23'),
+(4, 'yehey@gmail.com', '$2y$10$1M8eAkVIzDux81flh282ZOFkwjafp0GCD0hE4ZQa.mXuH4g9RimyO', 'alumni', 'pending', '2026-05-01 01:58:40'),
+(5, 'jay.escalona.je@gmail.com', '$2y$10$EbJmsz5mIJSMX73tHb0Xv.RiLinVmW/X3llHsuigjTQBKAgKOoznK', 'alumni', 'pending', '2026-05-01 14:01:08'),
+(7, 'escalonajj11ictc.bshs2122@gmail.com', '$2y$10$ZURJzfW797KNlpCaYSrp..OHOYAT.p/lPDJsZiZjLPzXoVErXVhBK', 'alumni', 'pending', '2026-05-01 14:11:29');
+
+--
+-- Triggers `users`
+--
+DELIMITER $$
+CREATE TRIGGER `trg_audit_user_delete` BEFORE DELETE ON `users` FOR EACH ROW BEGIN
+    INSERT INTO audit_logs (table_name, record_id, action_type, user_id)
+    VALUES ('users', OLD.id, 'DELETE', OLD.id);
+END
+$$
+DELIMITER ;
+DELIMITER $$
+CREATE TRIGGER `trg_audit_user_security` AFTER UPDATE ON `users` FOR EACH ROW BEGIN
+    
+    IF OLD.status <> NEW.status OR OLD.role <> NEW.role THEN
+        INSERT INTO audit_logs (table_name, record_id, action_type, user_id)
+        VALUES ('users', NEW.id, 'UPDATE', NEW.id);
+    END IF;
+END
+$$
+DELIMITER ;
+
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `alumnidetails`
+--
+ALTER TABLE `alumnidetails`
+  ADD PRIMARY KEY (`alumni_id`),
+  ADD UNIQUE KEY `user_id` (`user_id`),
+  ADD UNIQUE KEY `student_number` (`student_number`),
+  ADD KEY `course_id` (`course_id`);
+
+--
+-- Indexes for table `audit_logs`
+--
+ALTER TABLE `audit_logs`
+  ADD PRIMARY KEY (`log_id`),
+  ADD KEY `user_id` (`user_id`);
+
+--
+-- Indexes for table `courses`
+--
+ALTER TABLE `courses`
+  ADD PRIMARY KEY (`course_id`),
+  ADD UNIQUE KEY `course_code` (`course_code`),
+  ADD KEY `department_id` (`department_id`);
+
+--
+-- Indexes for table `departments`
+--
+ALTER TABLE `departments`
+  ADD PRIMARY KEY (`department_id`);
+
+--
+-- Indexes for table `events`
+--
+ALTER TABLE `events`
+  ADD PRIMARY KEY (`event_id`),
+  ADD KEY `user_id` (`user_id`);
+
+--
+-- Indexes for table `jobpostings`
+--
+ALTER TABLE `jobpostings`
+  ADD PRIMARY KEY (`job_id`),
+  ADD KEY `user_id` (`user_id`);
+
+--
+-- Indexes for table `userprofile`
+--
+ALTER TABLE `userprofile`
+  ADD PRIMARY KEY (`profile_id`),
+  ADD UNIQUE KEY `user_id` (`user_id`);
+
+--
+-- Indexes for table `users`
+--
+ALTER TABLE `users`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `email` (`email`),
+  ADD KEY `idx_user_email` (`email`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `alumnidetails`
+--
+ALTER TABLE `alumnidetails`
+  MODIFY `alumni_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT for table `audit_logs`
+--
+ALTER TABLE `audit_logs`
+  MODIFY `log_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `courses`
+--
+ALTER TABLE `courses`
+  MODIFY `course_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+
+--
+-- AUTO_INCREMENT for table `departments`
+--
+ALTER TABLE `departments`
+  MODIFY `department_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+
+--
+-- AUTO_INCREMENT for table `events`
+--
+ALTER TABLE `events`
+  MODIFY `event_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `jobpostings`
+--
+ALTER TABLE `jobpostings`
+  MODIFY `job_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `userprofile`
+--
+ALTER TABLE `userprofile`
+  MODIFY `profile_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT for table `users`
+--
+ALTER TABLE `users`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `alumnidetails`
+--
+ALTER TABLE `alumnidetails`
+  ADD CONSTRAINT `alumnidetails_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `alumnidetails_ibfk_2` FOREIGN KEY (`course_id`) REFERENCES `courses` (`course_id`);
+
+--
+-- Constraints for table `audit_logs`
+--
+ALTER TABLE `audit_logs`
+  ADD CONSTRAINT `audit_logs_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE SET NULL;
+
+--
+-- Constraints for table `courses`
+--
+ALTER TABLE `courses`
+  ADD CONSTRAINT `courses_ibfk_1` FOREIGN KEY (`department_id`) REFERENCES `departments` (`department_id`);
+
+--
+-- Constraints for table `events`
+--
+ALTER TABLE `events`
+  ADD CONSTRAINT `events_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `jobpostings`
+--
+ALTER TABLE `jobpostings`
+  ADD CONSTRAINT `jobpostings_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `userprofile`
+--
+ALTER TABLE `userprofile`
+  ADD CONSTRAINT `userprofile_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+
+DELIMITER $$
+--
+-- Events
+--
+CREATE DEFINER=`root`@`localhost` EVENT `evt_AutomateEventStatus` ON SCHEDULE EVERY 15 MINUTE STARTS '2026-04-29 12:11:11' ON COMPLETION PRESERVE ENABLE DO BEGIN
+    
+    UPDATE events 
+    SET status = 'completed' 
+    WHERE status NOT IN ('completed', 'cancelled') 
+      AND (
+          event_date < CURRENT_DATE 
+          OR (event_date = CURRENT_DATE AND CURRENT_TIME > end_time)
+      );
+
+    
+    UPDATE events 
+    SET status = 'ongoing' 
+    WHERE status = 'upcoming' 
+      AND event_date = CURRENT_DATE 
+      AND CURRENT_TIME >= start_time 
+      AND CURRENT_TIME <= end_time;
+
+    
+    UPDATE events 
+    SET status = 'upcoming' 
+    WHERE status IN ('ongoing', 'completed')
+      AND status != 'cancelled'
+      AND (
+          event_date > CURRENT_DATE 
+          OR (event_date = CURRENT_DATE AND CURRENT_TIME < start_time)
+      );
+
+END$$
+
+DELIMITER ;
+COMMIT;
+
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
-
--- Dump completed on 2026-04-30 10:14:19
