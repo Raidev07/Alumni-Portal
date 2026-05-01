@@ -16,7 +16,6 @@ unset($_SESSION['reg_errors'], $_SESSION['reg_old']);
     <link rel="icon" href="assets/image/alumni-logo.png" />
     <link rel="stylesheet" href="assets/css/style.css" />
     <link rel="stylesheet" type="text/css" href="assets/css/registration_style.css" />
-    <link rel="stylesheet" href="assets/css/signUpDialog_style.css" />
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet" />
     <title>Alumni Registration</title>
 </head>
@@ -62,7 +61,7 @@ unset($_SESSION['reg_errors'], $_SESSION['reg_old']);
                 <?php endforeach; ?>
             </div>
         <?php endif; ?>
-            <form action="backend/register_process.php" method="POST" novalidate>
+        <form action="backend/register_process.php" method="POST" novalidate>
             <div class="user__details">
                 <div class="input__box">
                     <span class="details">School ID</span>
@@ -223,21 +222,6 @@ unset($_SESSION['reg_errors'], $_SESSION['reg_old']);
             </div>
         </form>
     </div>
-
-    <dialog id="signUpDialog">
-        <div class="title">Sign Up As...</div>
-        <div class="registerButtons">
-            <button onclick="window.location.href = 'student_form.php'">
-                Register As Student
-            </button>
-            <button onclick="window.location.href = 'alumni_form.php'">
-                Register As Alumni
-            </button>
-        </div>
-        <button id="closeButton" onclick="document.getElementById('signUpDialog').close()">
-            Close
-        </button>
-    </dialog>
 
     <!-- Error/Success Modal -->
     <div id="regModal"

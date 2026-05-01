@@ -19,13 +19,6 @@ $year_graduated = (int) ($_POST['yearEnrolled'] ?? 0);
 $raw_password = $_POST['password'] ?? '';
 $confirm_pass = $_POST['confirmPassword'] ?? '';
 
-// detect role
-if (isset($_POST['yearLevel'])) {
-    $role = "student";
-} else {
-    $role = "alumni";
-}
-
 // ─── Validation ──────────────────────────────────────────────────────────────
 $errors = [];
 
@@ -57,12 +50,6 @@ if (!empty($errors)) {
     echo json_encode(['success' => false, 'errors' => $errors]);
     exit;
 }
-// Ni Comment ko kasi d ako sure if tatanggalin gumawa na kasi ng stored procedure si Sam (May delete on the future)
-// $sql = "INSERT INTO users 
-// (student_id, first_name, middle_name, last_name, email, password, role)
-// VALUES 
-// ('$student_id','$first_name','$middle_name','$last_name','$email','$password','$role')";
-
 
 // ─── Hash password ───────────────────────────────────────────────────────────
 $hashed_password = password_hash($raw_password, PASSWORD_DEFAULT);
@@ -127,9 +114,4 @@ try {
     echo json_encode(['success' => false, 'errors' => [$errMsg]]);
 }
 
-// if ($conn->query($sql) === TRUE) {
-//     header("Location: ../login.php");
-// } else {
-//     echo "Error: " . $conn->error;
-// }
 ?>

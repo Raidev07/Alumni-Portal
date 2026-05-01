@@ -5,7 +5,7 @@ require_once "backend/db.php";
 // Redirect to login if not authenticated
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'alumni') {
     header("Location: login.php");
-    exit();    
+    exit();
 }
 
 // Fetch alumni's name
@@ -27,7 +27,6 @@ $full_name = $profile ? htmlspecialchars($profile['first_name'] . ' ' . $profile
     <title>Alumni Portal</title>
     <link rel="icon" href="assets/image/alumni-logo.png">
     <link rel="stylesheet" href="assets/css/alumni_homepage.css">
-    <link rel="stylesheet" href="assets/css/signUpDialog_style.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
@@ -47,7 +46,7 @@ $full_name = $profile ? htmlspecialchars($profile['first_name'] . ' ' . $profile
             <li><a href="alumni_homepage.php" class="active">Home</a></li>
             <li><a href="jobs.php">Jobs</a></li>
             <li><a href="events.php">Events</a></li>
-            <li><a href="articles_page.php">Highlights</a></li> 
+            <li><a href="articles_page.php">Highlights</a></li>
         </ul>
 
         <div class="nav-right">
@@ -63,24 +62,24 @@ $full_name = $profile ? htmlspecialchars($profile['first_name'] . ' ' . $profile
                     <span></span>
                     <span></span>
                 </button>
-                
+
                 <div class="hamburger-dropdown" id="hamburgerDropdown">
                     <ul>
-                    <li>
-                        <a href="contact.php">
-                        <i class="fas fa-envelope"></i> Contact Us
-                        </a>
-                    </li>
-                    <li class="dropdown-divider-top">
-                        <a href="#" id="logoutTrigger">
-                        <i class="fas fa-sign-out-alt"></i> Logout
-                        </a>
-                    </li>
+                        <li>
+                            <a href="contact.php">
+                                <i class="fas fa-envelope"></i> Contact Us
+                            </a>
+                        </li>
+                        <li class="dropdown-divider-top">
+                            <a href="#" id="logoutTrigger">
+                                <i class="fas fa-sign-out-alt"></i> Logout
+                            </a>
+                        </li>
                     </ul>
                 </div>
-                </div>
+            </div>
 
- 
+
             <a href="#" class="logo-link2">
                 <img src="assets/image/plplogo.png" alt="PLP Logo">
             </a>
@@ -347,17 +346,17 @@ $full_name = $profile ? htmlspecialchars($profile['first_name'] . ' ' . $profile
         </div>
     </footer>
     <div class="logout-overlay" id="logoutOverlay" role="dialog" aria-modal="true" aria-labelledby="logoutTitle">
-    <div class="logout-modal">
-        <div class="logout-modal-icon">
-        <i class="fas fa-sign-out-alt"></i>
+        <div class="logout-modal">
+            <div class="logout-modal-icon">
+                <i class="fas fa-sign-out-alt"></i>
+            </div>
+            <h3 id="logoutTitle">Logging out?</h3>
+            <p>Are you sure you want to log out of your account?</p>
+            <div class="logout-modal-btns">
+                <button class="logout-btn-no" id="logoutNo">Cancel</button>
+                <button class="logout-btn-yes" id="logoutYes">Yes, log out</button>
+            </div>
         </div>
-        <h3 id="logoutTitle">Logging out?</h3>
-        <p>Are you sure you want to log out of your account?</p>
-        <div class="logout-modal-btns">
-        <button class="logout-btn-no" id="logoutNo">Cancel</button>
-        <button class="logout-btn-yes" id="logoutYes">Yes, log out</button>
-        </div>
-    </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
     <script src="assets/js/alumni_homepage.js"></script>

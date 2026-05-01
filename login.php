@@ -17,7 +17,6 @@ if (isset($_GET['error'])) {
     <title>Alumni Login</title>
     <link rel="icon" href="assets/image/alumni-logo.png">
     <link rel="stylesheet" href="assets/css/login.css">
-    <link rel="stylesheet" href="assets/css/signUpDialog_style.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
 </head>
@@ -61,8 +60,7 @@ if (isset($_GET['error'])) {
 
                     <p class="login__sign">
                         Don't have an account?
-                        <a href="#" id="openSignUp"
-                            onclick="document.getElementById('signUpDialog').showModal(); return false;">
+                        <a href="DPA.php">
                             Sign Up
                         </a>
                     </p>
@@ -74,21 +72,6 @@ if (isset($_GET['error'])) {
             </div>
         </div>
     </section>
-
-    <dialog id="signUpDialog">
-        <div class="title">Sign Up As...</div>
-        <div class="registerButtons">
-            <button onclick="window.location.href = 'student_form.php'">
-                Register As Student
-            </button>
-            <button onclick="window.location.href = 'alumni_form.php'">
-                Register As Alumni
-            </button>
-        </div>
-        <button id="closeButton" onclick="document.getElementById('signUpDialog').close()">
-            Close
-        </button>
-    </dialog>
 
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.1/dist/gsap.min.js"></script>
     <script src="assets/js/login.js"></script>
