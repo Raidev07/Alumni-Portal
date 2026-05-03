@@ -12,6 +12,18 @@
 </head>
 
 <body>
+<?php
+session_start();
+// Pass session data to JavaScript safely
+$loggedIn = isset($_SESSION['user_id']) ? 'true' : 'false';
+$userId   = isset($_SESSION['user_id']) ? (int)$_SESSION['user_id'] : 0;
+?>
+
+<!-- Inject session info for JS -->
+<script>
+    const SESSION_LOGGED_IN = <?= $loggedIn ?>;
+    const SESSION_USER_ID   = <?= $userId ?>;
+</script>
 
     <nav class="navbar" id="navbar">
         <div class="nav-left">
@@ -26,12 +38,14 @@
             <li><a href="jobs.php" class="active">Jobs</a></li>
             <li><a href="events.php">Events</a></li>
         </ul>
-<div class="nav-right">
+        <div class="nav-right">
             <div class="btns">
-                <button class="btn" onclick="window.location.href = 'login.php'">Login</button>
-                <button class="btn" onclick="window.location.href = 'DPA.php'">
-                    Signup
-                </button>
+                <?php if (isset($_SESSION['user_id'])): ?>
+                    <button class="btn" onclick="window.location.href='logout.php'">Logout</button>
+                <?php else: ?>
+                    <button class="btn" onclick="window.location.href='login.php'">Login</button>
+                    <button class="btn" onclick="window.location.href='DPA.php'">Signup</button>
+                <?php endif; ?>
             </div>
             <a href="#" class="logo-link2"><img src="assets/image/plplogo.png" alt="PLP Logo"></a>
         </div>
@@ -124,7 +138,7 @@
         </div>
     </div>
 
-    <!--------- JOB DETAIL CONTAINER OVERLAY (SEE MORE BUTTON) ------------>
+    <!--------- JOB DETAIL CONTAINER OVERLAY ------------>
     <div class="detail-overlay hidden" id="detailOverlay">
         <div class="detail-job">
             <div class="detail-header">
@@ -161,9 +175,16 @@
                 <h1>Job Board</h1>
                 <p class="subtitle">Explore opportunities with alumni networks</p>
             </div>
+            <!-- Only show "Post a Job" button if logged in -->
+            <?php if (isset($_SESSION['user_id'])): ?>
             <button class="create-btn" id="openPostBtn">
                 <i class="fa-solid fa-plus"></i> Post a Job
             </button>
+            <?php else: ?>
+            <button class="create-btn" onclick="window.location.href='login.php'">
+                <i class="fa-solid fa-plus"></i> Login to Post
+            </button>
+            <?php endif; ?>
         </div>
 
         <div class="layout">
@@ -188,7 +209,7 @@
             </main>
         </div>
     </div>
-    
+
     <script src="assets/js/jobscript.js"></script>
 </body>
 </html>
