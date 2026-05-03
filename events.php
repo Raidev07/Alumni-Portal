@@ -1,3 +1,15 @@
+<?php
+// events.php — root level
+// Sessions are started here; login_process.php must use the same session_start()
+session_start();
+
+$isLoggedIn = isset($_SESSION['user_id']) ? 'true' : 'false';
+
+$userName = '';
+if (!empty($_SESSION['first_name'])) {
+    $userName = htmlspecialchars($_SESSION['first_name'], ENT_QUOTES, 'UTF-8');
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -15,8 +27,9 @@
 
     <nav class="navbar" id="navbar">
         <div class="nav-left">
-            <a href="https://plpasig.edu.ph/" class="logo-link1"><img src="assets/image/alumni-logo.png"
-                    alt="Alumni Logo"></a>
+            <a href="https://plpasig.edu.ph/" class="logo-link1">
+                <img src="assets/image/alumni-logo.png" alt="Alumni Logo">
+            </a>
             <div class="title">
                 <div>Pamantasan ng Lungsod ng Pasig</div>
                 <div>ALUMNI</div>
@@ -29,14 +42,26 @@
         </ul>
         <div class="nav-right">
             <div class="btns">
-                <button class="btn" onclick="window.location.href = 'login.php'">Login</button>
-                <button class="btn" onclick="window.location.href = 'DPA.php'">
-                    Signup
-                </button>
+                <?php if (isset($_SESSION['user_id'])): ?>
+                    <?php if ($userName): ?>
+                        <span class="btn" style="cursor:default;">Hi, <?= $userName ?>!</span>
+                    <?php endif; ?>
+                    <button class="btn" onclick="window.location.href='logout.php'">Logout</button>
+                <?php else: ?>
+                    <button class="btn" onclick="window.location.href='login.php'">Login</button>
+                    <button class="btn" onclick="window.location.href='DPA.php'">Signup</button>
+                <?php endif; ?>
             </div>
-            <a href="#" class="logo-link2"><img src="assets/image/plplogo.png" alt="PLP Logo"></a>
+            <a href="#" class="logo-link2">
+                <img src="assets/image/plplogo.png" alt="PLP Logo">
+            </a>
         </div>
     </nav>
+
+    <!-- Pass login state to JavaScript -->
+    <script>
+        window.isLoggedIn = <?= $isLoggedIn ?>;
+    </script>
 
     <!-- POST EVENT MODAL OVERLAY -->
     <div class="overlay hidden" id="postOverlay">
@@ -147,7 +172,7 @@
             <main class="main">
                 <div class="search-row">
                     <input type="text" id="searchInput" placeholder="Search by title or location...">
-                    <button onclick="renderEvents()">Search</button>
+                    <button onclick="fetchEvents()">Search</button>
                 </div>
                 <div id="jobsList"></div>
                 <div class="empty-state" id="emptyState">
