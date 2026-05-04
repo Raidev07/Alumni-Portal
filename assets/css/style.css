@@ -276,6 +276,15 @@ body {
     display: none;
 }
 
+.login-prmpt {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    width: 100%;
+    margin-top: 20px;
+}
+
 /* COMMUNITY */
 .section {
     padding-block: 5em;

@@ -45,7 +45,7 @@
                     <li class="user-header text-bg-primary"> <img src="img/user.webp" class="rounded-circle shadow" alt="User Image">
                         <p>Admin<small>Alumni Associasion</small></p>
                     </li>
-                    <li class="user-footer"> <a href="profile.php" class="btn btn-default btn-flat"><i class="bi bi-person"></i>&nbsp; Profile</a> <a href="#" class="btn btn-default btn-flat float-end" onclick="logout()"><i class="nav-icon bi bi-box-arrow-in-right"></i>&nbsp; Sign out</a> </li>
+                    <li class="user-footer"> <a href="profile.php" class="btn btn-default btn-flat"><i class="bi bi-person"></i>&nbsp; Profile</a> <a href="#" class="btn btn-default btn-flat float-end" onclick="logout(event)"><i class="nav-icon bi bi-box-arrow-in-right"></i>&nbsp; Sign out</a> </li>
                 </ul>
             </li>
         </ul>

@@ -15,30 +15,9 @@
 
 <body>
     <!-- NAVBAR -->
-    <nav class="navbar" id="navbar">
-        <div class="nav-left">
-            <a href="#" class="logo-link1"><img src="assets/image/alumni-logo.png" alt="Alumni Logo"></a>
-            <div class="title">
-                <div>Pamantasan ng Lungsod ng Pasig</div>
-                <div>ALUMNI</div>
-            </div>
-        </div>
-
-        <ul class="nav-links">
-            <li><a href="index.php">Home</a></li>
-            <li><a href="jobs.php">Jobs</a></li>
-            <li><a href="events.php">Events</a></li>
-        </ul>
-        <div class="nav-right"> 
-            <div class="btns">
-                <button class="btn" onclick="window.location.href = 'login.php'">Login</button>
-                <button class="btn" onclick="window.location.href = 'DPA.php'">
-                    Signup
-                </button>
-            </div>
-            <a href="#" class="logo-link2"><img src="assets/image/plplogo.png" alt="PLP Logo"></a>
-        </div>
-    </nav>
+    <?php
+    include('includes/navbarindex.php');
+    ?>
 
     <!-- MAP -->
     <section class="location">

@@ -1,3 +1,45 @@
+<?php
+header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
+header("Pragma: no-cache");
+header("Expires: 0");
+
+session_start();
+require_once "backend/db.php";
+
+$isLoggedIn = isset($_SESSION['user_id']);
+$uid = $isLoggedIn ? $_SESSION['user_id'] : null;
+
+$query = "SELECT COUNT(*) AS total_alumni FROM users WHERE role = 'alumni'";
+$result = mysqli_query($conn, $query);
+
+$total_alumni = 0;
+if ($result) {
+    $row = mysqli_fetch_assoc($result);
+    $total_alumni = $row['total_alumni'] ?? 0;
+}
+
+$full_name = 'Guest';
+
+if ($isLoggedIn) {
+    $profile_stmt = $conn->prepare("
+        SELECT first_name, last_name 
+        FROM userprofile 
+        WHERE user_id = ?
+    ");
+
+    if ($profile_stmt) {
+        $profile_stmt->bind_param("i", $uid);
+        $profile_stmt->execute();
+        $profile_result = $profile_stmt->get_result();
+        $profile = $profile_result->fetch_assoc();
+
+        if ($profile) {
+            $full_name = ucfirst($profile['first_name']) . ' ' . ucfirst($profile['last_name']);
+        }
+    }
+}
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -7,39 +49,19 @@
     <title>Alumni Portal</title>
     <link rel="icon" href="assets/image/alumni-logo.png">
     <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/alumni_homepage.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
 </head>
 
 <body>
-    <nav class="navbar" id="navbar">
-        <div class="nav-left">
-            <a href="#" class="logo-link1"><img src="assets/image/alumni-logo.png" alt="alumni Logo"></a>
-            <div class="title">
-                <div>Pamantasan ng Lungsod ng Pasig</div>
-                <div>ALUMNI</div>
-            </div>
-        </div>
-
-        <ul class="nav-links">
-            <li><a href="index.php" class="active">Home</a></li>
-            <li><a href="jobs.php">Jobs</a></li>
-            <li><a href="events.php">Events</a></li>
-            <li><a href="DPA.php">Highlights</a></li>
-        </ul>
-
-        <div class="nav-right">
-            <div class="btns">
-                <button class="btn" onclick="window.location.href = 'login.php'">Login</button>
-                <button class="btn" onclick="window.location.href = 'DPA.php'">
-                    Signup
-                </button>
-            </div>
-            <a href="#" class="logo-link2"><img src="assets/image/plplogo.png" alt="PLP Logo"></a>
-        </div>
-    </nav>
-
+    <?php
+    if ($isLoggedIn) {
+        include('includes/navbarhome.php'); 
+    } else {
+        include('includes/navbarindex.php');
+    } ?>
 
     <section class="header">
         <!-- Swiper Slider -->
@@ -50,28 +72,51 @@
                     <!-- Slide 1 -->
                     <div class="swiper-slide">
                         <div class="slide-content1">
-                            <h1>Welcome to PLP’s Alumni Page</h1>
+                            <h1><?= $isLoggedIn
+                                    ? "Welcome Back, " . htmlspecialchars($full_name)
+                                    : "Welcome to PLP’s Alumni Page"
+                                ?>
+                            </h1>
                             <p>
-                                Join our vibrant alumni community. Connect, share experiences,
-                                and build lasting relationships with graduates from around the world.
+                                <?= $isLoggedIn
+                                    ? "Explore jobs, events, and updates from the PLP community."
+                                    : "Join our vibrant alumni community. Connect, share experiences, and build lasting relationships with graduates from around the world."
+                                ?>
                             </p>
-                            <!-- <a href="#" class="btn">Join now</a> -->
+                            <?php if (!$isLoggedIn): ?>
+                                <div class="login-prmpt">
+                                    <p>Already have an account? <a href="login.php" class="btn">Join now</a></p>
+                                </div>
+                            <?php endif; ?>
                         </div>
                     </div>
 
                     <!-- Slide 2 -->
                     <div class="swiper-slide">
                         <div class="slide-content2">
-                            <h1>Register Your Alumni Profile</h1>
+                            <h1>
+                                <?= $isLoggedIn ? "Your Alumni Hub" : "Register Your Alumni Profile" ?>
+                            </h1>
                             <p>
-                                Access exclusive features, update your profile, and stay informed about alumni events.
+                                <?= $isLoggedIn
+                                    ? "Manage your profile, explore opportunities, and stay connected."
+                                    : "Access exclusive features, update your profile, and stay informed about alumni events."
+                                ?>
                             </p>
                             <ul>
-                                <li><i class="fas fa-check-circle"></i> Alumni Card Application</li>
-                                <li><i class="fas fa-check-circle"></i> Yearbook Claiming Application</li>
-                                <li><i class="fas fa-check-circle"></i> 2-in-1 Package</li>
+                                <?php if ($isLoggedIn): ?>
+                                    <li><i class="fas fa-check-circle"></i> Update Your Profile Information</li>
+                                    <li><i class="fas fa-check-circle"></i> Browse Job Opportunities</li>
+                                    <li><i class="fas fa-check-circle"></i> Check Upcoming Events</li>
+                                <?php else: ?>
+                                    <li><i class="fas fa-check-circle"></i> Alumni Card Application</li>
+                                    <li><i class="fas fa-check-circle"></i> Yearbook Claiming Application</li>
+                                    <li><i class="fas fa-check-circle"></i> 2-in-1 Package</li>
+                                <?php endif; ?>
                             </ul>
-                            <a href="#" class="btn">Sign Up</a>
+                            <a href="<?= $isLoggedIn ? 'jobs.php' : 'DPA.php' ?>" class="btn">
+                                <?= $isLoggedIn ? "View Latest Jobs" : "Sign Up" ?>
+                            </a>
                         </div>
                     </div>
 
@@ -92,10 +137,9 @@
         <div class="project-container">
             <div onclick="window.location.href='https://github.com/Raidev07' " class="project-box">
                 <i class="uil uil-briefcase-alt"></i>
-                <h3>10,000+ Members</h3>
+                <h3> <?= number_format($total_alumni) ?>+ Members</h3>
                 <label>Alumni</label>
             </div>
-            </a>
             <div onclick="window.location.href='https://www.facebook.com/jb.vasquezrollamas'" class="project-box">
                 <i class="uil uil-users-alt"></i>
                 <h3>100+ Events</h3>
@@ -252,55 +296,12 @@
         </div>
     </section>
 
-    <!-- footer -->
-
-    <footer class="footer">
-        <div class="footer-container">
-
-            <!-- Left: Logo + About -->
-            <div class="footer-section">
-                <img src="assets/image/alumni-logo.png" alt="Alumni Logo" class="footer-logo">
-                <h3>PLP Alumni Portal</h3>
-                <p>
-                    Connecting graduates of Pamantasan ng Lungsod ng Pasig.
-                    Stay updated with events, jobs, and alumni activities.
-                </p>
-            </div>
-
-            <!-- Middle: Links -->
-            <div class="footer-section">
-                <h4>Quick Links</h4>
-                <ul>
-                    <li><a href="index.php">Home</a></li>
-                    <li><a href="jobs.php">Jobs</a></li>
-                    <li><a href="events.php">Events</a></li>
-                    <li><a href="contact.php">Contact</a></li>
-                </ul>
-            </div>
-
-            <!-- Right: Contact -->
-            <div class="footer-section">
-                <h4>Contact</h4>
-                <p>Email: alumni@plpasig.edu.ph</p>
-                <p>Phone: +63 912 345 6789</p>
-
-                <div class="socials">
-                    <a href="#"><i class="fab fa-facebook-f"></i></a>
-                    <a href="#"><i class="fab fa-twitter"></i></a>
-                    <a href="#"><i class="fab fa-linkedin-in"></i></a>
-                </div>
-            </div>
-
-        </div>
-
-        <!-- Bottom -->
-        <div class="footer-bottom">
-            <p>© 2026 PLP Alumni Portal | All Rights Reserved</p>
-        </div>
-    </footer>
+    <?php include('includes/footer.php'); ?>
+    <?php include('includes/logoutmodal.php'); ?>
 
     <script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
     <script src="assets/js/script.js"></script>
+    <script src="assets/js/alumni_homepage.js"></script>
 </body>
 
 </html>

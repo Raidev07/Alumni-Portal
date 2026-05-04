@@ -65,7 +65,7 @@ a {
 img {
     display: block;
     max-width: 100%;
-    height: auto;
+    height: 37rem;
 }
 
 /*=============== LOGIN ===============*/
@@ -109,11 +109,12 @@ img {
     border-radius: 4rem;
     display: flex;
     align-items: center;
+    padding: 0 1rem;
 }
 
 .login__icon {
     position: absolute;
-    left: 1.25rem;
+    left: 1rem;
     font-size: 1.5rem;
     font-weight: initial;
 }
@@ -125,11 +126,11 @@ img {
 }
 
 .login__input {
-    width: 100%;
+    width: 97%;
     height: 100%;
-    margin-left: 3.25rem;
     font-weight: 600;
-    z-index: 2;
+    padding-left: 3.25rem;
+    padding-right: 3rem;
     background: transparent;
     color: var(--title-color);
 }
@@ -239,4 +240,59 @@ img {
     font-size: 1rem;
     color: #cc0000 !important;
     flex-shrink: 0;
+}
+
+.login__toggle {
+    position: absolute;
+    right: 1.25rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    font-size: 1.3rem;
+    color: var(--text-color);
+    z-index: 10;
+}
+
+.back__home{
+    position: fixed;
+    top: 25px;
+    left: 25px;
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    padding: .85rem 1.2rem;
+    border-radius: 50px;
+
+    background: rgba(255,255,255,0.15);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+
+    border: 1px solid rgba(255,255,255,0.2);
+
+    color: #222;
+    font-weight: 600;
+    font-size: .95rem;
+
+    box-shadow:
+        0 8px 32px rgba(0,0,0,.12),
+        inset 0 1px 1px rgba(255,255,255,.2);
+
+    z-index: 999;
+    transition: all .3s ease;
+}
+
+.back__home i{
+    font-size: 1.2rem;
+}
+
+.back__home:hover{
+    transform: translateY(-3px) scale(1.03);
+    background: #28a745;
+    color: #fff;
+
+    box-shadow:
+        0 12px 25px rgba(40,167,69,.35);
 }

@@ -41,6 +41,10 @@ if (isset($_GET['error'])) {
                             <input type="password" name="password" autocomplete="current-password" required
                                 placeholder=" " class="login__input" id="password">
                             <label for="password" class="login__label">Password</label>
+
+                            <span class="login__toggle" id="togglePassword">
+                                <i class="ri-eye-line"></i>
+                            </span>
                         </div>
                     </div>
 
@@ -68,13 +72,33 @@ if (isset($_GET['error'])) {
             </div>
 
             <div class="login__image">
-                <img src="assets/image/login.png" alt="" class="login__img" onclick="window.location.href='index.php'">
+                <img src="assets/image/login.png" alt="" class="login__img" >
             </div>
+            <a href="index.php" class="back__home">
+                <i class="ri-arrow-left-s-line"></i>
+                <span>Homepage</span>
+            </a>
         </div>
     </section>
 
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.1/dist/gsap.min.js"></script>
     <script src="assets/js/login.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const passwordInput = document.getElementById("password");
+            const togglePassword = document.getElementById("togglePassword");
+            const icon = togglePassword.querySelector("i");
+
+            togglePassword.addEventListener("click", () => {
+                const isPassword = passwordInput.type === "password";
+
+                passwordInput.type = isPassword ? "text" : "password";
+
+                icon.classList.toggle("ri-eye-line");
+                icon.classList.toggle("ri-eye-off-line");
+            });
+        });
+    </script>
 </body>
 
 </html>

@@ -72,7 +72,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Confirm logout — redirect to index.php (change href as needed)
   logoutYes.addEventListener("click", () => {
-    window.location.href = "index.php";
+    window.location.href = "logout.php";
   });
 
 });

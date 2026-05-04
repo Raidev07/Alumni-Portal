@@ -24,6 +24,7 @@ if (!empty($_SESSION['first_name'])) {
 </head>
 
 <body>
+<<<<<<< HEAD
 
     <nav class="navbar" id="navbar">
         <div class="nav-left">
@@ -57,6 +58,11 @@ if (!empty($_SESSION['first_name'])) {
             </a>
         </div>
     </nav>
+=======
+    <?php
+    include('includes/navbarindex.php');
+    ?>
+>>>>>>> 3aba082 (Update alumni portal UI, login flow, and database schema; remove deprecated alumni_homepage.php)
 
     <!-- Pass login state to JavaScript -->
     <script>
@@ -184,4 +190,5 @@ if (!empty($_SESSION['first_name'])) {
 
     <script src="assets/js/eventscript.js"></script>
 </body>
+
 </html>

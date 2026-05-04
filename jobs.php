@@ -1,3 +1,7 @@
+<?php
+include("backend/db.php");
+session_start();
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -12,6 +16,7 @@
 </head>
 
 <body>
+<<<<<<< HEAD
 <?php
 session_start();
 // Pass session data to JavaScript safely
@@ -50,6 +55,11 @@ $userId   = isset($_SESSION['user_id']) ? (int)$_SESSION['user_id'] : 0;
             <a href="#" class="logo-link2"><img src="assets/image/plplogo.png" alt="PLP Logo"></a>
         </div>
     </nav>
+=======
+    <?php
+    include(__DIR__ . '/includes/navbarindex.php');
+    ?>
+>>>>>>> 3aba082 (Update alumni portal UI, login flow, and database schema; remove deprecated alumni_homepage.php)
 
     <!-- POST JOB MODAL OVERLAY -->
     <div class="overlay hidden" id="postOverlay">
@@ -175,6 +185,7 @@ $userId   = isset($_SESSION['user_id']) ? (int)$_SESSION['user_id'] : 0;
                 <h1>Job Board</h1>
                 <p class="subtitle">Explore opportunities with alumni networks</p>
             </div>
+<<<<<<< HEAD
             <!-- Only show "Post a Job" button if logged in -->
             <?php if (isset($_SESSION['user_id'])): ?>
             <button class="create-btn" id="openPostBtn">
@@ -184,6 +195,16 @@ $userId   = isset($_SESSION['user_id']) ? (int)$_SESSION['user_id'] : 0;
             <button class="create-btn" onclick="window.location.href='login.php'">
                 <i class="fa-solid fa-plus"></i> Login to Post
             </button>
+=======
+            <?php if (!empty($_SESSION['user_id'])): ?>
+                <a class="create-btn" id="openPostBtn">
+                    <i class="fa-solid fa-plus"></i> Post a Job
+                </a>
+            <?php else: ?>
+                <a href="login.php" class="create-btn" style="text-decoration:none;">
+                    <i class="fa-solid fa-plus"></i> login to Post a Job
+                </a>
+>>>>>>> 3aba082 (Update alumni portal UI, login flow, and database schema; remove deprecated alumni_homepage.php)
             <?php endif; ?>
         </div>
 
@@ -210,6 +231,14 @@ $userId   = isset($_SESSION['user_id']) ? (int)$_SESSION['user_id'] : 0;
         </div>
     </div>
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 3aba082 (Update alumni portal UI, login flow, and database schema; remove deprecated alumni_homepage.php)
     <script src="assets/js/jobscript.js"></script>
+    <script>
+        const isLoggedIn = <?php echo !empty($_SESSION['user_id']) ? 'true' : 'false'; ?>;
+    </script>
 </body>
+
 </html>

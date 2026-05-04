@@ -40,9 +40,7 @@ if ($result->num_rows === 1) {
         if ($user['role'] === 'admin') {
             header("Location: ../admin/dashboard.php");
         } elseif ($user['role'] === 'alumni') {
-            header("Location: ../alumni_homepage.php");
-        } else {
-            header("Location: ../student/home.php");
+            header("Location: ../index.php");
         }
 
         exit();

@@ -21,33 +21,9 @@ unset($_SESSION['reg_errors'], $_SESSION['reg_old']);
 </head>
 
 <body>
-    <div class="darkshade"></div>
-    <nav class="navbar" id="navbar">
-        <div class="nav-left">
-            <a href="https://plpasig.edu.ph/" class="logo-link1"><img src="assets/image/alumni-logo.png"
-                    alt="alumni Logo" /></a>
-            <div class="title">
-                <div>Pamantasan ng Lungsod ng Pasig</div>
-                <div>ALUMNI</div>
-            </div>
-        </div>
-
-        <ul class="nav-links">
-            <li><a href="index.php">Home</a></li>
-            <li><a href="jobs.php">Jobs</a></li>
-            <li><a href="events.php">Events</a></li>
-        </ul>
-
-        <div class="nav-right">
-            <div class="btns">
-                <button class="btn" onclick="window.location.href = 'login.php'">Login</button>
-                <button class="btn" onclick="window.location.href = 'DPA.php'">
-                    Signup
-                </button>
-            </div>
-            <a href="#" class="logo-link2"><img src="assets/image/plplogo.png" alt="PLP Logo"></a>
-        </div>
-    </nav>
+    <?php
+    include('includes/navbarindex.php');
+    ?>
 
     <div class="form_container">
         <div class="title">Alumni Registration</div>
