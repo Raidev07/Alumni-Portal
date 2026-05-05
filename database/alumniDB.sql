@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 03, 2026 at 01:09 PM
+-- Generation Time: May 05, 2026 at 11:08 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -308,7 +308,47 @@ CREATE TABLE `audit_logs` (
 
 INSERT INTO `audit_logs` (`log_id`, `table_name`, `record_id`, `action_type`, `user_id`, `action_timestamp`) VALUES
 (1, 'userprofile', 3, 'UPDATE', 4, '2026-05-01 11:30:30'),
-(2, 'users', 2, 'DELETE', NULL, '2026-05-01 14:08:00');
+(2, 'users', 2, 'DELETE', NULL, '2026-05-01 14:08:00'),
+(3, 'userprofile', 4, 'UPDATE', 5, '2026-05-03 13:28:31'),
+(4, 'userprofile', 4, 'UPDATE', 5, '2026-05-03 13:55:36'),
+(5, 'userprofile', 4, 'UPDATE', 5, '2026-05-03 13:56:07'),
+(6, 'userprofile', 4, 'UPDATE', 5, '2026-05-03 13:59:42'),
+(7, 'userprofile', 4, 'UPDATE', 5, '2026-05-03 14:01:25'),
+(8, 'userprofile', 4, 'UPDATE', 5, '2026-05-03 14:01:32'),
+(9, 'userprofile', 4, 'UPDATE', 5, '2026-05-03 14:19:49'),
+(10, 'userprofile', 4, 'UPDATE', 5, '2026-05-03 14:21:01'),
+(11, 'userprofile', 4, 'UPDATE', 5, '2026-05-04 01:59:24'),
+(12, 'userprofile', 4, 'UPDATE', 5, '2026-05-04 01:59:27'),
+(13, 'userprofile', 4, 'UPDATE', 5, '2026-05-04 01:59:33'),
+(14, 'userprofile', 4, 'UPDATE', 5, '2026-05-04 01:59:42'),
+(15, 'userprofile', 4, 'UPDATE', 5, '2026-05-04 02:05:18'),
+(16, 'userprofile', 4, 'UPDATE', 5, '2026-05-04 05:52:50'),
+(17, 'userprofile', 4, 'UPDATE', 5, '2026-05-04 05:52:54'),
+(18, 'userprofile', 4, 'UPDATE', 5, '2026-05-04 05:54:05'),
+(19, 'userprofile', 4, 'UPDATE', 5, '2026-05-04 05:59:16'),
+(20, 'userprofile', 4, 'UPDATE', 5, '2026-05-04 05:59:20'),
+(21, 'userprofile', 4, 'UPDATE', 5, '2026-05-04 05:59:42'),
+(22, 'userprofile', 4, 'UPDATE', 5, '2026-05-04 05:59:59'),
+(23, 'userprofile', 4, 'UPDATE', 5, '2026-05-04 06:04:28'),
+(24, 'userprofile', 4, 'UPDATE', 5, '2026-05-04 06:48:53'),
+(25, 'userprofile', 4, 'UPDATE', 5, '2026-05-04 07:23:20'),
+(26, 'userprofile', 4, 'UPDATE', 5, '2026-05-04 07:27:20'),
+(27, 'userprofile', 4, 'UPDATE', 5, '2026-05-04 07:27:28'),
+(28, 'userprofile', 4, 'UPDATE', 5, '2026-05-04 07:28:11'),
+(29, 'userprofile', 4, 'UPDATE', 5, '2026-05-04 07:31:14'),
+(30, 'userprofile', 4, 'UPDATE', 5, '2026-05-04 07:31:20'),
+(31, 'userprofile', 4, 'UPDATE', 5, '2026-05-04 07:32:37'),
+(32, 'userprofile', 4, 'UPDATE', 5, '2026-05-04 07:34:42'),
+(33, 'userprofile', 4, 'UPDATE', 5, '2026-05-04 07:34:49'),
+(34, 'userprofile', 4, 'UPDATE', 5, '2026-05-04 07:40:13'),
+(35, 'userprofile', 4, 'UPDATE', 5, '2026-05-04 07:40:17'),
+(36, 'userprofile', 4, 'UPDATE', 5, '2026-05-04 07:41:47'),
+(37, 'userprofile', 4, 'UPDATE', 5, '2026-05-04 07:41:51'),
+(38, 'userprofile', 4, 'UPDATE', 5, '2026-05-04 07:46:12'),
+(39, 'userprofile', 4, 'UPDATE', 5, '2026-05-04 07:46:34'),
+(40, 'userprofile', 4, 'UPDATE', 5, '2026-05-05 03:22:39'),
+(41, 'userprofile', 4, 'UPDATE', 5, '2026-05-05 03:24:14'),
+(42, 'userprofile', 4, 'UPDATE', 5, '2026-05-05 03:24:25');
 
 -- --------------------------------------------------------
 
@@ -366,6 +406,30 @@ INSERT INTO `departments` (`department_id`, `department_name`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `education`
+--
+
+CREATE TABLE `education` (
+  `edu_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `school` varchar(150) NOT NULL,
+  `degree` varchar(150) NOT NULL,
+  `awards` varchar(150) DEFAULT NULL,
+  `start_year` year(4) DEFAULT NULL,
+  `end_year` year(4) DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `education`
+--
+
+INSERT INTO `education` (`edu_id`, `user_id`, `school`, `degree`, `awards`, `start_year`, `end_year`, `created_at`) VALUES
+(2, 5, 'sd', 'sd', 'sd', '1902', '1905', '2026-05-04 06:37:51');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `events`
 --
 
@@ -385,6 +449,13 @@ CREATE TABLE `events` (
   `status` enum('upcoming','ongoing','completed','cancelled') DEFAULT 'upcoming',
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `events`
+--
+
+INSERT INTO `events` (`event_id`, `user_id`, `event_title`, `event_date`, `start_time`, `end_time`, `location`, `event_type`, `max_attendees`, `registration_deadline`, `contact_email`, `event_description`, `status`, `created_at`) VALUES
+(1, 5, 'SD', '2026-05-04', '02:25:00', '16:25:00', 'TA', 'Workshop', 111, '2026-03-10', 'jay.escalona.je@gmail.com', 'hello its me text', 'upcoming', '2026-05-05 03:26:03');
 
 --
 -- Triggers `events`
@@ -429,6 +500,33 @@ CREATE TRIGGER `trg_audit_event_update` AFTER UPDATE ON `events` FOR EACH ROW BE
 END
 $$
 DELIMITER ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `experience`
+--
+
+CREATE TABLE `experience` (
+  `exp_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `title` varchar(100) NOT NULL,
+  `company` varchar(100) NOT NULL,
+  `location` varchar(100) DEFAULT NULL,
+  `start_date` date DEFAULT NULL,
+  `end_date` date DEFAULT NULL,
+  `description` text DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `experience`
+--
+
+INSERT INTO `experience` (`exp_id`, `user_id`, `title`, `company`, `location`, `start_date`, `end_date`, `description`, `created_at`) VALUES
+(1, 5, 'Software Developers', 'Rocketech', '15-19 Bloomsbury Way, Holborn, London, WC1A 2TH.', '2005-07-21', '2011-06-14', 'The Software Engineer is responsible for the complete lifecycle of software development. This role applies engineering principles to design, develop, test, release, and maintain software programs that solve complex business or consumer needs', '2026-05-04 02:18:16'),
+(3, 5, 'sd', 'sd', 'sd', '2026-05-19', '2026-05-18', 'sd', '2026-05-04 13:17:42'),
+(4, 5, 'aya', 'aya', 'aya', '2026-05-20', '2026-05-15', 'ghost', '2026-05-05 03:23:13');
 
 -- --------------------------------------------------------
 
@@ -492,6 +590,28 @@ DELIMITER ;
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `skills`
+--
+
+CREATE TABLE `skills` (
+  `skill_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `skill_name` varchar(100) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `skills`
+--
+
+INSERT INTO `skills` (`skill_id`, `user_id`, `skill_name`, `created_at`) VALUES
+(4, 5, 'ds', '2026-05-04 07:49:41'),
+(5, 5, 'sd', '2026-05-04 13:17:30'),
+(6, 5, 'JAVA', '2026-05-05 03:23:36');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `userprofile`
 --
 
@@ -506,19 +626,20 @@ CREATE TABLE `userprofile` (
   `address` varchar(255) DEFAULT NULL,
   `birthdate` date DEFAULT NULL,
   `gender` enum('Male','Female') DEFAULT NULL,
-  `profile_picture` varchar(255) DEFAULT NULL
+  `profile_picture` varchar(255) DEFAULT NULL,
+  `about` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `userprofile`
 --
 
-INSERT INTO `userprofile` (`profile_id`, `user_id`, `first_name`, `last_name`, `suffix`, `middle_name`, `contact_number`, `address`, `birthdate`, `gender`, `profile_picture`) VALUES
-(1, 1, 'Vehniah', 'Samson', '', 'Perol', '09929952041', 'Callejon 2', '2006-09-11', 'Male', NULL),
-(3, 4, 'Mark Venice', 'Escalomos', 'Sr.', 'Ash', '09324424232', 'hello', '2015-10-01', 'Male', NULL),
-(4, 5, 'hello', 'john', '', 'its me', '09927756044', 'sdad', '2026-01-07', 'Male', NULL),
-(5, 7, 'Mark Venice', 'Samson', 'Sr.', 'Ash', '09927756044', 'tao', '2026-03-25', 'Male', NULL),
-(6, 9, 'Sam Aidan', 'Gonzaga', '', 'Capalaran', '09625928701', 'Mulawin St.', '2005-11-17', 'Male', NULL);
+INSERT INTO `userprofile` (`profile_id`, `user_id`, `first_name`, `last_name`, `suffix`, `middle_name`, `contact_number`, `address`, `birthdate`, `gender`, `profile_picture`, `about`) VALUES
+(1, 1, 'Vehniah', 'Samson', '', 'Perol', '09929952041', 'Callejon 2', '2006-09-11', 'Male', NULL, NULL),
+(3, 4, 'Mark Venice', 'Escalomos', 'Sr.', 'Ash', '09324424232', 'hello', '2015-10-01', 'Male', NULL, NULL),
+(4, 5, 'John Jesse', 'Escalona', 'III', 'Macuana', '09927756044', '3078 barangay saksakan st. pasig city', '2005-07-07', 'Male', 'avatar_5_1777951454.png', 'HELLO ITS ME KAT BADING'),
+(5, 7, 'Mark Venice', 'Samson', 'Sr.', 'Ash', '09927756044', 'tao', '2026-03-25', 'Male', NULL, NULL),
+(6, 9, 'Sam Aidan', 'Gonzaga', '', 'Capalaran', '09625928701', 'Mulawin St.', '2005-11-17', 'Male', NULL, NULL);
 
 --
 -- Triggers `userprofile`
@@ -632,6 +753,13 @@ ALTER TABLE `departments`
   ADD PRIMARY KEY (`department_id`);
 
 --
+-- Indexes for table `education`
+--
+ALTER TABLE `education`
+  ADD PRIMARY KEY (`edu_id`),
+  ADD KEY `user_id` (`user_id`);
+
+--
 -- Indexes for table `events`
 --
 ALTER TABLE `events`
@@ -639,10 +767,24 @@ ALTER TABLE `events`
   ADD KEY `user_id` (`user_id`);
 
 --
+-- Indexes for table `experience`
+--
+ALTER TABLE `experience`
+  ADD PRIMARY KEY (`exp_id`),
+  ADD KEY `user_id` (`user_id`);
+
+--
 -- Indexes for table `jobpostings`
 --
 ALTER TABLE `jobpostings`
   ADD PRIMARY KEY (`job_id`),
+  ADD KEY `user_id` (`user_id`);
+
+--
+-- Indexes for table `skills`
+--
+ALTER TABLE `skills`
+  ADD PRIMARY KEY (`skill_id`),
   ADD KEY `user_id` (`user_id`);
 
 --
@@ -680,7 +822,7 @@ ALTER TABLE `alumnifeatured`
 -- AUTO_INCREMENT for table `audit_logs`
 --
 ALTER TABLE `audit_logs`
-  MODIFY `log_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `log_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=43;
 
 --
 -- AUTO_INCREMENT for table `courses`
@@ -695,16 +837,34 @@ ALTER TABLE `departments`
   MODIFY `department_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
+-- AUTO_INCREMENT for table `education`
+--
+ALTER TABLE `education`
+  MODIFY `edu_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
 -- AUTO_INCREMENT for table `events`
 --
 ALTER TABLE `events`
-  MODIFY `event_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `event_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `experience`
+--
+ALTER TABLE `experience`
+  MODIFY `exp_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `jobpostings`
 --
 ALTER TABLE `jobpostings`
   MODIFY `job_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `skills`
+--
+ALTER TABLE `skills`
+  MODIFY `skill_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `userprofile`
@@ -742,16 +902,34 @@ ALTER TABLE `courses`
   ADD CONSTRAINT `courses_ibfk_1` FOREIGN KEY (`department_id`) REFERENCES `departments` (`department_id`);
 
 --
+-- Constraints for table `education`
+--
+ALTER TABLE `education`
+  ADD CONSTRAINT `education_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+
+--
 -- Constraints for table `events`
 --
 ALTER TABLE `events`
   ADD CONSTRAINT `events_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
 
 --
+-- Constraints for table `experience`
+--
+ALTER TABLE `experience`
+  ADD CONSTRAINT `experience_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+
+--
 -- Constraints for table `jobpostings`
 --
 ALTER TABLE `jobpostings`
   ADD CONSTRAINT `jobpostings_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `skills`
+--
+ALTER TABLE `skills`
+  ADD CONSTRAINT `skills_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `userprofile`
