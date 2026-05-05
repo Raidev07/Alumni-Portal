@@ -1,9 +1,8 @@
 <?php
-// events.php — root level
-// Sessions are started here; login_process.php must use the same session_start()
 session_start();
 
-$isLoggedIn = isset($_SESSION['user_id']) ? 'true' : 'false';
+$isLoggedIn = isset($_SESSION['user_id']);
+$userId = isset($_SESSION['user_id']) ? (int) $_SESSION['user_id'] : 0;
 
 $userName = '';
 if (!empty($_SESSION['first_name'])) {
@@ -27,14 +26,15 @@ if (!empty($_SESSION['first_name'])) {
 <body>
     <?php
     if ($isLoggedIn) {
-        include('includes/navbarindex.php');
-    } else {
         include('includes/navbarhome.php');
+    } else {
+        include('includes/navbarindex.php');
     } ?>
 
     <!-- Pass login state to JavaScript -->
     <script>
-        window.isLoggedIn = <?= $isLoggedIn ?>;
+        const SESSION_LOGGED_IN = <?= $isLoggedIn ?>;
+        const SESSION_USER_ID = <?= $userId ?>;
     </script>
 
     <!-- POST EVENT MODAL OVERLAY -->
@@ -128,9 +128,16 @@ if (!empty($_SESSION['first_name'])) {
                 <h1>Alumni Events Board</h1>
                 <p class="subtitle">Explore events held by our alumni network</p>
             </div>
-            <button class="create-btn" id="openPostBtn">
-                <i class="fa-solid fa-plus"></i> Post an Event
-            </button>
+            <!-- Mirror jobs.php: show Post button if logged in, Login to Post if not -->
+            <?php if (isset($_SESSION['user_id'])): ?>
+                <button class="create-btn" id="openPostBtn">
+                    <i class="fa-solid fa-plus"></i> Post an Event
+                </button>
+            <?php else: ?>
+                <button class="create-btn" onclick="window.location.href='login.php'">
+                    <i class="fa-solid fa-plus"></i> Login to Post
+                </button>
+            <?php endif; ?>
         </div>
 
         <div class="layout">
@@ -159,7 +166,6 @@ if (!empty($_SESSION['first_name'])) {
     <?php include('includes/logoutmodal.php'); ?>
 
     <script src="assets/js/alumni_homepage.js"></script>
-
     <script src="assets/js/eventscript.js"></script>
 </body>
 

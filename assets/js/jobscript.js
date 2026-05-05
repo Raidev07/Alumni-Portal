@@ -8,7 +8,6 @@ async function renderJobs() {
     const empty = document.getElementById("emptyState");
     const query = document.getElementById("searchInput").value.trim();
 
-    // Build query string
     const params = new URLSearchParams({ type: activeType });
     if (query) params.append("query", query);
 
@@ -17,11 +16,11 @@ async function renderJobs() {
         const jobs = await res.json();
 
         if (!res.ok) {
-            list.innerHTML = <p style="color:red;">Error: ${jobs.error ?? "Unknown error"}</p>;
+            list.innerHTML = `<p style="color:red;">Error: ${jobs.error ?? "Unknown error"}</p>`;
             return;
         }
 
-        jobsCache = jobs; // cache for openDetail()
+        jobsCache = jobs;
 
         if (jobs.length === 0) {
             list.innerHTML = "";
@@ -63,7 +62,7 @@ async function renderJobs() {
         `).join("");
 
     } catch (err) {
-        list.innerHTML = <p style="color:red;">Failed to load jobs. Please try again.</p>;
+        list.innerHTML = `<p style="color:red;">Failed to load jobs. Please try again.</p>`;
         console.error(err);
     }
 }
@@ -158,7 +157,7 @@ document.getElementById("postBtn")?.addEventListener("click", async () => {
             .forEach(id => { document.getElementById(id).value = ""; });
 
         document.getElementById("postOverlay").classList.add("hidden");
-        renderJobs(); // refresh list from DB
+        renderJobs();
 
     } catch (err) {
         alert("Network error. Please try again.");
@@ -174,7 +173,6 @@ function badgeClass(type) {
     return "badge-ct";
 }
 
-// Prevent XSS when inserting user-provided text into innerHTML
 function escHtml(str = "") {
     return String(str)
         .replace(/&/g, "&amp;")
@@ -188,7 +186,12 @@ document.getElementById("closeDetail")?.addEventListener("click", () => {
     document.getElementById("detailOverlay").classList.add("hidden");
 });
 
+// Single openPostBtn listener — guarded by session state
 document.getElementById("openPostBtn")?.addEventListener("click", () => {
+    if (!SESSION_LOGGED_IN) {
+        window.location.href = "login.php";
+        return;
+    }
     document.getElementById("postOverlay").classList.remove("hidden");
 });
 

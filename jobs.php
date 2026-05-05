@@ -1,201 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PLP Alumni – Job Board</title>
+    <link rel="icon" href="assets/image/alumni-logo.png">
+    <link rel="stylesheet" href="assets/css/jobs.css">
+    <link rel="stylesheet" href="assets/css/alumni_homepage.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+<?php
+session_start();
+// Pass session data to JavaScript safely
+$isLoggedIn = isset($_SESSION['user_id']);
+$userId   = isset($_SESSION['user_id']) ? (int)$_SESSION['user_id'] : 0;
+?>
+
+<!-- Inject session info for JS -->
+<script>
+    const SESSION_LOGGED_IN = <?= $loggedIn ?>;
+    const SESSION_USER_ID   = <?= $userId ?>;
+</script>
+
     <?php
-    session_start();
-    // Pass session data to JavaScript safely
-    $loggedIn = isset($_SESSION['user_id']) ? 'true' : 'false';
-    $userId   = isset($_SESSION['user_id']) ? (int)$_SESSION['user_id'] : 0;
-    ?>
+    if ($isLoggedIn) {
+        include('includes/navbarhome.php');
+    } else {
+        include('includes/navbarindex.php');
+    } ?>
 
-    <!DOCTYPE html>
-    <html lang="en">
-
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>PLP Alumni – Job Board</title>
-        <link rel="icon" href="assets/image/alumni-logo.png">
-        <link rel="stylesheet" href="assets/css/jobs.css">
-        <link rel="stylesheet" href="assets/css/alumni_homepage.css">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
-    </head>
-
-    <body>
-        <?php
-        if ($loggedIn) {
-            include('includes/navbarhome.php');
-        } else {
-            include('includes/navbarindex.php');
-        } ?>
-
-        <!-- Inject session info for JS -->
-        <script>
-            const SESSION_LOGGED_IN = <?= $loggedIn ?>;
-            const SESSION_USER_ID = <?= $userId ?>;
-        </script>
-
-        <!-- POST JOB MODAL OVERLAY -->
-        <div class="overlay hidden" id="postOverlay">
-            <div class="modal">
-                <div class="modal-header">
-                    <h2>Job Posting Details</h2>
-                    <p>Fill in the information below</p>
+    <!-- POST JOB MODAL OVERLAY -->
+    <div class="overlay hidden" id="postOverlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h2>Job Posting Details</h2>
+                <p>Fill in the information below</p>
+            </div>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="f-title">Job Title</label>
+                    <input id="f-title" type="text" placeholder="e.g. Software Engineer">
                 </div>
-                <div class="form-grid">
-                    <div class="form-group">
-                        <label for="f-title">Job Title</label>
-                        <input id="f-title" type="text" placeholder="e.g. Software Engineer">
-                    </div>
-                    <div class="form-group">
-                        <label for="f-company">Company Name</label>
-                        <input id="f-company" type="text" placeholder="e.g. TechCorp Inc.">
-                    </div>
-                    <div class="form-group">
-                        <label for="f-location">Location</label>
-                        <input id="f-location" type="text" placeholder="e.g. Pasig / Remote">
-                    </div>
-                    <div class="form-group">
-                        <label for="f-type">Job Type</label>
-                        <select id="f-type">
-                            <option>Full-time</option>
-                            <option>Part-time</option>
-                            <option>Contract</option>
-                            <option>Internship</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="f-salary">Salary Range</label>
-                        <input id="f-salary" type="text" placeholder="e.g. 30,000 – 50,000">
-                    </div>
-                    <div class="form-group">
-                        <label for="f-modality">Modality</label>
-                        <select id="f-modality">
-                            <option>Onsite</option>
-                            <option>Hybrid</option>
-                            <option>Remote</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="f-category">Category</label>
-                        <select id="f-category">
-                            <option>Engineering</option>
-                            <option>Marketing</option>
-                            <option>Product</option>
-                            <option>Theater</option>
-                            <option>Programming</option>
-                            <option>HR</option>
-                            <option>Finance</option>
-                            <option>Design</option>
-                            <option>Operations</option>
-                            <option>Other</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="f-link">Application Link</label>
-                        <input id="f-link" type="url" placeholder="https://...">
-                    </div>
-                    <div class="form-group">
-                        <label for="f-email">Contact Email</label>
-                        <input id="f-email" type="email" placeholder="hr@company.com">
-                    </div>
-                    <div class="form-group form-full">
-                        <label for="f-desc">Job Description</label>
-                        <textarea id="f-desc" rows="4"
-                            placeholder="Describe the role, responsibilities, and day-to-day tasks..."></textarea>
-                    </div>
-                    <div class="form-group form-full">
-                        <label for="f-req">Requirements &amp; Qualifications</label>
-                        <textarea id="f-req" rows="3"
-                            placeholder="List required skills, education, years of experience..."></textarea>
-                    </div>
-                    <div class="form-group form-full">
-                        <label for="f-benefits">Benefits</label>
-                        <textarea id="f-benefits" rows="2"
-                            placeholder="Health insurance, performance bonuses, flexible hours..."></textarea>
-                    </div>
+                <div class="form-group">
+                    <label for="f-company">Company Name</label>
+                    <input id="f-company" type="text" placeholder="e.g. TechCorp Inc.">
                 </div>
-                <div class="modal-footer">
-                    <button class="btn-cancel" id="cancelBtn">Cancel</button>
-                    <button class="btn-post" id="postBtn">Post Job</button>
+                <div class="form-group">
+                    <label for="f-location">Location</label>
+                    <input id="f-location" type="text" placeholder="e.g. Pasig / Remote">
+                </div>
+                <div class="form-group">
+                    <label for="f-type">Job Type</label>
+                    <select id="f-type">
+                        <option>Full-time</option>
+                        <option>Part-time</option>
+                        <option>Contract</option>
+                        <option>Internship</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="f-salary">Salary Range</label>
+                    <input id="f-salary" type="text" placeholder="e.g. 30,000 – 50,000">
+                </div>
+                <div class="form-group">
+                    <label for="f-modality">Modality</label>
+                    <select id="f-modality">
+                        <option>Onsite</option>
+                        <option>Hybrid</option>
+                        <option>Remote</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="f-category">Category</label>
+                    <select id="f-category">
+                        <option>Engineering</option>
+                        <option>Marketing</option>
+                        <option>Product</option>
+                        <option>Theater</option>
+                        <option>Programming</option>
+                        <option>HR</option>
+                        <option>Finance</option>
+                        <option>Design</option>
+                        <option>Operations</option>
+                        <option>Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="f-link">Application Link</label>
+                    <input id="f-link" type="url" placeholder="https://...">
+                </div>
+                <div class="form-group">
+                    <label for="f-email">Contact Email</label>
+                    <input id="f-email" type="email" placeholder="hr@company.com">
+                </div>
+                <div class="form-group form-full">
+                    <label for="f-desc">Job Description</label>
+                    <textarea id="f-desc" rows="4"
+                        placeholder="Describe the role, responsibilities, and day-to-day tasks..."></textarea>
+                </div>
+                <div class="form-group form-full">
+                    <label for="f-req">Requirements &amp; Qualifications</label>
+                    <textarea id="f-req" rows="3"
+                        placeholder="List required skills, education, years of experience..."></textarea>
+                </div>
+                <div class="form-group form-full">
+                    <label for="f-benefits">Benefits</label>
+                    <textarea id="f-benefits" rows="2"
+                        placeholder="Health insurance, performance bonuses, flexible hours..."></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-cancel" id="cancelBtn">Cancel</button>
+                <button class="btn-post" id="postBtn">Post Job</button>
+            </div>
+        </div>
+    </div>
+
+    <!--------- JOB DETAIL CONTAINER OVERLAY ------------>
+    <div class="detail-overlay hidden" id="detailOverlay">
+        <div class="detail-job">
+            <div class="detail-header">
+                <h2 id="d-title"></h2>
+                <div class="dh-company" id="d-company"></div>
+                <div class="detail-badges" id="d-badges"></div>
+            </div>
+            <div class="detail-body">
+                <div class="detail-meta-row" id="d-meta"></div>
+                <div class="detail-section">
+                    <h3>Job Description</h3>
+                    <p id="d-desc"></p>
+                </div>
+                <div class="detail-section">
+                    <h3>Requirements &amp; Qualifications</h3>
+                    <p id="d-req"></p>
+                </div>
+                <div class="detail-section">
+                    <h3>Benefits</h3>
+                    <p id="d-ben"></p>
+                </div>
+                <div class="detail-actions">
+                    <a class="btn-apply" id="d-link" href="#" target="_blank">Apply Now</a>
+                    <button class="btn-back" id="closeDetail">Close</button>
                 </div>
             </div>
         </div>
+    </div>
 
-        <!--------- JOB DETAIL CONTAINER OVERLAY ------------>
-        <div class="detail-overlay hidden" id="detailOverlay">
-            <div class="detail-job">
-                <div class="detail-header">
-                    <h2 id="d-title"></h2>
-                    <div class="dh-company" id="d-company"></div>
-                    <div class="detail-badges" id="d-badges"></div>
-                </div>
-                <div class="detail-body">
-                    <div class="detail-meta-row" id="d-meta"></div>
-                    <div class="detail-section">
-                        <h3>Job Description</h3>
-                        <p id="d-desc"></p>
-                    </div>
-                    <div class="detail-section">
-                        <h3>Requirements &amp; Qualifications</h3>
-                        <p id="d-req"></p>
-                    </div>
-                    <div class="detail-section">
-                        <h3>Benefits</h3>
-                        <p id="d-ben"></p>
-                    </div>
-                    <div class="detail-actions">
-                        <a class="btn-apply" id="d-link" href="#" target="_blank">Apply Now</a>
-                        <button class="btn-back" id="closeDetail">Close</button>
-                    </div>
-                </div>
+    <!------------ MAIN PAGE ------------->
+    <div class="page">
+        <div class="top-row">
+            <div>
+                <h1>Job Board</h1>
+                <p class="subtitle">Explore opportunities with alumni networks</p>
             </div>
+            <!-- Only show "Post a Job" button if logged in -->
+            <?php if (isset($_SESSION['user_id'])): ?>
+            <button class="create-btn" id="openPostBtn">
+                <i class="fa-solid fa-plus"></i> Post a Job
+            </button>
+            <?php else: ?>
+            <button class="create-btn" onclick="window.location.href='login.php'">
+                <i class="fa-solid fa-plus"></i> Login to Post
+            </button>
+            <?php endif; ?>
         </div>
 
-        <!------------ MAIN PAGE ------------->
-        <div class="page">
-            <div class="top-row">
-                <div>
-                    <h1>Job Board</h1>
-                    <p class="subtitle">Explore opportunities with alumni networks</p>
+        <div class="layout">
+            <aside class="sidebar">
+                <h3>Filter Jobs</h3>
+                <p class="sidebar-label">Job Type</p>
+                <div class="filter-item active" data-filter="all">All</div>
+                <div class="filter-item" data-filter="Full-time">Full-time</div>
+                <div class="filter-item" data-filter="Part-time">Part-time</div>
+                <div class="filter-item" data-filter="Contract">Contract</div>
+                <div class="filter-item" data-filter="Internship">Internship</div>
+            </aside>
+            <main class="main">
+                <div class="search-row">
+                    <input type="text" id="searchInput" placeholder="Search by title, company, location...">
+                    <button onclick="renderJobs()">Search</button>
                 </div>
-                <!-- Only show "Post a Job" button if logged in -->
-                <?php if (isset($_SESSION['user_id'])): ?>
-                    <button class="create-btn" id="openPostBtn">
-                        <i class="fa-solid fa-plus"></i> Post a Job
-                    </button>
-                <?php else: ?>
-                    <button class="create-btn" onclick="window.location.href='login.php'">
-                        <i class="fa-solid fa-plus"></i> Login to Post
-                    </button>
-                <?php endif; ?>
-            </div>
-
-            <div class="layout">
-                <aside class="sidebar">
-                    <h3>Filter Jobs</h3>
-                    <p class="sidebar-label">Job Type</p>
-                    <div class="filter-item active" data-filter="all">All</div>
-                    <div class="filter-item" data-filter="Full-time">Full-time</div>
-                    <div class="filter-item" data-filter="Part-time">Part-time</div>
-                    <div class="filter-item" data-filter="Contract">Contract</div>
-                    <div class="filter-item" data-filter="Internship">Internship</div>
-                </aside>
-                <main class="main">
-                    <div class="search-row">
-                        <input type="text" id="searchInput" placeholder="Search by title, company, location...">
-                        <button onclick="renderJobs()">Search</button>
-                    </div>
-                    <div id="jobsList"></div>
-                    <div class="empty-state" id="emptyState">
-                        <p>No jobs found. Try a different search.</p>
-                    </div>
-                </main>
-            </div>
+                <div id="jobsList"></div>
+                <div class="empty-state" id="emptyState">
+                    <p>No jobs found. Try a different search.</p>
+                </div>
+            </main>
         </div>
+    </div>
 
-        <?php include('includes/logoutmodal.php'); ?>
-
-        <script src="assets/js/alumni_homepage.js"></script>
-        <script src="assets/js/jobscript.js"></script>
-    </body>
-
-    </html>
+    <?php include('includes/logoutmodal.php'); ?>
+    <script src="assets/js/alumni_homepage.js"></script>
+    <script src="assets/js/jobscript.js"></script>
+</body>
+</html>

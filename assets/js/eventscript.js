@@ -1,9 +1,9 @@
 // eventscript.js — Connected to database via event_process.php
 
-let allEvents   = [];           // Cache of events fetched from the server
-let activeType  = "all";        // Current sidebar filter
+let allEvents  = [];
+let activeType = "all";
 
-// ── Utility: date/time formatters (same as before) ──────────────────────────
+// ── Utility: date/time formatters ─────────────────────────────────────────────
 
 function formatDate(dateStr) {
     if (!dateStr) return "TBD";
@@ -16,8 +16,8 @@ function formatDate(dateStr) {
 function formatTime(timeStr) {
     if (!timeStr) return "TBD";
     const [h, m] = timeStr.split(":");
-    const hour = parseInt(h);
-    const ampm = hour >= 12 ? "PM" : "AM";
+    const hour   = parseInt(h);
+    const ampm   = hour >= 12 ? "PM" : "AM";
     const display = hour % 12 === 0 ? 12 : hour % 12;
     return `${display}:${m} ${ampm}`;
 }
@@ -40,7 +40,7 @@ function typeBadgeClass(type) {
     }
 }
 
-// ── Fetch events from server ─────────────────────────────────────────────────
+// ── Fetch events from server ──────────────────────────────────────────────────
 
 async function fetchEvents() {
     const query  = document.getElementById("searchInput").value.trim();
@@ -82,41 +82,39 @@ function renderEvents(events) {
     empty.classList.remove("show");
 
     list.innerHTML = events.map((e) => `
-    <div class="job-card">
-      <div class="job-content">
-        <div class="job-title">${escHtml(e.title)}</div>
-        <div class="job-company">${escHtml(e.organizer || "PLP Alumni")}</div>
-
-        <p class="job-desc">
-          ${e.desc && e.desc.length > 110 ? escHtml(e.desc.slice(0, 110)) + "…" : escHtml(e.desc || "")}
-        </p>
-
-        <div class="job-meta">
-          <span class="meta-item">
-            <span class="meta-icon"><i class="fa-solid fa-tag"></i></span>
-            <span class="badge ${typeBadgeClass(e.type)}">${escHtml(e.type)}</span>
-          </span>
-          <span class="meta-item">
-            <span class="meta-icon"><i class="fa-solid fa-calendar-days"></i></span>
-            ${formatDate(e.date)}
-          </span>
-          <span class="meta-item">
-            <span class="meta-icon"><i class="fa-regular fa-clock"></i></span>
-            ${formatTimeRange(e.timeStart, e.timeEnd)}
-          </span>
-          <span class="meta-item">
-            <span class="meta-icon"><i class="fa-solid fa-location-dot"></i></span>
-            ${escHtml(e.location)}
-          </span>
-          <span class="meta-item">
-            <span class="meta-icon"><i class="fa-solid fa-users"></i></span>
-            ${e.maxAttendees} slots
-          </span>
+        <div class="job-card">
+            <div class="job-content">
+                <div class="job-title">${escHtml(e.title)}</div>
+                <div class="job-company">${escHtml(e.organizer || "PLP Alumni")}</div>
+                <p class="job-desc">
+                    ${e.desc && e.desc.length > 110 ? escHtml(e.desc.slice(0, 110)) + "…" : escHtml(e.desc || "")}
+                </p>
+                <div class="job-meta">
+                    <span class="meta-item">
+                        <span class="meta-icon"><i class="fa-solid fa-tag"></i></span>
+                        <span class="badge ${typeBadgeClass(e.type)}">${escHtml(e.type)}</span>
+                    </span>
+                    <span class="meta-item">
+                        <span class="meta-icon"><i class="fa-solid fa-calendar-days"></i></span>
+                        ${formatDate(e.date)}
+                    </span>
+                    <span class="meta-item">
+                        <span class="meta-icon"><i class="fa-regular fa-clock"></i></span>
+                        ${formatTimeRange(e.timeStart, e.timeEnd)}
+                    </span>
+                    <span class="meta-item">
+                        <span class="meta-icon"><i class="fa-solid fa-location-dot"></i></span>
+                        ${escHtml(e.location)}
+                    </span>
+                    <span class="meta-item">
+                        <span class="meta-icon"><i class="fa-solid fa-users"></i></span>
+                        ${e.maxAttendees} slots
+                    </span>
+                </div>
+            </div>
+            <button class="apply-btn" onclick="openDetail(${e.id})">See More</button>
         </div>
-      </div>
-      <button class="apply-btn" onclick="openDetail(${e.id})">See More</button>
-    </div>
-  `).join("");
+    `).join("");
 }
 
 // ── Detail modal ──────────────────────────────────────────────────────────────
@@ -132,35 +130,35 @@ function openDetail(id) {
     document.getElementById("d-organizer").textContent = e.organizer || "PLP Alumni";
 
     document.getElementById("d-meta").innerHTML = `
-    <div class="detail-meta-card">
-      <div class="dmc-label"><i class="fa-solid fa-calendar-days"></i> Date</div>
-      <div class="dmc-value">${formatDate(e.date)}</div>
-    </div>
-    <div class="detail-meta-card">
-      <div class="dmc-label"><i class="fa-regular fa-clock"></i> Time Start</div>
-      <div class="dmc-value">${formatTime(e.timeStart)}</div>
-    </div>
-    <div class="detail-meta-card">
-      <div class="dmc-label"><i class="fa-regular fa-clock"></i> Time End</div>
-      <div class="dmc-value">${formatTime(e.timeEnd)}</div>
-    </div>
-    <div class="detail-meta-card">
-      <div class="dmc-label"><i class="fa-solid fa-location-dot"></i> Location</div>
-      <div class="dmc-value">${escHtml(e.location)}</div>
-    </div>
-    <div class="detail-meta-card">
-      <div class="dmc-label"><i class="fa-solid fa-users"></i> Max Attendees</div>
-      <div class="dmc-value">${e.maxAttendees} slots</div>
-    </div>
-    <div class="detail-meta-card">
-      <div class="dmc-label"><i class="fa-solid fa-hourglass-end"></i> Reg. Deadline</div>
-      <div class="dmc-value">${formatDate(e.deadline)}</div>
-    </div>
-    <div class="detail-meta-card">
-      <div class="dmc-label"><i class="fa-solid fa-envelope"></i> Contact</div>
-      <div class="dmc-value dmc-email">${escHtml(e.email || "")}</div>
-    </div>
-  `;
+        <div class="detail-meta-card">
+            <div class="dmc-label"><i class="fa-solid fa-calendar-days"></i> Date</div>
+            <div class="dmc-value">${formatDate(e.date)}</div>
+        </div>
+        <div class="detail-meta-card">
+            <div class="dmc-label"><i class="fa-regular fa-clock"></i> Time Start</div>
+            <div class="dmc-value">${formatTime(e.timeStart)}</div>
+        </div>
+        <div class="detail-meta-card">
+            <div class="dmc-label"><i class="fa-regular fa-clock"></i> Time End</div>
+            <div class="dmc-value">${formatTime(e.timeEnd)}</div>
+        </div>
+        <div class="detail-meta-card">
+            <div class="dmc-label"><i class="fa-solid fa-location-dot"></i> Location</div>
+            <div class="dmc-value">${escHtml(e.location)}</div>
+        </div>
+        <div class="detail-meta-card">
+            <div class="dmc-label"><i class="fa-solid fa-users"></i> Max Attendees</div>
+            <div class="dmc-value">${e.maxAttendees} slots</div>
+        </div>
+        <div class="detail-meta-card">
+            <div class="dmc-label"><i class="fa-solid fa-hourglass-end"></i> Reg. Deadline</div>
+            <div class="dmc-value">${formatDate(e.deadline)}</div>
+        </div>
+        <div class="detail-meta-card">
+            <div class="dmc-label"><i class="fa-solid fa-envelope"></i> Contact</div>
+            <div class="dmc-value dmc-email">${escHtml(e.email || "")}</div>
+        </div>
+    `;
 
     document.getElementById("d-desc").textContent = e.desc || "";
 
@@ -174,27 +172,26 @@ function openDetail(id) {
     document.getElementById("detailOverlay").classList.remove("hidden");
 }
 
-document.getElementById("closeDetail").addEventListener("click", () => {
+document.getElementById("closeDetail")?.addEventListener("click", () => {
     document.getElementById("detailOverlay").classList.add("hidden");
 });
 
 // ── Post Event modal ──────────────────────────────────────────────────────────
 
-document.getElementById("openPostBtn").addEventListener("click", () => {
-    // If user is not logged in, redirect to login
-    // PHP will have set window.isLoggedIn via a <script> tag in events.php
-    if (typeof window.isLoggedIn !== "undefined" && !window.isLoggedIn) {
+// openPostBtn only exists in the DOM when logged in (PHP renders it conditionally)
+document.getElementById("openPostBtn")?.addEventListener("click", () => {
+    if (!SESSION_LOGGED_IN) {
         window.location.href = "login.php";
         return;
     }
     document.getElementById("postOverlay").classList.remove("hidden");
 });
 
-document.getElementById("cancelBtn").addEventListener("click", () => {
+document.getElementById("cancelBtn")?.addEventListener("click", () => {
     document.getElementById("postOverlay").classList.add("hidden");
 });
 
-document.getElementById("postBtn").addEventListener("click", async () => {
+document.getElementById("postBtn")?.addEventListener("click", async () => {
     const title = document.getElementById("f-title").value.trim();
 
     if (!title) {
@@ -204,18 +201,18 @@ document.getElementById("postBtn").addEventListener("click", async () => {
 
     const payload = {
         title,
-        date:         document.getElementById("f-date").value         || "",
+        date:         document.getElementById("f-date").value            || "",
         type:         document.getElementById("f-type").value,
-        timeStart:    document.getElementById("f-time-start").value   || "",
-        timeEnd:      document.getElementById("f-time-end").value     || "",
+        timeStart:    document.getElementById("f-time-start").value      || "",
+        timeEnd:      document.getElementById("f-time-end").value        || "",
         location:     document.getElementById("f-location").value.trim() || "TBD",
-        maxAttendees: parseInt(document.getElementById("f-max").value) || 0,
-        deadline:     document.getElementById("f-deadline").value     || "",
-        email:        document.getElementById("f-email").value.trim() || "",
-        desc:         document.getElementById("f-desc").value.trim()  || "No description provided.",
+        maxAttendees: parseInt(document.getElementById("f-max").value)   || 0,
+        deadline:     document.getElementById("f-deadline").value        || "",
+        email:        document.getElementById("f-email").value.trim()    || "",
+        desc:         document.getElementById("f-desc").value.trim()     || "No description provided.",
     };
 
-    const postBtn = document.getElementById("postBtn");
+    const postBtn       = document.getElementById("postBtn");
     postBtn.disabled    = true;
     postBtn.textContent = "Posting…";
 
@@ -225,11 +222,9 @@ document.getElementById("postBtn").addEventListener("click", async () => {
             headers: { "Content-Type": "application/json" },
             body:    JSON.stringify(payload),
         });
-
         const data = await res.json();
 
         if (!data.success) {
-            // 401 means not logged in
             if (res.status === 401) {
                 window.location.href = "login.php";
                 return;
@@ -243,8 +238,6 @@ document.getElementById("postBtn").addEventListener("click", async () => {
         ].forEach((id) => { document.getElementById(id).value = ""; });
 
         document.getElementById("postOverlay").classList.add("hidden");
-
-        // Re-fetch from server so the new event appears with correct DB data
         await fetchEvents();
 
     } catch (err) {
@@ -263,16 +256,16 @@ document.querySelectorAll(".filter-item").forEach((el) => {
                 .forEach((e) => e.classList.remove("active"));
         el.classList.add("active");
         activeType = el.dataset.filter;
-        fetchEvents();          // Re-fetch with new type filter
+        fetchEvents();
     });
 });
 
 // ── Live search (debounced) ───────────────────────────────────────────────────
 
 let searchTimer = null;
-document.getElementById("searchInput").addEventListener("input", () => {
+document.getElementById("searchInput")?.addEventListener("input", () => {
     clearTimeout(searchTimer);
-    searchTimer = setTimeout(fetchEvents, 350);     // 350 ms debounce
+    searchTimer = setTimeout(fetchEvents, 350);
 });
 
 // ── UI helpers ────────────────────────────────────────────────────────────────
@@ -300,7 +293,6 @@ function showFormError(msg) {
     err.textContent = msg;
 }
 
-// Prevent XSS when injecting user content into innerHTML
 function escHtml(str) {
     if (!str) return "";
     return String(str)
