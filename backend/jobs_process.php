@@ -97,7 +97,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $user_id  = (int)$_SESSION['user_id'];
     $title_s  = $conn->real_escape_string($title);
-    $company_s= $conn->real_escape_string($company);
+    $company_s = $conn->real_escape_string($company);
     $location = $conn->real_escape_string(trim($data['location'] ?? 'TBD'));
     $job_type = $conn->real_escape_string($data['type']          ?? 'Full-time');
     $modality = $conn->real_escape_string($data['modality']      ?? 'Onsite');

@@ -19,50 +19,18 @@ if (!empty($_SESSION['first_name'])) {
     <title>PLP Alumni – Events Board</title>
     <link rel="icon" href="assets/image/alumni-logo.png">
     <link rel="stylesheet" href="assets/css/events.css">
+    <link rel="stylesheet" href="assets/css/alumni_homepage.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
 </head>
 
 <body>
-<<<<<<< HEAD
-
-    <nav class="navbar" id="navbar">
-        <div class="nav-left">
-            <a href="https://plpasig.edu.ph/" class="logo-link1">
-                <img src="assets/image/alumni-logo.png" alt="Alumni Logo">
-            </a>
-            <div class="title">
-                <div>Pamantasan ng Lungsod ng Pasig</div>
-                <div>ALUMNI</div>
-            </div>
-        </div>
-        <ul class="nav-links">
-            <li><a href="index.php">Home</a></li>
-            <li><a href="jobs.php">Jobs</a></li>
-            <li><a href="events.php" class="active">Events</a></li>
-        </ul>
-        <div class="nav-right">
-            <div class="btns">
-                <?php if (isset($_SESSION['user_id'])): ?>
-                    <?php if ($userName): ?>
-                        <span class="btn" style="cursor:default;">Hi, <?= $userName ?>!</span>
-                    <?php endif; ?>
-                    <button class="btn" onclick="window.location.href='logout.php'">Logout</button>
-                <?php else: ?>
-                    <button class="btn" onclick="window.location.href='login.php'">Login</button>
-                    <button class="btn" onclick="window.location.href='DPA.php'">Signup</button>
-                <?php endif; ?>
-            </div>
-            <a href="#" class="logo-link2">
-                <img src="assets/image/plplogo.png" alt="PLP Logo">
-            </a>
-        </div>
-    </nav>
-=======
     <?php
-    include('includes/navbarindex.php');
-    ?>
->>>>>>> 3aba082 (Update alumni portal UI, login flow, and database schema; remove deprecated alumni_homepage.php)
+    if ($isLoggedIn) {
+        include('includes/navbarindex.php');
+    } else {
+        include('includes/navbarhome.php');
+    } ?>
 
     <!-- Pass login state to JavaScript -->
     <script>
@@ -187,6 +155,10 @@ if (!empty($_SESSION['first_name'])) {
             </main>
         </div>
     </div>
+
+    <?php include('includes/logoutmodal.php'); ?>
+
+    <script src="assets/js/alumni_homepage.js"></script>
 
     <script src="assets/js/eventscript.js"></script>
 </body>

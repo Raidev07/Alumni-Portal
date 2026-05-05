@@ -26,7 +26,8 @@ if ($method === 'GET') {
 // GET — Fetch events from DB
 // ═════════════════════════════════════════════════════════════════════════════
 
-function handleGetEvents() {
+function handleGetEvents()
+{
     global $conn;
 
     try {
@@ -68,10 +69,10 @@ function handleGetEvents() {
         if ($search !== '') {
             $like     = '%' . $search . '%';
             $sql     .= " AND (
-                              e.event_title LIKE ?
-                           OR e.location    LIKE ?
-                           OR CONCAT(up.first_name, ' ', up.last_name) LIKE ?
-                          )";
+                                e.event_title LIKE ?
+                            OR e.location    LIKE ?
+                            OR CONCAT(up.first_name, ' ', up.last_name) LIKE ?
+                            )";
             $params[] = $like;
             $params[] = $like;
             $params[] = $like;
@@ -108,7 +109,6 @@ function handleGetEvents() {
         $stmt->close();
 
         echo json_encode(['success' => true, 'events' => $events]);
-
     } catch (Exception $ex) {
         http_response_code(500);
         echo json_encode(['success' => false, 'message' => $ex->getMessage()]);
@@ -119,7 +119,8 @@ function handleGetEvents() {
 // POST — Insert a new event (must be logged in)
 // ═════════════════════════════════════════════════════════════════════════════
 
-function handlePostEvent() {
+function handlePostEvent()
+{
     global $conn;
 
     // Auth check
@@ -225,7 +226,6 @@ function handlePostEvent() {
             'message'  => 'Event posted successfully.',
             'event_id' => $new_id,
         ]);
-
     } catch (Exception $ex) {
         http_response_code(500);
         echo json_encode(['success' => false, 'message' => $ex->getMessage()]);
@@ -234,7 +234,8 @@ function handlePostEvent() {
 
 // ── Helper ────────────────────────────────────────────────────────────────────
 
-function timeAgo($datetime) {
+function timeAgo($datetime)
+{
     if (!$datetime) return '';
     $diff = time() - strtotime($datetime);
     if ($diff < 60)     return 'Just now';
