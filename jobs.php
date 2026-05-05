@@ -22,9 +22,9 @@
     <body>
         <?php
         if ($loggedIn) {
-            include('includes/navbarindex.php');
-        } else {
             include('includes/navbarhome.php');
+        } else {
+            include('includes/navbarindex.php');
         } ?>
 
         <!-- Inject session info for JS -->
