@@ -179,6 +179,27 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'NO_ZERO_IN_DATE,NO_ZERO_DATE,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `trg_audit_feature_delete` BEFORE DELETE ON `alumnifeatured` 
+FOR EACH ROW 
+BEGIN
+    INSERT INTO audit_logs (table_name, record_id, action_type, user_id)
+    
+    VALUES ('alumnifeatured', OLD.id, 'DELETE', NULL);
+END */;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 
 --
 -- Table structure for table `audit_logs`
@@ -197,7 +218,7 @@ CREATE TABLE `audit_logs` (
   PRIMARY KEY (`log_id`),
   KEY `user_id` (`user_id`),
   CONSTRAINT `audit_logs_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE SET NULL
-) ENGINE=InnoDB AUTO_INCREMENT=43 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=48 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -206,7 +227,7 @@ CREATE TABLE `audit_logs` (
 
 LOCK TABLES `audit_logs` WRITE;
 /*!40000 ALTER TABLE `audit_logs` DISABLE KEYS */;
-INSERT INTO `audit_logs` VALUES (1,'userprofile',3,'UPDATE',4,'2026-05-01 11:30:30'),(2,'users',2,'DELETE',NULL,'2026-05-01 14:08:00'),(3,'userprofile',4,'UPDATE',5,'2026-05-03 13:28:31'),(4,'userprofile',4,'UPDATE',5,'2026-05-03 13:55:36'),(5,'userprofile',4,'UPDATE',5,'2026-05-03 13:56:07'),(6,'userprofile',4,'UPDATE',5,'2026-05-03 13:59:42'),(7,'userprofile',4,'UPDATE',5,'2026-05-03 14:01:25'),(8,'userprofile',4,'UPDATE',5,'2026-05-03 14:01:32'),(9,'userprofile',4,'UPDATE',5,'2026-05-03 14:19:49'),(10,'userprofile',4,'UPDATE',5,'2026-05-03 14:21:01'),(11,'userprofile',4,'UPDATE',5,'2026-05-04 01:59:24'),(12,'userprofile',4,'UPDATE',5,'2026-05-04 01:59:27'),(13,'userprofile',4,'UPDATE',5,'2026-05-04 01:59:33'),(14,'userprofile',4,'UPDATE',5,'2026-05-04 01:59:42'),(15,'userprofile',4,'UPDATE',5,'2026-05-04 02:05:18'),(16,'userprofile',4,'UPDATE',5,'2026-05-04 05:52:50'),(17,'userprofile',4,'UPDATE',5,'2026-05-04 05:52:54'),(18,'userprofile',4,'UPDATE',5,'2026-05-04 05:54:05'),(19,'userprofile',4,'UPDATE',5,'2026-05-04 05:59:16'),(20,'userprofile',4,'UPDATE',5,'2026-05-04 05:59:20'),(21,'userprofile',4,'UPDATE',5,'2026-05-04 05:59:42'),(22,'userprofile',4,'UPDATE',5,'2026-05-04 05:59:59'),(23,'userprofile',4,'UPDATE',5,'2026-05-04 06:04:28'),(24,'userprofile',4,'UPDATE',5,'2026-05-04 06:48:53'),(25,'userprofile',4,'UPDATE',5,'2026-05-04 07:23:20'),(26,'userprofile',4,'UPDATE',5,'2026-05-04 07:27:20'),(27,'userprofile',4,'UPDATE',5,'2026-05-04 07:27:28'),(28,'userprofile',4,'UPDATE',5,'2026-05-04 07:28:11'),(29,'userprofile',4,'UPDATE',5,'2026-05-04 07:31:14'),(30,'userprofile',4,'UPDATE',5,'2026-05-04 07:31:20'),(31,'userprofile',4,'UPDATE',5,'2026-05-04 07:32:37'),(32,'userprofile',4,'UPDATE',5,'2026-05-04 07:34:42'),(33,'userprofile',4,'UPDATE',5,'2026-05-04 07:34:49'),(34,'userprofile',4,'UPDATE',5,'2026-05-04 07:40:13'),(35,'userprofile',4,'UPDATE',5,'2026-05-04 07:40:17'),(36,'userprofile',4,'UPDATE',5,'2026-05-04 07:41:47'),(37,'userprofile',4,'UPDATE',5,'2026-05-04 07:41:51'),(38,'userprofile',4,'UPDATE',5,'2026-05-04 07:46:12'),(39,'userprofile',4,'UPDATE',5,'2026-05-04 07:46:34'),(40,'userprofile',4,'UPDATE',5,'2026-05-05 03:22:39'),(41,'userprofile',4,'UPDATE',5,'2026-05-05 03:24:14'),(42,'userprofile',4,'UPDATE',5,'2026-05-05 03:24:25');
+INSERT INTO `audit_logs` VALUES (1,'userprofile',3,'UPDATE',4,'2026-05-01 11:30:30'),(2,'users',2,'DELETE',NULL,'2026-05-01 14:08:00'),(3,'userprofile',4,'UPDATE',5,'2026-05-03 13:28:31'),(4,'userprofile',4,'UPDATE',5,'2026-05-03 13:55:36'),(5,'userprofile',4,'UPDATE',5,'2026-05-03 13:56:07'),(6,'userprofile',4,'UPDATE',5,'2026-05-03 13:59:42'),(7,'userprofile',4,'UPDATE',5,'2026-05-03 14:01:25'),(8,'userprofile',4,'UPDATE',5,'2026-05-03 14:01:32'),(9,'userprofile',4,'UPDATE',5,'2026-05-03 14:19:49'),(10,'userprofile',4,'UPDATE',5,'2026-05-03 14:21:01'),(11,'userprofile',4,'UPDATE',5,'2026-05-04 01:59:24'),(12,'userprofile',4,'UPDATE',5,'2026-05-04 01:59:27'),(13,'userprofile',4,'UPDATE',5,'2026-05-04 01:59:33'),(14,'userprofile',4,'UPDATE',5,'2026-05-04 01:59:42'),(15,'userprofile',4,'UPDATE',5,'2026-05-04 02:05:18'),(16,'userprofile',4,'UPDATE',5,'2026-05-04 05:52:50'),(17,'userprofile',4,'UPDATE',5,'2026-05-04 05:52:54'),(18,'userprofile',4,'UPDATE',5,'2026-05-04 05:54:05'),(19,'userprofile',4,'UPDATE',5,'2026-05-04 05:59:16'),(20,'userprofile',4,'UPDATE',5,'2026-05-04 05:59:20'),(21,'userprofile',4,'UPDATE',5,'2026-05-04 05:59:42'),(22,'userprofile',4,'UPDATE',5,'2026-05-04 05:59:59'),(23,'userprofile',4,'UPDATE',5,'2026-05-04 06:04:28'),(24,'userprofile',4,'UPDATE',5,'2026-05-04 06:48:53'),(25,'userprofile',4,'UPDATE',5,'2026-05-04 07:23:20'),(26,'userprofile',4,'UPDATE',5,'2026-05-04 07:27:20'),(27,'userprofile',4,'UPDATE',5,'2026-05-04 07:27:28'),(28,'userprofile',4,'UPDATE',5,'2026-05-04 07:28:11'),(29,'userprofile',4,'UPDATE',5,'2026-05-04 07:31:14'),(30,'userprofile',4,'UPDATE',5,'2026-05-04 07:31:20'),(31,'userprofile',4,'UPDATE',5,'2026-05-04 07:32:37'),(32,'userprofile',4,'UPDATE',5,'2026-05-04 07:34:42'),(33,'userprofile',4,'UPDATE',5,'2026-05-04 07:34:49'),(34,'userprofile',4,'UPDATE',5,'2026-05-04 07:40:13'),(35,'userprofile',4,'UPDATE',5,'2026-05-04 07:40:17'),(36,'userprofile',4,'UPDATE',5,'2026-05-04 07:41:47'),(37,'userprofile',4,'UPDATE',5,'2026-05-04 07:41:51'),(38,'userprofile',4,'UPDATE',5,'2026-05-04 07:46:12'),(39,'userprofile',4,'UPDATE',5,'2026-05-04 07:46:34'),(40,'userprofile',4,'UPDATE',5,'2026-05-05 03:22:39'),(41,'userprofile',4,'UPDATE',5,'2026-05-05 03:24:14'),(42,'userprofile',4,'UPDATE',5,'2026-05-05 03:24:25'),(43,'experience',5,'DELETE',9,'2026-05-06 02:05:02'),(44,'education',3,'INSERT',9,'2026-05-06 02:06:08'),(45,'skills',7,'INSERT',9,'2026-05-06 02:08:32'),(46,'skills',7,'DELETE',9,'2026-05-06 02:09:15'),(47,'education',3,'DELETE',9,'2026-05-06 02:09:51');
 /*!40000 ALTER TABLE `audit_logs` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -282,7 +303,7 @@ CREATE TABLE `education` (
   PRIMARY KEY (`edu_id`),
   KEY `user_id` (`user_id`),
   CONSTRAINT `education_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -303,11 +324,51 @@ UNLOCK TABLES;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'NO_ZERO_IN_DATE,NO_ZERO_DATE,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `trg_audit_education_insert` AFTER INSERT ON `education` 
+FOR EACH ROW 
+BEGIN
+    INSERT INTO audit_logs (table_name, record_id, action_type, user_id)
+    VALUES ('education', NEW.edu_id, 'INSERT', NEW.user_id);
+END */;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'NO_ZERO_IN_DATE,NO_ZERO_DATE,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
 /*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `trg_audit_education_update` AFTER UPDATE ON `education` 
 FOR EACH ROW 
 BEGIN
     INSERT INTO audit_logs (table_name, record_id, action_type, user_id)
     VALUES ('education', NEW.edu_id, 'UPDATE', NEW.user_id);
+END */;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'NO_ZERO_IN_DATE,NO_ZERO_DATE,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `trg_audit_education_delete` BEFORE DELETE ON `education` 
+FOR EACH ROW 
+BEGIN
+    INSERT INTO audit_logs (table_name, record_id, action_type, user_id)
+    VALUES ('education', OLD.edu_id, 'DELETE', OLD.user_id);
 END */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -475,7 +536,7 @@ CREATE TABLE `experience` (
   PRIMARY KEY (`exp_id`),
   KEY `user_id` (`user_id`),
   CONSTRAINT `experience_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -496,11 +557,51 @@ UNLOCK TABLES;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'NO_ZERO_IN_DATE,NO_ZERO_DATE,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `trg_audit_experience_insert` AFTER INSERT ON `experience` 
+FOR EACH ROW 
+BEGIN
+    INSERT INTO audit_logs (table_name, record_id, action_type, user_id)
+    VALUES ('experience', NEW.exp_id, 'INSERT', NEW.user_id);
+END */;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'NO_ZERO_IN_DATE,NO_ZERO_DATE,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
 /*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `trg_audit_experience_update` AFTER UPDATE ON `experience` 
 FOR EACH ROW 
 BEGIN
     INSERT INTO audit_logs (table_name, record_id, action_type, user_id)
     VALUES ('experience', NEW.exp_id, 'UPDATE', NEW.user_id);
+END */;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'NO_ZERO_IN_DATE,NO_ZERO_DATE,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `trg_audit_experience_delete` BEFORE DELETE ON `experience` 
+FOR EACH ROW 
+BEGIN
+    INSERT INTO audit_logs (table_name, record_id, action_type, user_id)
+    VALUES ('experience', OLD.exp_id, 'DELETE', OLD.user_id);
 END */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -636,7 +737,7 @@ CREATE TABLE `skills` (
   PRIMARY KEY (`skill_id`),
   KEY `user_id` (`user_id`),
   CONSTRAINT `skills_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -657,11 +758,51 @@ UNLOCK TABLES;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'NO_ZERO_IN_DATE,NO_ZERO_DATE,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `trg_audit_skills_insert` AFTER INSERT ON `skills` 
+FOR EACH ROW 
+BEGIN
+    INSERT INTO audit_logs (table_name, record_id, action_type, user_id)
+    VALUES ('skills', NEW.skill_id, 'INSERT', NEW.user_id);
+END */;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'NO_ZERO_IN_DATE,NO_ZERO_DATE,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
 /*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `trg_audit_skills_update` AFTER UPDATE ON `skills` 
 FOR EACH ROW 
 BEGIN
     INSERT INTO audit_logs (table_name, record_id, action_type, user_id)
     VALUES ('skills', NEW.skill_id, 'UPDATE', NEW.user_id);
+END */;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'NO_ZERO_IN_DATE,NO_ZERO_DATE,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `trg_audit_skills_delete` BEFORE DELETE ON `skills` 
+FOR EACH ROW 
+BEGIN
+    INSERT INTO audit_logs (table_name, record_id, action_type, user_id)
+    VALUES ('skills', OLD.skill_id, 'DELETE', OLD.user_id);
 END */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -1156,4 +1297,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-05-06  4:19:03
+-- Dump completed on 2026-05-06 10:26:26
