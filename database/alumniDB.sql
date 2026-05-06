@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 05, 2026 at 11:08 AM
+-- Generation Time: May 06, 2026 at 10:31 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -27,53 +27,109 @@ DELIMITER $$
 --
 CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_FilterEvents` (IN `p_event_type` VARCHAR(50))   BEGIN
 
+
+
     IF p_event_type = 'All' THEN
+
+
 
         SELECT * FROM Events WHERE status != 'cancelled' ORDER BY event_date ASC;
 
+
+
     ELSE
+
+
 
         SELECT * FROM Events 
 
+
+
         WHERE event_type = p_event_type 
+
+
 
         AND status != 'cancelled' 
 
+
+
         ORDER BY event_date ASC;
 
+
+
     END IF;
+
+
 
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_FilterJobs` (IN `p_type` VARCHAR(50), IN `p_modality` VARCHAR(50))   BEGIN
 
+
+
     SELECT * FROM JobPostings
+
+
 
     WHERE (job_type = p_type OR p_type = 'All')
 
+
+
     AND (modality = p_modality OR p_modality = 'All')
+
+
 
     AND status = 'active'
 
+
+
     ORDER BY posted_at DESC;
+
+
 
 END$$
 
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_GetLatestFeature` ()   BEGIN
+    
+    SELECT id, title, alumni_name, profession, category, cover_image, excerpt 
+    FROM alumnifeatured 
+    ORDER BY created_at DESC 
+    LIMIT 1;
+END$$
+
 CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_RegisterAlumni` (IN `p_email` VARCHAR(100), IN `p_password` VARCHAR(255), IN `p_first_name` VARCHAR(50), IN `p_last_name` VARCHAR(50), IN `p_suffix` VARCHAR(10), IN `p_middle_name` VARCHAR(50), IN `p_contact_number` VARCHAR(11), IN `p_address` VARCHAR(255), IN `p_birthdate` DATE, IN `p_gender` ENUM('Male','Female'), IN `p_student_number` VARCHAR(20), IN `p_course_id` INT, IN `p_year_graduated` YEAR)   BEGIN
+
+
 
     DECLARE v_new_user_id INT;
 
 
 
+
+
+
+
     DECLARE EXIT HANDLER FOR SQLEXCEPTION 
+
+
 
     BEGIN
 
+
+
         ROLLBACK;
+
+
 
         RESIGNAL; 
 
+
+
     END;
+
+
+
+
 
 
 
@@ -81,11 +137,23 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_RegisterAlumni` (IN `p_email` VA
 
 
 
+
+
+
+
     
+
+
 
     INSERT INTO users (email, password, role) 
 
+
+
     VALUES (p_email, p_password, 'alumni');
+
+
+
+
 
 
 
@@ -93,95 +161,185 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_RegisterAlumni` (IN `p_email` VA
 
 
 
+
+
+
+
     
+
+
 
     INSERT INTO userprofile (
 
+
+
         user_id, first_name, last_name, suffix, middle_name, 
+
+
 
         contact_number, address, birthdate, gender
 
+
+
     ) 
+
+
 
     VALUES (
 
+
+
         v_new_user_id, p_first_name, p_last_name, p_suffix, p_middle_name, 
 
+
+
         p_contact_number, p_address, p_birthdate, p_gender
+
+
 
     );
 
 
 
+
+
+
+
     
 
+
+
     INSERT INTO alumnidetails (user_id, student_number, course_id, year_graduated) 
+
+
 
     VALUES (v_new_user_id, p_student_number, p_course_id, p_year_graduated);
 
 
 
+
+
+
+
     COMMIT;
+
+
 
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_SearchEvents` (IN `p_query` VARCHAR(100))   BEGIN
 
+
+
     SET @term = CONCAT('%', p_query, '%');
 
-    
+
 
     
+
+
+
+    
+
+
 
     SELECT e.*, p.first_name, p.last_name, p.suffix, p.profile_picture 
 
+
+
     FROM Events e
+
+
 
     JOIN UserProfile p ON e.user_id = p.user_id
 
+
+
     WHERE (e.event_title LIKE @term 
+
+
 
        OR e.event_description LIKE @term 
 
+
+
        OR e.location LIKE @term 
+
+
 
        OR e.event_type LIKE @term
 
+
+
        OR p.first_name LIKE @term 
+
+
 
        OR p.last_name LIKE @term 
 
+
+
        OR p.suffix LIKE @term)
+
+
 
     AND e.status != 'cancelled'
 
+
+
     ORDER BY e.event_date ASC;
+
+
 
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_SearchJobs` (IN `p_query` VARCHAR(100))   BEGIN
 
+
+
     SET @term = CONCAT('%', p_query, '%');
+
+
 
     SELECT * FROM JobPostings
 
+
+
     WHERE (job_title LIKE @term 
+
+
 
        OR company_name LIKE @term 
 
+
+
        OR job_description LIKE @term 
+
+
 
        OR requirements_qualifications LIKE @term 
 
+
+
        OR benefits LIKE @term 
+
+
 
        OR location LIKE @term 
 
+
+
        OR category LIKE @term)
+
+
 
     AND status = 'active'
 
+
+
     ORDER BY posted_at DESC;
+
+
 
 END$$
 
@@ -220,33 +378,67 @@ CREATE TRIGGER `trg_PreventAlumniDetailsUpdate` BEFORE UPDATE ON `alumnidetails`
 
 
 
+
+
+
+
     IF OLD.student_number <> NEW.student_number THEN
+
+
 
         SIGNAL SQLSTATE '45000'
 
+
+
         SET MESSAGE_TEXT = 'Student number cannot be modified.';
 
+
+
     END IF;
+
+
+
+
 
 
 
     IF OLD.course_id <> NEW.course_id THEN
 
+
+
         SIGNAL SQLSTATE '45000'
+
+
 
         SET MESSAGE_TEXT = 'Course cannot be modified.';
 
+
+
     END IF;
+
+
+
+
 
 
 
     IF OLD.year_graduated <> NEW.year_graduated THEN
 
+
+
         SIGNAL SQLSTATE '45000'
+
+
 
         SET MESSAGE_TEXT = 'Year graduated cannot be modified.';
 
+
+
     END IF;
+
+
+
+
 
 
 
@@ -256,13 +448,23 @@ DELIMITER ;
 DELIMITER $$
 CREATE TRIGGER `trg_PreventDuplicateAlumni` BEFORE INSERT ON `alumnidetails` FOR EACH ROW BEGIN
 
+
+
     IF EXISTS (SELECT 1 FROM AlumniDetails WHERE student_number = NEW.student_number) THEN
+
+
 
         SIGNAL SQLSTATE '45000'
 
+
+
         SET MESSAGE_TEXT = 'Error: This Student Number is already registered to an alumni account.';
 
+
+
     END IF;
+
+
 
 END
 $$
@@ -286,6 +488,33 @@ CREATE TABLE `alumnifeatured` (
   `content` longtext NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Triggers `alumnifeatured`
+--
+DELIMITER $$
+CREATE TRIGGER `trg_audit_feature_delete` BEFORE DELETE ON `alumnifeatured` FOR EACH ROW BEGIN
+    INSERT INTO audit_logs (table_name, record_id, action_type, user_id)
+    
+    VALUES ('alumnifeatured', OLD.id, 'DELETE', NULL);
+END
+$$
+DELIMITER ;
+DELIMITER $$
+CREATE TRIGGER `trg_audit_feature_update` AFTER UPDATE ON `alumnifeatured` FOR EACH ROW BEGIN
+    
+    IF NEW.title <> OLD.title 
+       OR NEW.content <> OLD.content 
+       OR NEW.category <> OLD.category THEN
+       
+        INSERT INTO audit_logs (table_name, record_id, action_type, user_id)
+        
+        VALUES ('alumnifeatured', NEW.id, 'UPDATE', NULL);
+        
+    END IF;
+END
+$$
+DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -348,7 +577,13 @@ INSERT INTO `audit_logs` (`log_id`, `table_name`, `record_id`, `action_type`, `u
 (39, 'userprofile', 4, 'UPDATE', 5, '2026-05-04 07:46:34'),
 (40, 'userprofile', 4, 'UPDATE', 5, '2026-05-05 03:22:39'),
 (41, 'userprofile', 4, 'UPDATE', 5, '2026-05-05 03:24:14'),
-(42, 'userprofile', 4, 'UPDATE', 5, '2026-05-05 03:24:25');
+(42, 'userprofile', 4, 'UPDATE', 5, '2026-05-05 03:24:25'),
+(43, 'experience', 5, 'DELETE', 9, '2026-05-06 02:05:02'),
+(44, 'education', 3, 'INSERT', 9, '2026-05-06 02:06:08'),
+(45, 'skills', 7, 'INSERT', 9, '2026-05-06 02:08:32'),
+(46, 'skills', 7, 'DELETE', 9, '2026-05-06 02:09:15'),
+(47, 'education', 3, 'DELETE', 9, '2026-05-06 02:09:51'),
+(48, 'userprofile', 4, 'UPDATE', 5, '2026-05-06 08:21:20');
 
 -- --------------------------------------------------------
 
@@ -427,6 +662,31 @@ CREATE TABLE `education` (
 INSERT INTO `education` (`edu_id`, `user_id`, `school`, `degree`, `awards`, `start_year`, `end_year`, `created_at`) VALUES
 (2, 5, 'sd', 'sd', 'sd', '1902', '1905', '2026-05-04 06:37:51');
 
+--
+-- Triggers `education`
+--
+DELIMITER $$
+CREATE TRIGGER `trg_audit_education_delete` BEFORE DELETE ON `education` FOR EACH ROW BEGIN
+    INSERT INTO audit_logs (table_name, record_id, action_type, user_id)
+    VALUES ('education', OLD.edu_id, 'DELETE', OLD.user_id);
+END
+$$
+DELIMITER ;
+DELIMITER $$
+CREATE TRIGGER `trg_audit_education_insert` AFTER INSERT ON `education` FOR EACH ROW BEGIN
+    INSERT INTO audit_logs (table_name, record_id, action_type, user_id)
+    VALUES ('education', NEW.edu_id, 'INSERT', NEW.user_id);
+END
+$$
+DELIMITER ;
+DELIMITER $$
+CREATE TRIGGER `trg_audit_education_update` AFTER UPDATE ON `education` FOR EACH ROW BEGIN
+    INSERT INTO audit_logs (table_name, record_id, action_type, user_id)
+    VALUES ('education', NEW.edu_id, 'UPDATE', NEW.user_id);
+END
+$$
+DELIMITER ;
+
 -- --------------------------------------------------------
 
 --
@@ -463,39 +723,85 @@ INSERT INTO `events` (`event_id`, `user_id`, `event_title`, `event_date`, `start
 DELIMITER $$
 CREATE TRIGGER `trg_CheckEventDates` BEFORE INSERT ON `events` FOR EACH ROW BEGIN
 
+
+
     IF NEW.registration_deadline > NEW.event_date THEN
+
+
 
         SIGNAL SQLSTATE '45000' 
 
+
+
         SET MESSAGE_TEXT = 'Error: Registration deadline cannot be later than the event date.';
+
+
 
     END IF;
 
+
+
+END
+$$
+DELIMITER ;
+DELIMITER $$
+CREATE TRIGGER `trg_audit_event_delete` BEFORE DELETE ON `events` FOR EACH ROW BEGIN
+    INSERT INTO audit_logs (table_name, record_id, action_type, user_id)
+    VALUES ('events', OLD.event_id, 'DELETE', OLD.user_id);
+END
+$$
+DELIMITER ;
+DELIMITER $$
+CREATE TRIGGER `trg_audit_event_insert` AFTER INSERT ON `events` FOR EACH ROW BEGIN
+    INSERT INTO audit_logs (table_name, record_id, action_type, user_id)
+    VALUES ('events', NEW.event_id, 'INSERT', NEW.user_id);
 END
 $$
 DELIMITER ;
 DELIMITER $$
 CREATE TRIGGER `trg_audit_event_update` AFTER UPDATE ON `events` FOR EACH ROW BEGIN
 
+
+
     
+
+
 
     IF NEW.event_date <> OLD.event_date 
 
+
+
        OR NEW.start_time <> OLD.start_time 
+
+
 
        OR NEW.end_time <> OLD.end_time 
 
+
+
        OR NOT (NEW.registration_deadline <=> OLD.registration_deadline) THEN
+
+
 
        
 
+
+
         INSERT INTO audit_logs (table_name, record_id, action_type, user_id)
+
+
 
         VALUES ('events', NEW.event_id, 'UPDATE', NEW.user_id);
 
+
+
         
 
+
+
     END IF;
+
+
 
 END
 $$
@@ -527,6 +833,31 @@ INSERT INTO `experience` (`exp_id`, `user_id`, `title`, `company`, `location`, `
 (1, 5, 'Software Developers', 'Rocketech', '15-19 Bloomsbury Way, Holborn, London, WC1A 2TH.', '2005-07-21', '2011-06-14', 'The Software Engineer is responsible for the complete lifecycle of software development. This role applies engineering principles to design, develop, test, release, and maintain software programs that solve complex business or consumer needs', '2026-05-04 02:18:16'),
 (3, 5, 'sd', 'sd', 'sd', '2026-05-19', '2026-05-18', 'sd', '2026-05-04 13:17:42'),
 (4, 5, 'aya', 'aya', 'aya', '2026-05-20', '2026-05-15', 'ghost', '2026-05-05 03:23:13');
+
+--
+-- Triggers `experience`
+--
+DELIMITER $$
+CREATE TRIGGER `trg_audit_experience_delete` BEFORE DELETE ON `experience` FOR EACH ROW BEGIN
+    INSERT INTO audit_logs (table_name, record_id, action_type, user_id)
+    VALUES ('experience', OLD.exp_id, 'DELETE', OLD.user_id);
+END
+$$
+DELIMITER ;
+DELIMITER $$
+CREATE TRIGGER `trg_audit_experience_insert` AFTER INSERT ON `experience` FOR EACH ROW BEGIN
+    INSERT INTO audit_logs (table_name, record_id, action_type, user_id)
+    VALUES ('experience', NEW.exp_id, 'INSERT', NEW.user_id);
+END
+$$
+DELIMITER ;
+DELIMITER $$
+CREATE TRIGGER `trg_audit_experience_update` AFTER UPDATE ON `experience` FOR EACH ROW BEGIN
+    INSERT INTO audit_logs (table_name, record_id, action_type, user_id)
+    VALUES ('experience', NEW.exp_id, 'UPDATE', NEW.user_id);
+END
+$$
+DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -565,23 +896,55 @@ INSERT INTO `jobpostings` (`job_id`, `user_id`, `job_title`, `company_name`, `lo
 -- Triggers `jobpostings`
 --
 DELIMITER $$
+CREATE TRIGGER `trg_audit_job_delete` BEFORE DELETE ON `jobpostings` FOR EACH ROW BEGIN
+    INSERT INTO audit_logs (table_name, record_id, action_type, user_id)
+    VALUES ('jobpostings', OLD.job_id, 'DELETE', OLD.user_id);
+END
+$$
+DELIMITER ;
+DELIMITER $$
+CREATE TRIGGER `trg_audit_job_insert` AFTER INSERT ON `jobpostings` FOR EACH ROW BEGIN
+    INSERT INTO audit_logs (table_name, record_id, action_type, user_id)
+    VALUES ('jobpostings', NEW.job_id, 'INSERT', NEW.user_id);
+END
+$$
+DELIMITER ;
+DELIMITER $$
 CREATE TRIGGER `trg_audit_job_update` AFTER UPDATE ON `jobpostings` FOR EACH ROW BEGIN
+
+
 
     
 
+
+
     IF NEW.modality <> OLD.modality 
+
+
 
        OR NOT (NEW.contact_email <=> OLD.contact_email) THEN
 
+
+
        
+
+
 
         INSERT INTO audit_logs (table_name, record_id, action_type, user_id)
 
+
+
         VALUES ('jobpostings', NEW.job_id, 'UPDATE', NEW.user_id);
+
+
 
         
 
+
+
     END IF;
+
+
 
 END
 $$
@@ -597,17 +960,43 @@ CREATE TABLE `skills` (
   `skill_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
   `skill_name` varchar(100) NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `skill_level` varchar(50) NOT NULL DEFAULT 'Beginner'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `skills`
 --
 
-INSERT INTO `skills` (`skill_id`, `user_id`, `skill_name`, `created_at`) VALUES
-(4, 5, 'ds', '2026-05-04 07:49:41'),
-(5, 5, 'sd', '2026-05-04 13:17:30'),
-(6, 5, 'JAVA', '2026-05-05 03:23:36');
+INSERT INTO `skills` (`skill_id`, `user_id`, `skill_name`, `created_at`, `skill_level`) VALUES
+(4, 5, 'ds', '2026-05-04 07:49:41', 'Beginner'),
+(5, 5, 'sd', '2026-05-04 13:17:30', 'Beginner'),
+(6, 5, 'JAVA', '2026-05-05 03:23:36', 'Beginner');
+
+--
+-- Triggers `skills`
+--
+DELIMITER $$
+CREATE TRIGGER `trg_audit_skills_delete` BEFORE DELETE ON `skills` FOR EACH ROW BEGIN
+    INSERT INTO audit_logs (table_name, record_id, action_type, user_id)
+    VALUES ('skills', OLD.skill_id, 'DELETE', OLD.user_id);
+END
+$$
+DELIMITER ;
+DELIMITER $$
+CREATE TRIGGER `trg_audit_skills_insert` AFTER INSERT ON `skills` FOR EACH ROW BEGIN
+    INSERT INTO audit_logs (table_name, record_id, action_type, user_id)
+    VALUES ('skills', NEW.skill_id, 'INSERT', NEW.user_id);
+END
+$$
+DELIMITER ;
+DELIMITER $$
+CREATE TRIGGER `trg_audit_skills_update` AFTER UPDATE ON `skills` FOR EACH ROW BEGIN
+    INSERT INTO audit_logs (table_name, record_id, action_type, user_id)
+    VALUES ('skills', NEW.skill_id, 'UPDATE', NEW.user_id);
+END
+$$
+DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -637,7 +1026,7 @@ CREATE TABLE `userprofile` (
 INSERT INTO `userprofile` (`profile_id`, `user_id`, `first_name`, `last_name`, `suffix`, `middle_name`, `contact_number`, `address`, `birthdate`, `gender`, `profile_picture`, `about`) VALUES
 (1, 1, 'Vehniah', 'Samson', '', 'Perol', '09929952041', 'Callejon 2', '2006-09-11', 'Male', NULL, NULL),
 (3, 4, 'Mark Venice', 'Escalomos', 'Sr.', 'Ash', '09324424232', 'hello', '2015-10-01', 'Male', NULL, NULL),
-(4, 5, 'John Jesse', 'Escalona', 'III', 'Macuana', '09927756044', '3078 barangay saksakan st. pasig city', '2005-07-07', 'Male', 'avatar_5_1777951454.png', 'HELLO ITS ME KAT BADING'),
+(4, 5, 'John Jesses', 'Escalona', 'III', 'Macuana', '09927756044', '3078 barangay saksakan st. pasig city', '2005-07-07', 'Male', 'avatar_5_1777951454.png', 'HELLO ITS ME KAT BADING'),
 (5, 7, 'Mark Venice', 'Samson', 'Sr.', 'Ash', '09927756044', 'tao', '2026-03-25', 'Male', NULL, NULL),
 (6, 9, 'Sam Aidan', 'Gonzaga', '', 'Capalaran', '09625928701', 'Mulawin St.', '2005-11-17', 'Male', NULL, NULL);
 
@@ -647,9 +1036,15 @@ INSERT INTO `userprofile` (`profile_id`, `user_id`, `first_name`, `last_name`, `
 DELIMITER $$
 CREATE TRIGGER `trg_audit_profile_update` AFTER UPDATE ON `userprofile` FOR EACH ROW BEGIN
 
+
+
     INSERT INTO audit_logs (table_name, record_id, action_type, user_id)
 
+
+
     VALUES ('userprofile', NEW.profile_id, 'UPDATE', NEW.user_id);
+
+
 
 END
 $$
@@ -688,9 +1083,15 @@ INSERT INTO `users` (`id`, `email`, `password`, `role`, `status`, `created_at`) 
 DELIMITER $$
 CREATE TRIGGER `trg_audit_user_delete` BEFORE DELETE ON `users` FOR EACH ROW BEGIN
 
+
+
     INSERT INTO audit_logs (table_name, record_id, action_type, user_id)
 
+
+
     VALUES ('users', OLD.id, 'DELETE', OLD.id);
+
+
 
 END
 $$
@@ -698,15 +1099,27 @@ DELIMITER ;
 DELIMITER $$
 CREATE TRIGGER `trg_audit_user_security` AFTER UPDATE ON `users` FOR EACH ROW BEGIN
 
+
+
     
+
+
 
     IF OLD.status <> NEW.status OR OLD.role <> NEW.role THEN
 
+
+
         INSERT INTO audit_logs (table_name, record_id, action_type, user_id)
+
+
 
         VALUES ('users', NEW.id, 'UPDATE', NEW.id);
 
+
+
     END IF;
+
+
 
 END
 $$
@@ -822,7 +1235,7 @@ ALTER TABLE `alumnifeatured`
 -- AUTO_INCREMENT for table `audit_logs`
 --
 ALTER TABLE `audit_logs`
-  MODIFY `log_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=43;
+  MODIFY `log_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=49;
 
 --
 -- AUTO_INCREMENT for table `courses`
@@ -840,7 +1253,7 @@ ALTER TABLE `departments`
 -- AUTO_INCREMENT for table `education`
 --
 ALTER TABLE `education`
-  MODIFY `edu_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `edu_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `events`
@@ -852,7 +1265,7 @@ ALTER TABLE `events`
 -- AUTO_INCREMENT for table `experience`
 --
 ALTER TABLE `experience`
-  MODIFY `exp_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `exp_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `jobpostings`
@@ -864,7 +1277,7 @@ ALTER TABLE `jobpostings`
 -- AUTO_INCREMENT for table `skills`
 --
 ALTER TABLE `skills`
-  MODIFY `skill_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `skill_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `userprofile`
@@ -943,57 +1356,113 @@ DELIMITER $$
 --
 CREATE DEFINER=`root`@`localhost` EVENT `evt_AutomateEventStatus` ON SCHEDULE EVERY 15 MINUTE STARTS '2026-04-29 12:11:11' ON COMPLETION PRESERVE ENABLE DO BEGIN
 
+
+
     
+
+
 
     UPDATE events 
 
+
+
     SET status = 'completed' 
+
+
 
     WHERE status NOT IN ('completed', 'cancelled') 
 
+
+
       AND (
+
+
 
           event_date < CURRENT_DATE 
 
+
+
           OR (event_date = CURRENT_DATE AND CURRENT_TIME > end_time)
+
+
 
       );
 
 
 
+
+
+
+
     
+
+
 
     UPDATE events 
 
+
+
     SET status = 'ongoing' 
+
+
 
     WHERE status = 'upcoming' 
 
+
+
       AND event_date = CURRENT_DATE 
 
+
+
       AND CURRENT_TIME >= start_time 
+
+
 
       AND CURRENT_TIME <= end_time;
 
 
 
+
+
+
+
     
+
+
 
     UPDATE events 
 
+
+
     SET status = 'upcoming' 
+
+
 
     WHERE status IN ('ongoing', 'completed')
 
+
+
       AND status != 'cancelled'
+
+
 
       AND (
 
+
+
           event_date > CURRENT_DATE 
+
+
 
           OR (event_date = CURRENT_DATE AND CURRENT_TIME < start_time)
 
+
+
       );
+
+
+
+
 
 
 

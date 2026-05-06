@@ -371,10 +371,24 @@ if (!empty($profile['last_name'])) {
 
                 <!-- ── Add Skillzzzz--->
                 <div id="formSkill" class="modalForm" style="display:none">
+
                     <div class="formGroup">
                         <label for="skillName">Skill</label>
                         <input type="text" id="skillName" placeholder="e.g. JavaScript">
                     </div>
+
+                    <div class="formGroup">
+                        <label for="skillLevel">Skill Level</label>
+
+                        <select id="skillLevel">
+                            <option value="">Select Level</option>
+                            <option value="Beginner">Beginner</option>
+                            <option value="Intermediate">Intermediate</option>
+                            <option value="Advanced">Advanced</option>
+                            <option value="Expert">Expert</option>
+                        </select>
+                    </div>
+
                 </div>
 
             </div>
@@ -387,27 +401,15 @@ if (!empty($profile['last_name'])) {
     </div>
 
     <div class="dialogOverlay" id="avatarDialog">
-    <div class="dialogBox">
-        <h3>Update Profile Picture</h3>
-        <p>What do you want to do?</p>
-
-        <div class="dialogActions">
-
-            <button class="btnCancel" id="cancelAvatarBtn">
-                Cancel
-            </button>
-
-            <!-- <button class="btnDanger" id="removeAvatarBtn">
-                Remove Photo
-            </button> -->
-
-            <button class="btnConfirm" id="confirmAvatarBtn">
-                Upload
-            </button>
-
+        <div class="dialogBox">
+            <h3>Update Profile Picture</h3>
+            <p>What do you want to do?</p>
+            <div class="dialogActions">
+                <button class="btnCancel" id="cancelAvatarBtn">Cancel</button>
+                <button class="btnConfirm" id="confirmAvatarBtn">Upload</button>
+            </div>
         </div>
     </div>
-</div>
 
     <!-- DELETE DIALOG -->
     <div class="dialogOverlay" id="deleteDialog">
@@ -454,7 +456,8 @@ if (!empty($profile['last_name'])) {
             skills: <?= json_encode(array_values(array_map(function ($s) {
                         return [
                             "id" => $s['skill_id'] ?? null,
-                            "name" => $s['skill_name'] ?? ''
+                            "name" => $s['skill_name'] ?? '',
+                            "level" => $s['skill_level'] ?? ''
                         ];
                     }, $skills ?? []))) ?>,
 

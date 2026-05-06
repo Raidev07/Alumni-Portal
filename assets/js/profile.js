@@ -105,7 +105,6 @@ function render() {
     }
 
     // SKILLS
-    // SKILLS
     const skillsEl = document.getElementById("skillsList");
 
     if (!Array.isArray(profile.skills) || profile.skills.length === 0) {
@@ -115,16 +114,16 @@ function render() {
         skillsEl.innerHTML = profile.skills
             .map(
                 (s) => `
-<span class="badge">
-    ${esc(s.name)}
-
-    <button 
-        class="delete-skill"
-        onclick="removeSkill(${s.id})">
-        &times;
-    </button>
-</span>
-`,
+                <span class="badge">
+                    ${esc(s.name)} • ${esc(s.level)}
+                            
+                    <button 
+                        class="delete-skill"
+                        onclick="removeSkill(${s.id})">
+                        &times;
+                    </button>
+                </span>
+                `,
             )
             .join("");
     }
@@ -202,6 +201,7 @@ function closeModal() {
 }
 
 // Profile Edit
+// Profile Edit
 function openEditProfile() {
     document.getElementById("mFirstName").value = profile.firstName ?? "";
     document.getElementById("mMiddleName").value = profile.middleName ?? "";
@@ -217,14 +217,44 @@ function openEditProfile() {
         "Update your basic information.",
         "formEditProfile",
         () => {
-            profile.firstName = g("mFirstName");
-            profile.middleName = g("mMiddleName");
-            profile.lastName = g("mLastName");
-            profile.suffix = g("mSuffix");
+            const updated = {
+                first_name: g("mFirstName"),
+                middle_name: g("mMiddleName"),
+                last_name: g("mLastName"),
+                suffix: g("mSuffix"),
+                headline: g("mHeadline"),
+                address: g("mLocation"),
+                email: g("mEmail"),
+            };
 
-            profile.headline = g("mHeadline");
-            profile.location = g("mLocation");
-            profile.email = g("mEmail");
+            fetch("assets/profile/update_profile.php", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded",
+                },
+                body: new URLSearchParams(updated),
+            })
+                .then((res) => res.json())
+                .then((data) => {
+                    if (data.status === "success") {
+                        profile.firstName = updated.first_name;
+                        profile.middleName = updated.middle_name;
+                        profile.lastName = updated.last_name;
+                        profile.suffix = updated.suffix;
+
+                        profile.headline = updated.headline;
+                        profile.location = updated.address;
+                        profile.email = updated.email;
+
+                        render();
+                        closeModal();
+                    } else {
+                        alert(data.message || "Update failed");
+                    }
+                })
+                .catch(() => {
+                    alert("Something went wrong");
+                });
         },
     );
 }
@@ -393,18 +423,18 @@ function deleteExp(id) {
                 },
                 body: new URLSearchParams({ id }),
             })
-            .then(res => res.json())
-            .then(data => {
-                if (data.status === "success") {
-                    profile.experiences = profile.experiences.filter(
-                        x => String(x.id) !== String(id)
-                    );
-                    render();
-                } else {
-                    alert("Delete failed");
-                }
-            });
-        }
+                .then((res) => res.json())
+                .then((data) => {
+                    if (data.status === "success") {
+                        profile.experiences = profile.experiences.filter(
+                            (x) => String(x.id) !== String(id),
+                        );
+                        render();
+                    } else {
+                        alert("Delete failed");
+                    }
+                });
+        },
     );
 }
 
@@ -511,24 +541,25 @@ function deleteEdu(id) {
                 },
                 body: new URLSearchParams({ id }),
             })
-            .then(res => res.json())
-            .then(data => {
-                if (data.status === "success") {
-                    profile.educations = profile.educations.filter(
-                        x => String(x.id) !== String(id)
-                    );
-                    render();
-                } else {
-                    alert("Delete failed");
-                }
-            });
-        }
+                .then((res) => res.json())
+                .then((data) => {
+                    if (data.status === "success") {
+                        profile.educations = profile.educations.filter(
+                            (x) => String(x.id) !== String(id),
+                        );
+                        render();
+                    } else {
+                        alert("Delete failed");
+                    }
+                });
+        },
     );
 }
 
 // Skills functions
 function openAddSkill() {
     document.getElementById("skillName").value = "";
+    document.getElementById("skillLevel").value = "";
 
     openModal(
         "Add Skill",
@@ -536,8 +567,12 @@ function openAddSkill() {
         "formSkill",
         () => {
             const skill = g("skillName").trim();
+            const level = g("skillLevel").trim();
 
-            if (!skill) return;
+            if (!skill || !level) {
+                alert("Please complete all fields");
+                return;
+            }
 
             fetch("assets/profile/add_skill.php", {
                 method: "POST",
@@ -546,6 +581,7 @@ function openAddSkill() {
                 },
                 body: new URLSearchParams({
                     skill: skill,
+                    level: level,
                 }),
             })
                 .then((res) => res.json())
@@ -554,6 +590,7 @@ function openAddSkill() {
                         profile.skills.push({
                             id: data.id,
                             name: skill,
+                            level: level,
                         });
 
                         render();
@@ -578,18 +615,18 @@ function removeSkill(id) {
                 },
                 body: new URLSearchParams({ id }),
             })
-            .then(res => res.json())
-            .then(data => {
-                if (data.status === "success") {
-                    profile.skills = profile.skills.filter(
-                        x => String(x.id) !== String(id)
-                    );
-                    render();
-                } else {
-                    alert("Delete failed");
-                }
-            });
-        }
+                .then((res) => res.json())
+                .then((data) => {
+                    if (data.status === "success") {
+                        profile.skills = profile.skills.filter(
+                            (x) => String(x.id) !== String(id),
+                        );
+                        render();
+                    } else {
+                        alert("Delete failed");
+                    }
+                });
+        },
     );
 }
 
@@ -624,14 +661,14 @@ document.getElementById("confirmAvatarBtn").addEventListener("click", () => {
         method: "POST",
         body: formData,
     })
-    .then(res => res.text())
-    .then(res => {
-        if (res.trim() === "success") {
-            location.reload();
-        } else {
-            alert("Upload failed: " + res);
-        }
-    });
+        .then((res) => res.text())
+        .then((res) => {
+            if (res.trim() === "success") {
+                location.reload();
+            } else {
+                alert("Upload failed: " + res);
+            }
+        });
 
     document.getElementById("avatarDialog").classList.remove("active");
 });

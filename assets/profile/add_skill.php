@@ -2,7 +2,7 @@
 session_start();
 require_once "../../backend/db.php";
 
-header('Content-Type: application/json');
+header("Content-Type: application/json");
 
 if (!isset($_SESSION['user_id'])) {
     echo json_encode([
@@ -14,28 +14,37 @@ if (!isset($_SESSION['user_id'])) {
 $user_id = $_SESSION['user_id'];
 
 $skill = trim($_POST['skill'] ?? '');
+$level = trim($_POST['level'] ?? '');
 
-if ($skill === '') {
+if (empty($skill) || empty($level)) {
     echo json_encode([
         "status" => "error",
-        "message" => "Skill required"
+        "message" => "All fields required"
     ]);
     exit();
 }
 
 $stmt = $conn->prepare("
-    INSERT INTO skills
-    (user_id, skill_name)
-    VALUES (?, ?)
+    INSERT INTO skills (
+        user_id,
+        skill_name,
+        skill_level
+    )
+    VALUES (?, ?, ?)
 ");
 
-$stmt->bind_param("is", $user_id, $skill);
+$stmt->bind_param(
+    "iss",
+    $user_id,
+    $skill,
+    $level
+);
 
 if ($stmt->execute()) {
 
     echo json_encode([
         "status" => "success",
-        "id" => $stmt->insert_id
+        "id" => $conn->insert_id
     ]);
 
 } else {
@@ -45,3 +54,4 @@ if ($stmt->execute()) {
         "message" => $stmt->error
     ]);
 }
+?>
