@@ -26,6 +26,13 @@
         include('includes/navbarindex.php');
     } ?>
 
+    <!-- Pass login state to JavaScript -->
+    <script>
+        const SESSION_LOGGED_IN = <?= $isLoggedIn ? 'true' : 'false' ?>;
+        const SESSION_USER_ID = <?= $userId ?>;
+    </script>
+
+    
     <!-- POST JOB MODAL OVERLAY -->
     <div class="overlay hidden" id="postOverlay">
         <div class="modal">
@@ -140,7 +147,8 @@
                     <?php if (isset($_SESSION['user_id'])): ?>
                         <a class="btn-apply" id="d-link" href="#" target="_blank">Apply Now</a>
                     <?php else: ?>
-                            <a class="btn-apply" id="d-link" onclick="window.location.href='login.php'" target="_blank">Login to Apply</a>
+                        <a class="btn-apply" id="d-link" onclick="window.location.href='login.php'" target="_blank">Login to
+                            Apply</a>
 
                     <?php endif; ?>
 
