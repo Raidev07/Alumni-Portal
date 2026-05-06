@@ -9,14 +9,50 @@ require_once "backend/db.php";
 $isLoggedIn = isset($_SESSION['user_id']);
 $uid = $isLoggedIn ? $_SESSION['user_id'] : null;
 
-$query = "SELECT COUNT(*) AS total_alumni FROM users WHERE role = 'alumni'";
+/* ================= TOTAL ALUMNI ================= */
+$query = "
+    SELECT COUNT(*) AS total_alumni
+    FROM users
+    WHERE role = 'alumni'
+";
+
 $result = mysqli_query($conn, $query);
 
 $total_alumni = 0;
+
 if ($result) {
     $row = mysqli_fetch_assoc($result);
     $total_alumni = $row['total_alumni'] ?? 0;
 }
+
+
+/* ================= TOTAL EVENTS ================= */
+$events_query = "
+    SELECT COUNT(*) AS total_events
+    FROM events
+";
+
+$events_result = mysqli_query($conn, $events_query);
+
+$total_events = 0;
+
+if ($events_result) {
+    $row = mysqli_fetch_assoc($events_result);
+    $total_events = $row['total_events'] ?? 0;
+}
+
+
+/* ================= TOTAL JOBS ================= */
+$query_jobs = "SELECT COUNT(*) AS total_jobs FROM jobpostings";
+$result_jobs = mysqli_query($conn, $query_jobs);
+
+$total_jobs = 0;
+
+if ($result_jobs) {
+    $row_jobs = mysqli_fetch_assoc($result_jobs);
+    $total_jobs = $row_jobs['total_jobs'] ?? 0;
+}
+
 
 $full_name = 'Guest';
 
@@ -135,25 +171,20 @@ if ($isLoggedIn) {
             <h1>Community</h1>
         </div>
         <div class="project-container">
-            <div onclick="window.location.href='https://github.com/Raidev07' " class="project-box">
+            <div onclick="window.location.href='articles_page.php' " class="project-box">
                 <i class="uil uil-briefcase-alt"></i>
                 <h3> <?= number_format($total_alumni) ?>+ Members</h3>
                 <label>Alumni</label>
             </div>
-            <div onclick="window.location.href='https://www.facebook.com/jb.vasquezrollamas'" class="project-box">
+            <div onclick="window.location.href='events.php'" class="project-box">
                 <i class="uil uil-users-alt"></i>
-                <h3>100+ Events</h3>
+                <h3><?= number_format($total_events) ?>+ Events</h3>
                 <label>Events per year</label>
             </div>
-            <div class="project-box">
+            <div onclick="window.location.href='jobs.php'" class="project-box">
                 <i class="uil uil-award"></i>
-                <h3>Lorem ipsum</h3>
-                <label>dolor sit amet</label>
-            </div>
-            <div class="project-box">
-                <i class="uil uil-award"></i>
-                <h3>95% Overall</h3>
-                <label>Satisfaction Rate</label>
+                <h3><?= number_format($total_jobs) ?>+ Jobs</h3>
+                <label>jobs per year</label>
             </div>
         </div>
     </section>

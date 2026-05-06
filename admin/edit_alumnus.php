@@ -326,9 +326,9 @@ if (!$row) {
                                             <!-- ROW 6: COURSE + YEAR -->
                                             <div class="row g-3 mt-2">
                                                 <div class="col-md-6">
-                                                    <label class="form-label">Course <span class="text-danger">*</span></label>
+                                                    <label class="form-label">Program <span class="text-danger">*</span></label>
                                                     <select class="form-select" name="course_id" required>
-                                                        <option value="">Select a Course</option>
+                                                        <option value="">Select a Program</option>
                                                         <?php
                                                         $courseQuery = "SELECT * FROM courses ORDER BY course_code ASC";
                                                         $courseResult = mysqli_query($conn, $courseQuery);

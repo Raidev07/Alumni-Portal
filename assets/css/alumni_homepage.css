@@ -12,7 +12,7 @@ body {
 }
 
 .header {
-    min-height: 95vh;
+    min-height: 88vh;
     width: 100%;
     background-image: url(../image/homepage_img.png);
     background-position: center;
@@ -316,8 +316,8 @@ body {
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    width: 22%;
-    height: 200px;
+    width: 25%;
+    height: 225px;
     background: white;
     border-radius: 20px;
     box-shadow: rgba(17, 12, 46, 0.15) 0px 48px 100px 0px;

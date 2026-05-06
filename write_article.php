@@ -35,7 +35,7 @@
       <div class="field"><label for="content">Full article *</label><textarea id="content" name="content" rows="10" placeholder="Tell the whole story. Use blank lines to separate paragraphs." required></textarea></div>
       <div class="form-actions">
         <button type="submit" class="btn btn-primary">Publish story</button>
-        <a class="btn btn-outline" href="articles.html">Cancel</a>
+        <a class="btn btn-outline" href="admin/dashboard.php">Cancel</a>
       </div>
     </form>
   </div>
