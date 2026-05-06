@@ -115,11 +115,112 @@ if (!empty($_SESSION['first_name'])) {
                 </div>
                 <div class="detail-actions">
 
-                    <button class="btn-apply" id="d-register">Register Now</button>
-                    <button class="btn-back" id="closeDetail">Close</button>
+                    <button class="btn-apply" id="d-register">
+                        Register Now
+                    </button>
+
+                    <button class="btn-edit hidden" id="d-edit">
+                        Edit
+                    </button>
+
+                    <button class="btn-back" id="closeDetail">
+                        Close
+                    </button>
+
+                    <button class="btn-delete hidden" id="d-delete">
+                        Delete
+                    </button>
+
                 </div>
             </div>
         </div>
+    </div>
+
+    <!-- EDIT EVENT MODAL -->
+    <div class="overlay hidden" id="editOverlay">
+
+        <div class="modal">
+
+            <div class="modal-header">
+                <h2>Edit Event</h2>
+                <p>Update the information below</p>
+            </div>
+
+            <input type="hidden" id="e-id">
+
+            <div class="form-grid">
+
+                <div class="form-group form-full">
+                    <label>Event Title</label>
+                    <input id="e-title" type="text">
+                </div>
+
+                <div class="form-group">
+                    <label>Event Date</label>
+                    <input id="e-date" type="date">
+                </div>
+
+                <div class="form-group">
+                    <label>Event Type</label>
+                    <select id="e-type">
+                        <option>Networking</option>
+                        <option>Workshop</option>
+                        <option>Seminar</option>
+                        <option>Reunion</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Time Start</label>
+                    <input id="e-time-start" type="time">
+                </div>
+
+                <div class="form-group">
+                    <label>Time End</label>
+                    <input id="e-time-end" type="time">
+                </div>
+
+                <div class="form-group">
+                    <label>Location</label>
+                    <input id="e-location" type="text">
+                </div>
+
+                <div class="form-group">
+                    <label>Max Attendees</label>
+                    <input id="e-max" type="number">
+                </div>
+
+                <div class="form-group">
+                    <label>Deadline</label>
+                    <input id="e-deadline" type="date">
+                </div>
+
+                <div class="form-group">
+                    <label>Email</label>
+                    <input id="e-email" type="email">
+                </div>
+
+                <div class="form-group form-full">
+                    <label>Description</label>
+                    <textarea id="e-desc" rows="4"></textarea>
+                </div>
+
+            </div>
+
+            <div class="modal-footer">
+
+                <button class="btn-cancel" id="cancelEditBtn">
+                    Cancel
+                </button>
+
+                <button class="btn-post" id="saveEditBtn">
+                    Save Changes
+                </button>
+
+            </div>
+
+        </div>
+
     </div>
 
     <!-- MAIN PAGE -->
@@ -150,6 +251,11 @@ if (!empty($_SESSION['first_name'])) {
                 <div class="filter-item" data-filter="Workshop">Workshop</div>
                 <div class="filter-item" data-filter="Seminar">Seminar</div>
                 <div class="filter-item" data-filter="Reunion">Reunion</div>
+                <?php if (isset($_SESSION['user_id'])): ?>
+                    <div class="filter-item" data-filter="mine">
+                        Created by Me
+                    </div>
+                <?php endif; ?>
             </aside>
             <main class="main">
                 <div class="search-row">
@@ -162,6 +268,35 @@ if (!empty($_SESSION['first_name'])) {
                 </div>
             </main>
         </div>
+    </div>
+
+    <!-- DELETE MODAL -->
+    <div class="overlay hidden" id="deleteOverlay">
+
+        <div class="modal delete-modal">
+
+            <div class="modal-header">
+                <h2>Delete Event</h2>
+
+                <p>
+                    Are you sure you want to delete this event?
+                </p>
+            </div>
+
+            <div class="modal-footer">
+
+                <button class="btn-back" id="cancelDeleteBtn">
+                    Cancel
+                </button>
+
+                <button class="btn-delete" id="confirmDeleteBtn">
+                    Delete
+                </button>
+
+            </div>
+
+        </div>
+
     </div>
 
     <?php include('includes/logoutmodal.php'); ?>

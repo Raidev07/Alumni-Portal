@@ -17,6 +17,10 @@ if ($method === 'GET') {
     handleGetEvents();
 } elseif ($method === 'POST') {
     handlePostEvent();
+} elseif ($method === 'PUT') {
+    handleUpdateEvent();
+} elseif ($method === 'DELETE') {
+    handleDeleteEvent();
 } else {
     http_response_code(405);
     echo json_encode(['success' => false, 'message' => 'Method not allowed.']);
@@ -37,6 +41,7 @@ function handleGetEvents()
         $sql = "
             SELECT
                 e.event_id              AS id,
+                e.user_id               AS user_id,
                 e.event_title           AS title,
                 CONCAT(up.first_name, ' ', up.last_name) AS organizer,
                 e.event_type            AS type,
@@ -233,6 +238,91 @@ function handlePostEvent()
 }
 
 // ── Helper ────────────────────────────────────────────────────────────────────
+
+function handleUpdateEvent()
+{
+    global $conn;
+
+    if (empty($_SESSION['user_id'])) {
+        http_response_code(401);
+        echo json_encode(['success' => false]);
+        return;
+    }
+
+    $data = json_decode(file_get_contents("php://input"), true);
+
+    $id = (int)$data['id'];
+    $user_id = (int)$_SESSION['user_id'];
+
+    $stmt = $conn->prepare("
+        UPDATE events
+        SET
+            event_title=?,
+            event_date=?,
+            event_type=?,
+            start_time=?,
+            end_time=?,
+            location=?,
+            max_attendees=?,
+            registration_deadline=?,
+            contact_email=?,
+            event_description=?
+        WHERE event_id=?
+        AND user_id=?
+    ");
+
+    $stmt->bind_param(
+        "ssssssisssii",
+        $data['title'],
+        $data['date'],
+        $data['type'],
+        $data['timeStart'],
+        $data['timeEnd'],
+        $data['location'],
+        $data['maxAttendees'],
+        $data['deadline'],
+        $data['email'],
+        $data['desc'],
+        $id,
+        $user_id
+    );
+
+    $stmt->execute();
+
+    echo json_encode([
+        'success' => true
+    ]);
+}
+
+function handleDeleteEvent()
+{
+    global $conn;
+
+    if (empty($_SESSION['user_id'])) {
+        http_response_code(401);
+        echo json_encode(['success' => false]);
+        return;
+    }
+
+    $data = json_decode(file_get_contents("php://input"), true);
+
+    $id = (int)$data['id'];
+    $user_id = (int)$_SESSION['user_id'];
+
+    $stmt = $conn->prepare("
+        DELETE FROM events
+        WHERE event_id=?
+        AND user_id=?
+    ");
+
+    $stmt->bind_param("ii", $id, $user_id);
+
+    $stmt->execute();
+
+    echo json_encode([
+        'success' => true
+    ]);
+}
 
 function timeAgo($datetime)
 {
