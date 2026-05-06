@@ -191,7 +191,7 @@ unset($_SESSION['reg_errors'], $_SESSION['reg_old']);
             </div>
 
             <div class="button">
-                <button class="btn" onclick="window.location.href = 'index.php'">
+                <button type="button" class="btn" onclick="window.location.href = 'index.php'">
                     Cancel
                 </button>
                 <input type="submit" value="Register" />
