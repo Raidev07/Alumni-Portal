@@ -1,6 +1,6 @@
 // eventscript.js — Connected to database via event_process.php
 
-let allEvents  = [];
+let allEvents = [];
 let activeType = "all";
 
 // ── Utility: date/time formatters ─────────────────────────────────────────────
@@ -9,57 +9,66 @@ function formatDate(dateStr) {
     if (!dateStr) return "TBD";
     const d = new Date(dateStr + "T00:00:00");
     return d.toLocaleDateString("en-PH", {
-        year: "numeric", month: "long", day: "numeric",
+        year: "numeric",
+        month: "long",
+        day: "numeric",
     });
 }
 
 function formatTime(timeStr) {
     if (!timeStr) return "TBD";
     const [h, m] = timeStr.split(":");
-    const hour   = parseInt(h);
-    const ampm   = hour >= 12 ? "PM" : "AM";
+    const hour = parseInt(h);
+    const ampm = hour >= 12 ? "PM" : "AM";
     const display = hour % 12 === 0 ? 12 : hour % 12;
     return `${display}:${m} ${ampm}`;
 }
 
 function formatTimeRange(timeStart, timeEnd) {
     const start = formatTime(timeStart);
-    const end   = formatTime(timeEnd);
+    const end = formatTime(timeEnd);
     if (start === "TBD" && end === "TBD") return "TBD";
-    if (!timeEnd || end === "TBD")        return start;
+    if (!timeEnd || end === "TBD") return start;
     return `${start} – ${end}`;
 }
 
 function typeBadgeClass(type) {
     switch (type) {
-        case "Networking": return "text-networking";
-        case "Workshop":   return "text-workshop";
-        case "Seminar":    return "text-seminar";
-        case "Reunion":    return "text-reunion";
-        default:           return "text-ft";
+        case "Networking":
+            return "text-networking";
+        case "Workshop":
+            return "text-workshop";
+        case "Seminar":
+            return "text-seminar";
+        case "Reunion":
+            return "text-reunion";
+        default:
+            return "text-ft";
     }
 }
 
 // ── Fetch events from server ──────────────────────────────────────────────────
 
 async function fetchEvents() {
-    const query  = document.getElementById("searchInput").value.trim();
+    const query = document.getElementById("searchInput").value.trim();
     const params = new URLSearchParams();
 
     if (activeType !== "all") params.set("type", activeType);
-    if (query)                params.set("search", query);
+    if (query) params.set("search", query);
 
     showLoadingState(true);
 
     try {
-        const res  = await fetch(`backend/event_process.php?${params.toString()}`);
+        const res = await fetch(
+            `backend/event_process.php?${params.toString()}`,
+        );
         const data = await res.json();
 
-        if (!data.success) throw new Error(data.message || "Failed to load events.");
+        if (!data.success)
+            throw new Error(data.message || "Failed to load events.");
 
         allEvents = data.events;
         renderEvents(allEvents);
-
     } catch (err) {
         showError(err.message);
     } finally {
@@ -70,7 +79,7 @@ async function fetchEvents() {
 // ── Render event cards ────────────────────────────────────────────────────────
 
 function renderEvents(events) {
-    const list  = document.getElementById("jobsList");
+    const list = document.getElementById("jobsList");
     const empty = document.getElementById("emptyState");
 
     if (!events || events.length === 0) {
@@ -81,7 +90,9 @@ function renderEvents(events) {
 
     empty.classList.remove("show");
 
-    list.innerHTML = events.map((e) => `
+    list.innerHTML = events
+        .map(
+            (e) => `
         <div class="job-card">
             <div class="job-content">
                 <div class="job-title">${escHtml(e.title)}</div>
@@ -114,7 +125,9 @@ function renderEvents(events) {
             </div>
             <button class="apply-btn" onclick="openDetail(${e.id})">See More</button>
         </div>
-    `).join("");
+    `,
+        )
+        .join("");
 }
 
 // ── Detail modal ──────────────────────────────────────────────────────────────
@@ -126,8 +139,9 @@ function openDetail(id) {
     document.getElementById("d-type-badge").innerHTML =
         `<span class="detail-event-type-badge ${typeBadgeClass(e.type)}">${escHtml(e.type)}</span>`;
 
-    document.getElementById("d-title").textContent     = e.title;
-    document.getElementById("d-organizer").textContent = e.organizer || "PLP Alumni";
+    document.getElementById("d-title").textContent = e.title;
+    document.getElementById("d-organizer").textContent =
+        e.organizer || "PLP Alumni";
 
     document.getElementById("d-meta").innerHTML = `
         <div class="detail-meta-card">
@@ -162,12 +176,48 @@ function openDetail(id) {
 
     document.getElementById("d-desc").textContent = e.desc || "";
 
-    document.getElementById("d-register").onclick = () => {
-        if (e.email) {
-            window.location.href =
-                "mailto:" + e.email + "?subject=Event Registration: " + encodeURIComponent(e.title);
-        }
-    };
+    const registerBtn = document.getElementById("d-register");
+
+    if (!SESSION_LOGGED_IN) {
+        registerBtn.textContent = "Login to Register";
+        registerBtn.onclick = () => {
+            window.location.href = "login.php";
+        };
+    } else {
+        registerBtn.textContent = "Register Now";
+        registerBtn.onclick = () => {
+            if (e.email) {
+                const subject = "Event Registration: " + e.title;
+                const body =
+                    "Hello,\n\n" +
+                    "I would like to register for the following event:\n\n" +
+                    "Event: " +
+                    e.title +
+                    "\n" +
+                    "Date: " +
+                    formatDate(e.date) +
+                    "\n" +
+                    "Location: " +
+                    e.location +
+                    "\n\n" +
+                    "Please confirm my registration.\n\n" +
+                    "Thank you!";
+
+                window.open(
+                    "https://mail.google.com/mail/?view=cm" +
+                        "&to=" +
+                        encodeURIComponent(e.email) +
+                        "&su=" +
+                        encodeURIComponent(subject) +
+                        "&body=" +
+                        encodeURIComponent(body),
+                    "_blank",
+                );
+            } else {
+                alert("No contact email provided for this event.");
+            }
+        };
+    }
 
     document.getElementById("detailOverlay").classList.remove("hidden");
 }
@@ -201,26 +251,28 @@ document.getElementById("postBtn")?.addEventListener("click", async () => {
 
     const payload = {
         title,
-        date:         document.getElementById("f-date").value            || "",
-        type:         document.getElementById("f-type").value,
-        timeStart:    document.getElementById("f-time-start").value      || "",
-        timeEnd:      document.getElementById("f-time-end").value        || "",
-        location:     document.getElementById("f-location").value.trim() || "TBD",
-        maxAttendees: parseInt(document.getElementById("f-max").value)   || 0,
-        deadline:     document.getElementById("f-deadline").value        || "",
-        email:        document.getElementById("f-email").value.trim()    || "",
-        desc:         document.getElementById("f-desc").value.trim()     || "No description provided.",
+        date: document.getElementById("f-date").value || "",
+        type: document.getElementById("f-type").value,
+        timeStart: document.getElementById("f-time-start").value || "",
+        timeEnd: document.getElementById("f-time-end").value || "",
+        location: document.getElementById("f-location").value.trim() || "TBD",
+        maxAttendees: parseInt(document.getElementById("f-max").value) || 0,
+        deadline: document.getElementById("f-deadline").value || "",
+        email: document.getElementById("f-email").value.trim() || "",
+        desc:
+            document.getElementById("f-desc").value.trim() ||
+            "No description provided.",
     };
 
-    const postBtn       = document.getElementById("postBtn");
-    postBtn.disabled    = true;
+    const postBtn = document.getElementById("postBtn");
+    postBtn.disabled = true;
     postBtn.textContent = "Posting…";
 
     try {
-        const res  = await fetch("backend/event_process.php", {
-            method:  "POST",
+        const res = await fetch("backend/event_process.php", {
+            method: "POST",
             headers: { "Content-Type": "application/json" },
-            body:    JSON.stringify(payload),
+            body: JSON.stringify(payload),
         });
         const data = await res.json();
 
@@ -233,17 +285,26 @@ document.getElementById("postBtn")?.addEventListener("click", async () => {
         }
 
         // Reset form
-        ["f-title","f-date","f-time-start","f-time-end",
-         "f-location","f-max","f-deadline","f-email","f-desc"
-        ].forEach((id) => { document.getElementById(id).value = ""; });
+        [
+            "f-title",
+            "f-date",
+            "f-time-start",
+            "f-time-end",
+            "f-location",
+            "f-max",
+            "f-deadline",
+            "f-email",
+            "f-desc",
+        ].forEach((id) => {
+            document.getElementById(id).value = "";
+        });
 
         document.getElementById("postOverlay").classList.add("hidden");
         await fetchEvents();
-
     } catch (err) {
         showFormError(err.message);
     } finally {
-        postBtn.disabled    = false;
+        postBtn.disabled = false;
         postBtn.textContent = "Post Event";
     }
 });
@@ -252,8 +313,9 @@ document.getElementById("postBtn")?.addEventListener("click", async () => {
 
 document.querySelectorAll(".filter-item").forEach((el) => {
     el.addEventListener("click", () => {
-        document.querySelectorAll(".filter-item")
-                .forEach((e) => e.classList.remove("active"));
+        document
+            .querySelectorAll(".filter-item")
+            .forEach((e) => e.classList.remove("active"));
         el.classList.add("active");
         activeType = el.dataset.filter;
         fetchEvents();
@@ -287,7 +349,8 @@ function showFormError(msg) {
     if (!err) {
         err = document.createElement("p");
         err.id = "formError";
-        err.style.cssText = "color:#e53e3e;font-size:.875rem;margin-top:.5rem;text-align:center;";
+        err.style.cssText =
+            "color:#e53e3e;font-size:.875rem;margin-top:.5rem;text-align:center;";
         document.querySelector(".modal-footer").prepend(err);
     }
     err.textContent = msg;

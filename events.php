@@ -33,7 +33,7 @@ if (!empty($_SESSION['first_name'])) {
 
     <!-- Pass login state to JavaScript -->
     <script>
-        const SESSION_LOGGED_IN = <?= $isLoggedIn ?>;
+        const SESSION_LOGGED_IN = <?= $isLoggedIn ? 'true' : 'false' ?>;
         const SESSION_USER_ID = <?= $userId ?>;
     </script>
 
@@ -114,6 +114,7 @@ if (!empty($_SESSION['first_name'])) {
                     <p id="d-desc"></p>
                 </div>
                 <div class="detail-actions">
+
                     <button class="btn-apply" id="d-register">Register Now</button>
                     <button class="btn-back" id="closeDetail">Close</button>
                 </div>

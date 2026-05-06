@@ -425,9 +425,9 @@ function openAddEdu() {
 }
 
 function openEditEdu(id) {
-    const e = profile.educations.find((x) => x.id === id);
+    const e = profile.educations.find((x) => String(x.id) === String(id));
     if (!e) return;
-    eduModal({ ...e }, true);
+    eduModal(e , true);
 }
 
 function eduModal(edu, editing) {

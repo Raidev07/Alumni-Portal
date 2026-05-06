@@ -14,20 +14,12 @@
 
 <body>
 
-<?php
-session_start();
-// Pass session data to JavaScript safely
-$isLoggedIn = isset($_SESSION['user_id']);
-$userId   = isset($_SESSION['user_id']) ? (int)$_SESSION['user_id'] : 0;
-?>
-
-<!-- Inject session info for JS -->
-<script>
-    const SESSION_LOGGED_IN = <?= $loggedIn ?>;
-    const SESSION_USER_ID   = <?= $userId ?>;
-</script>
-
     <?php
+    session_start();
+    // Pass session data to JavaScript safely
+    $isLoggedIn = isset($_SESSION['user_id']);
+    $userId = isset($_SESSION['user_id']) ? (int) $_SESSION['user_id'] : 0;
+
     if ($isLoggedIn) {
         include('includes/navbarhome.php');
     } else {
@@ -144,7 +136,14 @@ $userId   = isset($_SESSION['user_id']) ? (int)$_SESSION['user_id'] : 0;
                     <p id="d-ben"></p>
                 </div>
                 <div class="detail-actions">
-                    <a class="btn-apply" id="d-link" href="#" target="_blank">Apply Now</a>
+
+                    <?php if (isset($_SESSION['user_id'])): ?>
+                        <a class="btn-apply" id="d-link" href="#" target="_blank">Apply Now</a>
+                    <?php else: ?>
+                            <a class="btn-apply" id="d-link" onclick="window.location.href='login.php'" target="_blank">Login to Apply</a>
+
+                    <?php endif; ?>
+
                     <button class="btn-back" id="closeDetail">Close</button>
                 </div>
             </div>
@@ -160,13 +159,13 @@ $userId   = isset($_SESSION['user_id']) ? (int)$_SESSION['user_id'] : 0;
             </div>
             <!-- Only show "Post a Job" button if logged in -->
             <?php if (isset($_SESSION['user_id'])): ?>
-            <button class="create-btn" id="openPostBtn">
-                <i class="fa-solid fa-plus"></i> Post a Job
-            </button>
+                <button class="create-btn" id="openPostBtn">
+                    <i class="fa-solid fa-plus"></i> Post a Job
+                </button>
             <?php else: ?>
-            <button class="create-btn" onclick="window.location.href='login.php'">
-                <i class="fa-solid fa-plus"></i> Login to Post
-            </button>
+                <button class="create-btn" onclick="window.location.href='login.php'">
+                    <i class="fa-solid fa-plus"></i> Login to Post
+                </button>
             <?php endif; ?>
         </div>
 
@@ -197,4 +196,5 @@ $userId   = isset($_SESSION['user_id']) ? (int)$_SESSION['user_id'] : 0;
     <script src="assets/js/alumni_homepage.js"></script>
     <script src="assets/js/jobscript.js"></script>
 </body>
+
 </html>
