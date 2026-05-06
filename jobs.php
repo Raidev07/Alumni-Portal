@@ -32,7 +32,7 @@
         const SESSION_USER_ID = <?= $userId ?>;
     </script>
 
-    
+
     <!-- POST JOB MODAL OVERLAY -->
     <div class="overlay hidden" id="postOverlay">
         <div class="modal">
@@ -145,19 +145,136 @@
                 <div class="detail-actions">
 
                     <?php if (isset($_SESSION['user_id'])): ?>
-                        <a class="btn-apply" id="d-link" href="#" target="_blank">Apply Now</a>
+                        <a class="btn-apply" id="d-link" href="#" target="_blank">
+                            Apply Now
+                        </a>
                     <?php else: ?>
-                        <a class="btn-apply" id="d-link" onclick="window.location.href='login.php'" target="_blank">Login to
-                            Apply</a>
-
+                        <a class="btn-apply" href="login.php">
+                            Login to Apply
+                        </a>
                     <?php endif; ?>
 
-                    <button class="btn-back" id="closeDetail">Close</button>
+                    <button class="btn-edit hidden" id="d-edit">
+                        Edit
+                    </button>
+
+                    <button class="btn-back" id="closeDetail">
+                        Close
+                    </button>
+
+                    <button class="btn-delete hidden" id="d-delete">
+                        Delete
+                    </button>
+
                 </div>
             </div>
         </div>
     </div>
 
+
+    <!-- EDIT JOB MODAL -->
+    <div class="overlay hidden" id="editOverlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h2>Edit Job Posting</h2>
+                <p>Update the information below</p>
+            </div>
+
+            <input type="hidden" id="e-id">
+
+            <div class="form-grid">
+
+                <div class="form-group">
+                    <label>Job Title</label>
+                    <input id="e-title" type="text">
+                </div>
+
+                <div class="form-group">
+                    <label>Company Name</label>
+                    <input id="e-company" type="text">
+                </div>
+
+                <div class="form-group">
+                    <label>Location</label>
+                    <input id="e-location" type="text">
+                </div>
+
+                <div class="form-group">
+                    <label>Job Type</label>
+                    <select id="e-type">
+                        <option>Full-time</option>
+                        <option>Part-time</option>
+                        <option>Contract</option>
+                        <option>Internship</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Salary</label>
+                    <input id="e-salary" type="text">
+                </div>
+
+                <div class="form-group">
+                    <label>Modality</label>
+                    <select id="e-modality">
+                        <option>Onsite</option>
+                        <option>Hybrid</option>
+                        <option>Remote</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Category</label>
+                    <select id="e-category">
+                        <option>Engineering</option>
+                        <option>Marketing</option>
+                        <option>Programming</option>
+                        <option>HR</option>
+                        <option>Finance</option>
+                        <option>Design</option>
+                        <option>Operations</option>
+                        <option>Other</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Application Link</label>
+                    <input id="e-link" type="url">
+                </div>
+
+                <div class="form-group">
+                    <label>Email</label>
+                    <input id="e-email" type="email">
+                </div>
+
+                <div class="form-group form-full">
+                    <label>Description</label>
+                    <textarea id="e-desc" rows="4"></textarea>
+                </div>
+
+                <div class="form-group form-full">
+                    <label>Requirements</label>
+                    <textarea id="e-req" rows="3"></textarea>
+                </div>
+
+                <div class="form-group form-full">
+                    <label>Benefits</label>
+                    <textarea id="e-benefits" rows="3"></textarea>
+                </div>
+
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn-cancel" id="cancelEditBtn">
+                    Cancel
+                </button>
+
+                <button class="btn-post" id="saveEditBtn">
+                    Save Changes
+                </button>
+            </div>
+        </div>
+    </div>
     <!------------ MAIN PAGE ------------->
     <div class="page">
         <div class="top-row">
@@ -186,6 +303,11 @@
                 <div class="filter-item" data-filter="Part-time">Part-time</div>
                 <div class="filter-item" data-filter="Contract">Contract</div>
                 <div class="filter-item" data-filter="Internship">Internship</div>
+                <?php if (isset($_SESSION['user_id'])): ?>
+                    <div class="filter-item" data-filter="mine">
+                        Created by Me
+                    </div>
+                <?php endif; ?>
             </aside>
             <main class="main">
                 <div class="search-row">
@@ -199,6 +321,32 @@
             </main>
         </div>
     </div>
+
+    <!-- DELETE CONFIRM MODAL -->
+    <div class="overlay hidden" id="deleteOverlay">
+        <div class="modal delete-modal">
+
+            <div class="modal-header">
+                <h2>Delete Job Post</h2>
+                <p>
+                    Are you sure you want to delete this job posting?
+                    This action cannot be undone.
+                </p>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn-back" id="cancelDeleteBtn">
+                    Cancel
+                </button>
+
+                <button class="btn-delete" id="confirmDeleteBtn">
+                    Delete
+                </button>
+            </div>
+
+        </div>
+    </div>
+
 
     <?php include('includes/logoutmodal.php'); ?>
     <script src="assets/js/alumni_homepage.js"></script>

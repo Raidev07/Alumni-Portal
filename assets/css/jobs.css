@@ -443,6 +443,19 @@ h1 {
     background: #e3f2fd;
     color: #1565c0;
 }
+
+.owner-tag {
+    display: inline-block;
+    padding: 2px 9px;
+    border-radius: 12px;
+    font-size: clamp(10px, 0.85vw, 12px);
+    font-weight: 700;
+    background: #e8f5e9;
+    color: #1a6b3a;
+    margin-left: 8px;
+    vertical-align: middle;
+}
+
 .badge-ct {
     background: #fff3e0;
     color: #e65100;
@@ -490,15 +503,12 @@ h1 {
 /* ─── OVERLAYS ───────────────────────────────────────────────────────────────── */
 .overlay {
     position: fixed;
-    top: 65px;
-    left: 0;
-    right: 0;
-    bottom: 0;
+    inset: 0;
     background: rgba(0, 0, 0, 0.5);
     display: flex;
     align-items: flex-start;
     justify-content: center;
-    z-index: 99;
+    z-index: 2000;
     padding: 40px 20px;
     overflow-y: auto;
 }
@@ -791,8 +801,8 @@ h1 {
 }
 
 .btn-back:hover {
-    background:#1a6b3a;
-        color: #ffffff;
+    background: #1a6b3a;
+    color: #ffffff;
 }
 
 /* ─── RESPONSIVE BREAKPOINTS ─────────────────────────────────────────────────── */
@@ -931,4 +941,74 @@ h1 {
     .detail-header {
         padding: 16px;
     }
+}
+
+.btn-edit {
+    background: transparent;
+    border: 1px solid #ccc;
+    color: #555;
+    padding: 11px 20px;
+    border-radius: 6px;
+    font-size: clamp(12px, 1vw, 14px);
+    font-weight: 700;
+    cursor: pointer;
+    font-family: "Roboto", sans-serif;
+    transition: background 0.2s;
+}
+
+.btn-edit:hover {
+    background: #1a6b3a;
+    color: #ffffff;
+}
+
+.btn-delete {
+    background: transparent;
+    border: 1px solid #dc2626;
+    color: #555;
+    padding: 11px 20px;
+    border-radius: 6px;
+    font-size: clamp(12px, 1vw, 14px);
+    font-weight: 700;
+    cursor: pointer;
+    font-family: "Roboto", sans-serif;
+    transition: background 0.2s;
+
+    margin-left: auto;
+}
+
+.btn-delete:hover {
+    background: #dc2626;
+    color: #ffffff;
+}
+
+.delete-modal {
+    max-width: 420px;
+}
+
+.delete-modal .modal-header {
+    text-align: center;
+}
+
+.delete-modal .modal-footer {
+    justify-content: center;
+}
+
+#deleteOverlay {
+    align-items: center;
+}
+
+body.modal-open {
+    overflow: hidden;
+    height: 100vh;
+    overscroll-behavior: none;
+}
+
+.overlay,
+.detail-overlay {
+    overscroll-behavior: contain;
+}
+
+
+.hidden {
+    display: none !important;
 }
