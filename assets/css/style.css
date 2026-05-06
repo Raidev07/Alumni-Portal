@@ -12,7 +12,7 @@ body {
 }
 
 .header {
-    min-height: 95vh;
+    min-height: 88vh;
     width: 100%;
     background-image: url(../image/homepage_img.png);
     background-position: center;
@@ -315,7 +315,7 @@ body {
 .project-container {
     display: flex;
     width: 100%;
-    justify-content: space-evenly;
+    justify-content: space-between;
     flex-wrap: wrap;
 }
 .project-box {
@@ -325,7 +325,7 @@ body {
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    width: 22%;
+    width: 40%;
     height: 200px;
     background: white;
     border-radius: 20px;

@@ -203,7 +203,7 @@ if (isset($_GET['id'])) {
                                                         <th style="width: 10px">#</th>
                                                         <th>Name</th>
                                                         <th>
-                                                            Course
+                                                            Program
                                                             <div class="dropdown d-inline">
                                                                 <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown" style="text-decoration:none;">
                                                                 </a>
