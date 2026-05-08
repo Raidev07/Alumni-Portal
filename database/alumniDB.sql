@@ -55,26 +55,46 @@ UNLOCK TABLES;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'NO_AUTO_VALUE_ON_ZERO' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `trg_PreventDuplicateAlumni` BEFORE INSERT ON `alumnidetails` FOR EACH ROW BEGIN
-
-
-
-    IF EXISTS (SELECT 1 FROM AlumniDetails WHERE student_number = NEW.student_number) THEN
-
-
-
-        SIGNAL SQLSTATE '45000'
-
-
-
-        SET MESSAGE_TEXT = 'Error: This Student Number is already registered to an alumni account.';
-
-
-
-    END IF;
-
-
-
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `trg_PreventDuplicateAlumni` BEFORE INSERT ON `alumnidetails` FOR EACH ROW BEGIN
+
+
+
+
+
+
+
+    IF EXISTS (SELECT 1 FROM AlumniDetails WHERE student_number = NEW.student_number) THEN
+
+
+
+
+
+
+
+        SIGNAL SQLSTATE '45000'
+
+
+
+
+
+
+
+        SET MESSAGE_TEXT = 'Error: This Student Number is already registered to an alumni account.';
+
+
+
+
+
+
+
+    END IF;
+
+
+
+
+
+
+
 END */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -119,74 +139,142 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'NO_AUTO_VALUE_ON_ZERO' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `trg_PreventAlumniDetailsUpdate` BEFORE UPDATE ON `alumnidetails` FOR EACH ROW BEGIN
-
-
-
-
-
-
-
-    IF OLD.student_number <> NEW.student_number THEN
-
-
-
-        SIGNAL SQLSTATE '45000'
-
-
-
-        SET MESSAGE_TEXT = 'Student number cannot be modified.';
-
-
-
-    END IF;
-
-
-
-
-
-
-
-    IF OLD.course_id <> NEW.course_id THEN
-
-
-
-        SIGNAL SQLSTATE '45000'
-
-
-
-        SET MESSAGE_TEXT = 'Course cannot be modified.';
-
-
-
-    END IF;
-
-
-
-
-
-
-
-    IF OLD.year_graduated <> NEW.year_graduated THEN
-
-
-
-        SIGNAL SQLSTATE '45000'
-
-
-
-        SET MESSAGE_TEXT = 'Year graduated cannot be modified.';
-
-
-
-    END IF;
-
-
-
-
-
-
-
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `trg_PreventAlumniDetailsUpdate` BEFORE UPDATE ON `alumnidetails` FOR EACH ROW BEGIN
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    IF OLD.student_number <> NEW.student_number THEN
+
+
+
+
+
+
+
+        SIGNAL SQLSTATE '45000'
+
+
+
+
+
+
+
+        SET MESSAGE_TEXT = 'Student number cannot be modified.';
+
+
+
+
+
+
+
+    END IF;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    IF OLD.course_id <> NEW.course_id THEN
+
+
+
+
+
+
+
+        SIGNAL SQLSTATE '45000'
+
+
+
+
+
+
+
+        SET MESSAGE_TEXT = 'Course cannot be modified.';
+
+
+
+
+
+
+
+    END IF;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    IF OLD.year_graduated <> NEW.year_graduated THEN
+
+
+
+
+
+
+
+        SIGNAL SQLSTATE '45000'
+
+
+
+
+
+
+
+        SET MESSAGE_TEXT = 'Year graduated cannot be modified.';
+
+
+
+
+
+
+
+    END IF;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 END */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -233,17 +321,28 @@ UNLOCK TABLES;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'NO_AUTO_VALUE_ON_ZERO' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `trg_audit_feature_update` AFTER UPDATE ON `alumnifeatured` FOR EACH ROW BEGIN
-    
-    IF NEW.title <> OLD.title 
-       OR NEW.content <> OLD.content 
-       OR NEW.category <> OLD.category THEN
-       
-        INSERT INTO audit_logs (table_name, record_id, action_type, user_id)
-        
-        VALUES ('alumnifeatured', NEW.id, 'UPDATE', NULL);
-        
-    END IF;
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `trg_audit_feature_update` AFTER UPDATE ON `alumnifeatured` FOR EACH ROW BEGIN
+
+    
+
+    IF NEW.title <> OLD.title 
+
+       OR NEW.content <> OLD.content 
+
+       OR NEW.category <> OLD.category THEN
+
+       
+
+        INSERT INTO audit_logs (table_name, record_id, action_type, user_id)
+
+        
+
+        VALUES ('alumnifeatured', NEW.id, 'UPDATE', NULL);
+
+        
+
+    END IF;
+
 END */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -259,10 +358,14 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'NO_AUTO_VALUE_ON_ZERO' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `trg_audit_feature_delete` BEFORE DELETE ON `alumnifeatured` FOR EACH ROW BEGIN
-    INSERT INTO audit_logs (table_name, record_id, action_type, user_id)
-    
-    VALUES ('alumnifeatured', OLD.id, 'DELETE', NULL);
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `trg_audit_feature_delete` BEFORE DELETE ON `alumnifeatured` FOR EACH ROW BEGIN
+
+    INSERT INTO audit_logs (table_name, record_id, action_type, user_id)
+
+    
+
+    VALUES ('alumnifeatured', OLD.id, 'DELETE', NULL);
+
 END */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -393,9 +496,12 @@ UNLOCK TABLES;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'NO_AUTO_VALUE_ON_ZERO' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `trg_audit_education_insert` AFTER INSERT ON `education` FOR EACH ROW BEGIN
-    INSERT INTO audit_logs (table_name, record_id, action_type, user_id)
-    VALUES ('education', NEW.edu_id, 'INSERT', NEW.user_id);
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `trg_audit_education_insert` AFTER INSERT ON `education` FOR EACH ROW BEGIN
+
+    INSERT INTO audit_logs (table_name, record_id, action_type, user_id)
+
+    VALUES ('education', NEW.edu_id, 'INSERT', NEW.user_id);
+
 END */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -411,9 +517,12 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'NO_AUTO_VALUE_ON_ZERO' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `trg_audit_education_update` AFTER UPDATE ON `education` FOR EACH ROW BEGIN
-    INSERT INTO audit_logs (table_name, record_id, action_type, user_id)
-    VALUES ('education', NEW.edu_id, 'UPDATE', NEW.user_id);
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `trg_audit_education_update` AFTER UPDATE ON `education` FOR EACH ROW BEGIN
+
+    INSERT INTO audit_logs (table_name, record_id, action_type, user_id)
+
+    VALUES ('education', NEW.edu_id, 'UPDATE', NEW.user_id);
+
 END */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -429,9 +538,12 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'NO_AUTO_VALUE_ON_ZERO' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `trg_audit_education_delete` BEFORE DELETE ON `education` FOR EACH ROW BEGIN
-    INSERT INTO audit_logs (table_name, record_id, action_type, user_id)
-    VALUES ('education', OLD.edu_id, 'DELETE', OLD.user_id);
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `trg_audit_education_delete` BEFORE DELETE ON `education` FOR EACH ROW BEGIN
+
+    INSERT INTO audit_logs (table_name, record_id, action_type, user_id)
+
+    VALUES ('education', OLD.edu_id, 'DELETE', OLD.user_id);
+
 END */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -485,26 +597,46 @@ UNLOCK TABLES;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'NO_AUTO_VALUE_ON_ZERO' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `trg_CheckEventDates` BEFORE INSERT ON `events` FOR EACH ROW BEGIN
-
-
-
-    IF NEW.registration_deadline > NEW.event_date THEN
-
-
-
-        SIGNAL SQLSTATE '45000' 
-
-
-
-        SET MESSAGE_TEXT = 'Error: Registration deadline cannot be later than the event date.';
-
-
-
-    END IF;
-
-
-
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `trg_CheckEventDates` BEFORE INSERT ON `events` FOR EACH ROW BEGIN
+
+
+
+
+
+
+
+    IF NEW.registration_deadline > NEW.event_date THEN
+
+
+
+
+
+
+
+        SIGNAL SQLSTATE '45000' 
+
+
+
+
+
+
+
+        SET MESSAGE_TEXT = 'Error: Registration deadline cannot be later than the event date.';
+
+
+
+
+
+
+
+    END IF;
+
+
+
+
+
+
+
 END */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -520,9 +652,12 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'NO_AUTO_VALUE_ON_ZERO' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `trg_audit_event_insert` AFTER INSERT ON `events` FOR EACH ROW BEGIN
-    INSERT INTO audit_logs (table_name, record_id, action_type, user_id)
-    VALUES ('events', NEW.event_id, 'INSERT', NEW.user_id);
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `trg_audit_event_insert` AFTER INSERT ON `events` FOR EACH ROW BEGIN
+
+    INSERT INTO audit_logs (table_name, record_id, action_type, user_id)
+
+    VALUES ('events', NEW.event_id, 'INSERT', NEW.user_id);
+
 END */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -538,50 +673,94 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'NO_AUTO_VALUE_ON_ZERO' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `trg_audit_event_update` AFTER UPDATE ON `events` FOR EACH ROW BEGIN
-
-
-
-    
-
-
-
-    IF NEW.event_date <> OLD.event_date 
-
-
-
-       OR NEW.start_time <> OLD.start_time 
-
-
-
-       OR NEW.end_time <> OLD.end_time 
-
-
-
-       OR NOT (NEW.registration_deadline <=> OLD.registration_deadline) THEN
-
-
-
-       
-
-
-
-        INSERT INTO audit_logs (table_name, record_id, action_type, user_id)
-
-
-
-        VALUES ('events', NEW.event_id, 'UPDATE', NEW.user_id);
-
-
-
-        
-
-
-
-    END IF;
-
-
-
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `trg_audit_event_update` AFTER UPDATE ON `events` FOR EACH ROW BEGIN
+
+
+
+
+
+
+
+    
+
+
+
+
+
+
+
+    IF NEW.event_date <> OLD.event_date 
+
+
+
+
+
+
+
+       OR NEW.start_time <> OLD.start_time 
+
+
+
+
+
+
+
+       OR NEW.end_time <> OLD.end_time 
+
+
+
+
+
+
+
+       OR NOT (NEW.registration_deadline <=> OLD.registration_deadline) THEN
+
+
+
+
+
+
+
+       
+
+
+
+
+
+
+
+        INSERT INTO audit_logs (table_name, record_id, action_type, user_id)
+
+
+
+
+
+
+
+        VALUES ('events', NEW.event_id, 'UPDATE', NEW.user_id);
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+    END IF;
+
+
+
+
+
+
+
 END */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -597,9 +776,12 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'NO_AUTO_VALUE_ON_ZERO' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `trg_audit_event_delete` BEFORE DELETE ON `events` FOR EACH ROW BEGIN
-    INSERT INTO audit_logs (table_name, record_id, action_type, user_id)
-    VALUES ('events', OLD.event_id, 'DELETE', OLD.user_id);
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `trg_audit_event_delete` BEFORE DELETE ON `events` FOR EACH ROW BEGIN
+
+    INSERT INTO audit_logs (table_name, record_id, action_type, user_id)
+
+    VALUES ('events', OLD.event_id, 'DELETE', OLD.user_id);
+
 END */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -648,9 +830,12 @@ UNLOCK TABLES;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'NO_AUTO_VALUE_ON_ZERO' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `trg_audit_experience_insert` AFTER INSERT ON `experience` FOR EACH ROW BEGIN
-    INSERT INTO audit_logs (table_name, record_id, action_type, user_id)
-    VALUES ('experience', NEW.exp_id, 'INSERT', NEW.user_id);
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `trg_audit_experience_insert` AFTER INSERT ON `experience` FOR EACH ROW BEGIN
+
+    INSERT INTO audit_logs (table_name, record_id, action_type, user_id)
+
+    VALUES ('experience', NEW.exp_id, 'INSERT', NEW.user_id);
+
 END */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -666,9 +851,12 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'NO_AUTO_VALUE_ON_ZERO' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `trg_audit_experience_update` AFTER UPDATE ON `experience` FOR EACH ROW BEGIN
-    INSERT INTO audit_logs (table_name, record_id, action_type, user_id)
-    VALUES ('experience', NEW.exp_id, 'UPDATE', NEW.user_id);
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `trg_audit_experience_update` AFTER UPDATE ON `experience` FOR EACH ROW BEGIN
+
+    INSERT INTO audit_logs (table_name, record_id, action_type, user_id)
+
+    VALUES ('experience', NEW.exp_id, 'UPDATE', NEW.user_id);
+
 END */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -684,9 +872,12 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'NO_AUTO_VALUE_ON_ZERO' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `trg_audit_experience_delete` BEFORE DELETE ON `experience` FOR EACH ROW BEGIN
-    INSERT INTO audit_logs (table_name, record_id, action_type, user_id)
-    VALUES ('experience', OLD.exp_id, 'DELETE', OLD.user_id);
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `trg_audit_experience_delete` BEFORE DELETE ON `experience` FOR EACH ROW BEGIN
+
+    INSERT INTO audit_logs (table_name, record_id, action_type, user_id)
+
+    VALUES ('experience', OLD.exp_id, 'DELETE', OLD.user_id);
+
 END */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -778,9 +969,12 @@ UNLOCK TABLES;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'NO_AUTO_VALUE_ON_ZERO' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `trg_audit_job_insert` AFTER INSERT ON `jobpostings` FOR EACH ROW BEGIN
-    INSERT INTO audit_logs (table_name, record_id, action_type, user_id)
-    VALUES ('jobpostings', NEW.job_id, 'INSERT', NEW.user_id);
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `trg_audit_job_insert` AFTER INSERT ON `jobpostings` FOR EACH ROW BEGIN
+
+    INSERT INTO audit_logs (table_name, record_id, action_type, user_id)
+
+    VALUES ('jobpostings', NEW.job_id, 'INSERT', NEW.user_id);
+
 END */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -796,42 +990,78 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'NO_AUTO_VALUE_ON_ZERO' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `trg_audit_job_update` AFTER UPDATE ON `jobpostings` FOR EACH ROW BEGIN
-
-
-
-    
-
-
-
-    IF NEW.modality <> OLD.modality 
-
-
-
-       OR NOT (NEW.contact_email <=> OLD.contact_email) THEN
-
-
-
-       
-
-
-
-        INSERT INTO audit_logs (table_name, record_id, action_type, user_id)
-
-
-
-        VALUES ('jobpostings', NEW.job_id, 'UPDATE', NEW.user_id);
-
-
-
-        
-
-
-
-    END IF;
-
-
-
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `trg_audit_job_update` AFTER UPDATE ON `jobpostings` FOR EACH ROW BEGIN
+
+
+
+
+
+
+
+    
+
+
+
+
+
+
+
+    IF NEW.modality <> OLD.modality 
+
+
+
+
+
+
+
+       OR NOT (NEW.contact_email <=> OLD.contact_email) THEN
+
+
+
+
+
+
+
+       
+
+
+
+
+
+
+
+        INSERT INTO audit_logs (table_name, record_id, action_type, user_id)
+
+
+
+
+
+
+
+        VALUES ('jobpostings', NEW.job_id, 'UPDATE', NEW.user_id);
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+    END IF;
+
+
+
+
+
+
+
 END */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -847,9 +1077,12 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'NO_AUTO_VALUE_ON_ZERO' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `trg_audit_job_delete` BEFORE DELETE ON `jobpostings` FOR EACH ROW BEGIN
-    INSERT INTO audit_logs (table_name, record_id, action_type, user_id)
-    VALUES ('jobpostings', OLD.job_id, 'DELETE', OLD.user_id);
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `trg_audit_job_delete` BEFORE DELETE ON `jobpostings` FOR EACH ROW BEGIN
+
+    INSERT INTO audit_logs (table_name, record_id, action_type, user_id)
+
+    VALUES ('jobpostings', OLD.job_id, 'DELETE', OLD.user_id);
+
 END */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -894,9 +1127,12 @@ UNLOCK TABLES;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'NO_AUTO_VALUE_ON_ZERO' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `trg_audit_skills_insert` AFTER INSERT ON `skills` FOR EACH ROW BEGIN
-    INSERT INTO audit_logs (table_name, record_id, action_type, user_id)
-    VALUES ('skills', NEW.skill_id, 'INSERT', NEW.user_id);
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `trg_audit_skills_insert` AFTER INSERT ON `skills` FOR EACH ROW BEGIN
+
+    INSERT INTO audit_logs (table_name, record_id, action_type, user_id)
+
+    VALUES ('skills', NEW.skill_id, 'INSERT', NEW.user_id);
+
 END */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -912,9 +1148,12 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'NO_AUTO_VALUE_ON_ZERO' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `trg_audit_skills_update` AFTER UPDATE ON `skills` FOR EACH ROW BEGIN
-    INSERT INTO audit_logs (table_name, record_id, action_type, user_id)
-    VALUES ('skills', NEW.skill_id, 'UPDATE', NEW.user_id);
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `trg_audit_skills_update` AFTER UPDATE ON `skills` FOR EACH ROW BEGIN
+
+    INSERT INTO audit_logs (table_name, record_id, action_type, user_id)
+
+    VALUES ('skills', NEW.skill_id, 'UPDATE', NEW.user_id);
+
 END */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -930,9 +1169,12 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'NO_AUTO_VALUE_ON_ZERO' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `trg_audit_skills_delete` BEFORE DELETE ON `skills` FOR EACH ROW BEGIN
-    INSERT INTO audit_logs (table_name, record_id, action_type, user_id)
-    VALUES ('skills', OLD.skill_id, 'DELETE', OLD.user_id);
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `trg_audit_skills_delete` BEFORE DELETE ON `skills` FOR EACH ROW BEGIN
+
+    INSERT INTO audit_logs (table_name, record_id, action_type, user_id)
+
+    VALUES ('skills', OLD.skill_id, 'DELETE', OLD.user_id);
+
 END */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -984,18 +1226,30 @@ UNLOCK TABLES;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'NO_AUTO_VALUE_ON_ZERO' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `trg_audit_profile_update` AFTER UPDATE ON `userprofile` FOR EACH ROW BEGIN
-
-
-
-    INSERT INTO audit_logs (table_name, record_id, action_type, user_id)
-
-
-
-    VALUES ('userprofile', NEW.profile_id, 'UPDATE', NEW.user_id);
-
-
-
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `trg_audit_profile_update` AFTER UPDATE ON `userprofile` FOR EACH ROW BEGIN
+
+
+
+
+
+
+
+    INSERT INTO audit_logs (table_name, record_id, action_type, user_id)
+
+
+
+
+
+
+
+    VALUES ('userprofile', NEW.profile_id, 'UPDATE', NEW.user_id);
+
+
+
+
+
+
+
 END */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -1041,30 +1295,54 @@ UNLOCK TABLES;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'NO_AUTO_VALUE_ON_ZERO' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `trg_audit_user_security` AFTER UPDATE ON `users` FOR EACH ROW BEGIN
-
-
-
-    
-
-
-
-    IF OLD.status <> NEW.status OR OLD.role <> NEW.role THEN
-
-
-
-        INSERT INTO audit_logs (table_name, record_id, action_type, user_id)
-
-
-
-        VALUES ('users', NEW.id, 'UPDATE', NEW.id);
-
-
-
-    END IF;
-
-
-
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `trg_audit_user_security` AFTER UPDATE ON `users` FOR EACH ROW BEGIN
+
+
+
+
+
+
+
+    
+
+
+
+
+
+
+
+    IF OLD.status <> NEW.status OR OLD.role <> NEW.role THEN
+
+
+
+
+
+
+
+        INSERT INTO audit_logs (table_name, record_id, action_type, user_id)
+
+
+
+
+
+
+
+        VALUES ('users', NEW.id, 'UPDATE', NEW.id);
+
+
+
+
+
+
+
+    END IF;
+
+
+
+
+
+
+
 END */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -1080,18 +1358,30 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'NO_AUTO_VALUE_ON_ZERO' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `trg_audit_user_delete` BEFORE DELETE ON `users` FOR EACH ROW BEGIN
-
-
-
-    INSERT INTO audit_logs (table_name, record_id, action_type, user_id)
-
-
-
-    VALUES ('users', OLD.id, 'DELETE', OLD.id);
-
-
-
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `trg_audit_user_delete` BEFORE DELETE ON `users` FOR EACH ROW BEGIN
+
+
+
+
+
+
+
+    INSERT INTO audit_logs (table_name, record_id, action_type, user_id)
+
+
+
+
+
+
+
+    VALUES ('users', OLD.id, 'DELETE', OLD.id);
+
+
+
+
+
+
+
 END */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -1115,118 +1405,230 @@ DELIMITER ;;
 /*!50003 SET sql_mode              = 'NO_AUTO_VALUE_ON_ZERO' */ ;;
 /*!50003 SET @saved_time_zone      = @@time_zone */ ;;
 /*!50003 SET time_zone             = '+00:00' */ ;;
-/*!50106 CREATE*/ /*!50117 DEFINER=`root`@`localhost`*/ /*!50106 EVENT `evt_AutomateEventStatus` ON SCHEDULE EVERY 15 MINUTE STARTS '2026-04-29 12:11:11' ON COMPLETION PRESERVE ENABLE DO BEGIN
-
-
-
-    
-
-
-
-    UPDATE events 
-
-
-
-    SET status = 'completed' 
-
-
-
-    WHERE status NOT IN ('completed', 'cancelled') 
-
-
-
-      AND (
-
-
-
-          event_date < CURRENT_DATE 
-
-
-
-          OR (event_date = CURRENT_DATE AND CURRENT_TIME > end_time)
-
-
-
-      );
-
-
-
-
-
-
-
-    
-
-
-
-    UPDATE events 
-
-
-
-    SET status = 'ongoing' 
-
-
-
-    WHERE status = 'upcoming' 
-
-
-
-      AND event_date = CURRENT_DATE 
-
-
-
-      AND CURRENT_TIME >= start_time 
-
-
-
-      AND CURRENT_TIME <= end_time;
-
-
-
-
-
-
-
-    
-
-
-
-    UPDATE events 
-
-
-
-    SET status = 'upcoming' 
-
-
-
-    WHERE status IN ('ongoing', 'completed')
-
-
-
-      AND status != 'cancelled'
-
-
-
-      AND (
-
-
-
-          event_date > CURRENT_DATE 
-
-
-
-          OR (event_date = CURRENT_DATE AND CURRENT_TIME < start_time)
-
-
-
-      );
-
-
-
-
-
-
-
+/*!50106 CREATE*/ /*!50117 DEFINER=`root`@`localhost`*/ /*!50106 EVENT `evt_AutomateEventStatus` ON SCHEDULE EVERY 15 MINUTE STARTS '2026-04-29 12:11:11' ON COMPLETION PRESERVE ENABLE DO BEGIN
+
+
+
+
+
+
+
+    
+
+
+
+
+
+
+
+    UPDATE events 
+
+
+
+
+
+
+
+    SET status = 'completed' 
+
+
+
+
+
+
+
+    WHERE status NOT IN ('completed', 'cancelled') 
+
+
+
+
+
+
+
+      AND (
+
+
+
+
+
+
+
+          event_date < CURRENT_DATE 
+
+
+
+
+
+
+
+          OR (event_date = CURRENT_DATE AND CURRENT_TIME > end_time)
+
+
+
+
+
+
+
+      );
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+
+
+
+
+
+
+
+    UPDATE events 
+
+
+
+
+
+
+
+    SET status = 'ongoing' 
+
+
+
+
+
+
+
+    WHERE status = 'upcoming' 
+
+
+
+
+
+
+
+      AND event_date = CURRENT_DATE 
+
+
+
+
+
+
+
+      AND CURRENT_TIME >= start_time 
+
+
+
+
+
+
+
+      AND CURRENT_TIME <= end_time;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+
+
+
+
+
+
+
+    UPDATE events 
+
+
+
+
+
+
+
+    SET status = 'upcoming' 
+
+
+
+
+
+
+
+    WHERE status IN ('ongoing', 'completed')
+
+
+
+
+
+
+
+      AND status != 'cancelled'
+
+
+
+
+
+
+
+      AND (
+
+
+
+
+
+
+
+          event_date > CURRENT_DATE 
+
+
+
+
+
+
+
+          OR (event_date = CURRENT_DATE AND CURRENT_TIME < start_time)
+
+
+
+
+
+
+
+      );
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 END */ ;;
 /*!50003 SET time_zone             = @saved_time_zone */ ;;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;;
@@ -1250,42 +1652,78 @@ DELIMITER ;
 /*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_FilterEvents`(IN `p_event_type` VARCHAR(50))
-BEGIN
-
-
-
-    IF p_event_type = 'All' THEN
-
-
-
-        SELECT * FROM Events WHERE status != 'cancelled' ORDER BY event_date ASC;
-
-
-
-    ELSE
-
-
-
-        SELECT * FROM Events 
-
-
-
-        WHERE event_type = p_event_type 
-
-
-
-        AND status != 'cancelled' 
-
-
-
-        ORDER BY event_date ASC;
-
-
-
-    END IF;
-
-
-
+BEGIN
+
+
+
+
+
+
+
+    IF p_event_type = 'All' THEN
+
+
+
+
+
+
+
+        SELECT * FROM Events WHERE status != 'cancelled' ORDER BY event_date ASC;
+
+
+
+
+
+
+
+    ELSE
+
+
+
+
+
+
+
+        SELECT * FROM Events 
+
+
+
+
+
+
+
+        WHERE event_type = p_event_type 
+
+
+
+
+
+
+
+        AND status != 'cancelled' 
+
+
+
+
+
+
+
+        ORDER BY event_date ASC;
+
+
+
+
+
+
+
+    END IF;
+
+
+
+
+
+
+
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -1303,30 +1741,54 @@ DELIMITER ;
 /*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_FilterJobs`(IN `p_type` VARCHAR(50), IN `p_modality` VARCHAR(50))
-BEGIN
-
-
-
-    SELECT * FROM JobPostings
-
-
-
-    WHERE (job_type = p_type OR p_type = 'All')
-
-
-
-    AND (modality = p_modality OR p_modality = 'All')
-
-
-
-    AND status = 'active'
-
-
-
-    ORDER BY posted_at DESC;
-
-
-
+BEGIN
+
+
+
+
+
+
+
+    SELECT * FROM JobPostings
+
+
+
+
+
+
+
+    WHERE (job_type = p_type OR p_type = 'All')
+
+
+
+
+
+
+
+    AND (modality = p_modality OR p_modality = 'All')
+
+
+
+
+
+
+
+    AND status = 'active'
+
+
+
+
+
+
+
+    ORDER BY posted_at DESC;
+
+
+
+
+
+
+
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -1344,12 +1806,18 @@ DELIMITER ;
 /*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_GetLatestFeature`()
-BEGIN
-    
-    SELECT id, title, alumni_name, profession, category, cover_image, excerpt 
-    FROM alumnifeatured 
-    ORDER BY created_at DESC 
-    LIMIT 1;
+BEGIN
+
+    
+
+    SELECT id, title, alumni_name, profession, category, cover_image, excerpt 
+
+    FROM alumnifeatured 
+
+    ORDER BY created_at DESC 
+
+    LIMIT 1;
+
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -1367,134 +1835,262 @@ DELIMITER ;
 /*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_RegisterAlumni`(IN `p_email` VARCHAR(100), IN `p_password` VARCHAR(255), IN `p_first_name` VARCHAR(50), IN `p_last_name` VARCHAR(50), IN `p_suffix` VARCHAR(10), IN `p_middle_name` VARCHAR(50), IN `p_contact_number` VARCHAR(11), IN `p_address` VARCHAR(255), IN `p_birthdate` DATE, IN `p_gender` ENUM('Male','Female'), IN `p_student_number` VARCHAR(20), IN `p_course_id` INT, IN `p_year_graduated` YEAR)
-BEGIN
-
-
-
-    DECLARE v_new_user_id INT;
-
-
-
-
-
-
-
-    DECLARE EXIT HANDLER FOR SQLEXCEPTION 
-
-
-
-    BEGIN
-
-
-
-        ROLLBACK;
-
-
-
-        RESIGNAL; 
-
-
-
-    END;
-
-
-
-
-
-
-
-    START TRANSACTION;
-
-
-
-
-
-
-
-    
-
-
-
-    INSERT INTO users (email, password, role) 
-
-
-
-    VALUES (p_email, p_password, 'alumni');
-
-
-
-
-
-
-
-    SET v_new_user_id = LAST_INSERT_ID();
-
-
-
-
-
-
-
-    
-
-
-
-    INSERT INTO userprofile (
-
-
-
-        user_id, first_name, last_name, suffix, middle_name, 
-
-
-
-        contact_number, address, birthdate, gender
-
-
-
-    ) 
-
-
-
-    VALUES (
-
-
-
-        v_new_user_id, p_first_name, p_last_name, p_suffix, p_middle_name, 
-
-
-
-        p_contact_number, p_address, p_birthdate, p_gender
-
-
-
-    );
-
-
-
-
-
-
-
-    
-
-
-
-    INSERT INTO alumnidetails (user_id, student_number, course_id, year_graduated) 
-
-
-
-    VALUES (v_new_user_id, p_student_number, p_course_id, p_year_graduated);
-
-
-
-
-
-
-
-    COMMIT;
-
-
-
+BEGIN
+
+
+
+
+
+
+
+    DECLARE v_new_user_id INT;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION 
+
+
+
+
+
+
+
+    BEGIN
+
+
+
+
+
+
+
+        ROLLBACK;
+
+
+
+
+
+
+
+        RESIGNAL; 
+
+
+
+
+
+
+
+    END;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    START TRANSACTION;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+
+
+
+
+
+
+
+    INSERT INTO users (email, password, role) 
+
+
+
+
+
+
+
+    VALUES (p_email, p_password, 'alumni');
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    SET v_new_user_id = LAST_INSERT_ID();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+
+
+
+
+
+
+
+    INSERT INTO userprofile (
+
+
+
+
+
+
+
+        user_id, first_name, last_name, suffix, middle_name, 
+
+
+
+
+
+
+
+        contact_number, address, birthdate, gender
+
+
+
+
+
+
+
+    ) 
+
+
+
+
+
+
+
+    VALUES (
+
+
+
+
+
+
+
+        v_new_user_id, p_first_name, p_last_name, p_suffix, p_middle_name, 
+
+
+
+
+
+
+
+        p_contact_number, p_address, p_birthdate, p_gender
+
+
+
+
+
+
+
+    );
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+
+
+
+
+
+
+
+    INSERT INTO alumnidetails (user_id, student_number, course_id, year_graduated) 
+
+
+
+
+
+
+
+    VALUES (v_new_user_id, p_student_number, p_course_id, p_year_graduated);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    COMMIT;
+
+
+
+
+
+
+
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -1512,70 +2108,134 @@ DELIMITER ;
 /*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_SearchEvents`(IN `p_query` VARCHAR(100))
-BEGIN
-
-
-
-    SET @term = CONCAT('%', p_query, '%');
-
-
-
-    
-
-
-
-    
-
-
-
-    SELECT e.*, p.first_name, p.last_name, p.suffix, p.profile_picture 
-
-
-
-    FROM Events e
-
-
-
-    JOIN UserProfile p ON e.user_id = p.user_id
-
-
-
-    WHERE (e.event_title LIKE @term 
-
-
-
-       OR e.event_description LIKE @term 
-
-
-
-       OR e.location LIKE @term 
-
-
-
-       OR e.event_type LIKE @term
-
-
-
-       OR p.first_name LIKE @term 
-
-
-
-       OR p.last_name LIKE @term 
-
-
-
-       OR p.suffix LIKE @term)
-
-
-
-    AND e.status != 'cancelled'
-
-
-
-    ORDER BY e.event_date ASC;
-
-
-
+BEGIN
+
+
+
+
+
+
+
+    SET @term = CONCAT('%', p_query, '%');
+
+
+
+
+
+
+
+    
+
+
+
+
+
+
+
+    
+
+
+
+
+
+
+
+    SELECT e.*, p.first_name, p.last_name, p.suffix, p.profile_picture 
+
+
+
+
+
+
+
+    FROM Events e
+
+
+
+
+
+
+
+    JOIN UserProfile p ON e.user_id = p.user_id
+
+
+
+
+
+
+
+    WHERE (e.event_title LIKE @term 
+
+
+
+
+
+
+
+       OR e.event_description LIKE @term 
+
+
+
+
+
+
+
+       OR e.location LIKE @term 
+
+
+
+
+
+
+
+       OR e.event_type LIKE @term
+
+
+
+
+
+
+
+       OR p.first_name LIKE @term 
+
+
+
+
+
+
+
+       OR p.last_name LIKE @term 
+
+
+
+
+
+
+
+       OR p.suffix LIKE @term)
+
+
+
+
+
+
+
+    AND e.status != 'cancelled'
+
+
+
+
+
+
+
+    ORDER BY e.event_date ASC;
+
+
+
+
+
+
+
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -1593,54 +2253,102 @@ DELIMITER ;
 /*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_SearchJobs`(IN `p_query` VARCHAR(100))
-BEGIN
-
-
-
-    SET @term = CONCAT('%', p_query, '%');
-
-
-
-    SELECT * FROM JobPostings
-
-
-
-    WHERE (job_title LIKE @term 
-
-
-
-       OR company_name LIKE @term 
-
-
-
-       OR job_description LIKE @term 
-
-
-
-       OR requirements_qualifications LIKE @term 
-
-
-
-       OR benefits LIKE @term 
-
-
-
-       OR location LIKE @term 
-
-
-
-       OR category LIKE @term)
-
-
-
-    AND status = 'active'
-
-
-
-    ORDER BY posted_at DESC;
-
-
-
+BEGIN
+
+
+
+
+
+
+
+    SET @term = CONCAT('%', p_query, '%');
+
+
+
+
+
+
+
+    SELECT * FROM JobPostings
+
+
+
+
+
+
+
+    WHERE (job_title LIKE @term 
+
+
+
+
+
+
+
+       OR company_name LIKE @term 
+
+
+
+
+
+
+
+       OR job_description LIKE @term 
+
+
+
+
+
+
+
+       OR requirements_qualifications LIKE @term 
+
+
+
+
+
+
+
+       OR benefits LIKE @term 
+
+
+
+
+
+
+
+       OR location LIKE @term 
+
+
+
+
+
+
+
+       OR category LIKE @term)
+
+
+
+
+
+
+
+    AND status = 'active'
+
+
+
+
+
+
+
+    ORDER BY posted_at DESC;
+
+
+
+
+
+
+
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
