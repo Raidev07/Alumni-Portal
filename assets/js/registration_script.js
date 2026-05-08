@@ -23,11 +23,226 @@ if (studentId) {
 }
 
 // ========================
+// Auto Fetch Graduate Info
+// ========================
+
+if (studentId) {
+    studentId.addEventListener("input", function () {
+        const studentNumber = this.value.trim();
+
+        if (!/^\d{2}-\d{5}$/.test(studentNumber)) {
+            return;
+        }
+
+        fetch(
+            `backend/get_graduate.php?student_number=${encodeURIComponent(studentNumber)}`,
+        )
+            .then((res) => res.json())
+            .then((data) => {
+                if (!data.success) {
+                    showRegModal(
+                        "⚠️",
+                        "Graduate Not Found",
+                        data.message,
+                        null,
+                    );
+
+                    return;
+                }
+
+                const g = data.data;
+
+                // Fill Inputs
+                document.getElementById("firstName").value = g.first_name || "";
+                document.getElementById("middleName").value =
+                    g.middle_name || "";
+                document.getElementById("lastName").value = g.last_name || "";
+                document.getElementById("suffix").value = g.suffix || "";
+                document.getElementById("birthdate").value = g.birthdate || "";
+
+                // Course
+                document.getElementById("course").value = g.course_id;
+
+                // Year Graduated
+                document.getElementById("yearGraduated").value =
+                    g.year_graduated;
+
+                // Gender
+                if (g.gender === "Male") {
+                    document.getElementById("dot-1").checked = true;
+                } else if (g.gender === "Female") {
+                    document.getElementById("dot-2").checked = true;
+                }
+
+                // Remove red error state after auto-fill
+                const filledFields = [
+                    "firstName",
+                    "middleName",
+                    "lastName",
+                    "suffix",
+                    "birthdate",
+                    "course",
+                    "yearGraduated",
+                ];
+
+                filledFields.forEach((id) => {
+                    const el = document.getElementById(id);
+
+                    if (el) {
+                        el.classList.remove("input-error");
+                    }
+                });
+
+                // Remove sex error state
+                document
+                    .querySelector(".sex__details .category")
+                    .classList.remove("sex-error");
+
+                document.getElementById("sexWarning").style.display = "none";
+
+                // Refresh validation UI after autofill
+                const autoFilledFields = [
+                    "firstName",
+                    "middleName",
+                    "lastName",
+                    "birthdate",
+                ];
+
+                autoFilledFields.forEach((id) => {
+                    const field = document.getElementById(id);
+
+                    if (field) {
+                        field.classList.remove("input-error");
+                        field.classList.add("readonly-valid");
+                        // trigger browser validation refresh
+                        field.dispatchEvent(
+                            new Event("input", { bubbles: true }),
+                        );
+                        field.dispatchEvent(
+                            new Event("change", { bubbles: true }),
+                        );
+                    }
+                });
+                // Lock fields
+                const lockFields = [
+                    "firstName",
+                    "middleName",
+                    "lastName",
+                    "birthdate",
+                ];
+
+                lockFields.forEach((id) => {
+                    document.getElementById(id).readOnly = true;
+                });
+
+                document.getElementById("course").style.pointerEvents = "none";
+                document.getElementById("suffix").style.pointerEvents = "none";
+                document.getElementById("yearGraduated").style.pointerEvents =
+                    "none";
+
+                document.querySelector(".sex__details").style.pointerEvents =
+                    "none";
+
+                document
+                    .getElementById("firstName")
+                    .classList.add("locked-field");
+                document
+                    .getElementById("middleName")
+                    .classList.add("locked-field");
+                document
+                    .getElementById("lastName")
+                    .classList.add("locked-field");
+                document.getElementById("suffix").classList.add("locked-field");
+                document
+                    .getElementById("birthdate")
+                    .classList.add("locked-field");
+                document
+                    .querySelector(".sex__details")
+                    .classList.add("sex-locked");
+
+                document.getElementById("course").classList.add("locked-field");
+                document
+                    .getElementById("yearGraduated")
+                    .classList.add("locked-field");
+            })
+            .catch(() => {
+                showRegModal(
+                    "❌",
+                    "Server Error",
+                    "Unable to verify graduate information.",
+                    null,
+                );
+            });
+    });
+}
+
+// ========================
+// Reset Form
+// ========================
+
+function resetRegistrationForm() {
+    const form = document.querySelector("form");
+
+    form.reset();
+
+    // Remove readonly
+    const lockFields = ["firstName", "middleName", "lastName", "birthdate"];
+
+    lockFields.forEach((id) => {
+        const field = document.getElementById(id);
+
+        if (field) {
+            field.readOnly = false;
+            field.classList.remove("readonly-valid", "input-error");
+        }
+    });
+
+    // Unlock selects
+    ["course", "suffix", "yearGraduated"].forEach((id) => {
+        const field = document.getElementById(id);
+
+        if (field) {
+            field.style.pointerEvents = "";
+            field.classList.remove("locked-field", "input-error");
+        }
+    });
+
+    // Unlock sex
+    const sexDetails = document.querySelector(".sex__details");
+
+    if (sexDetails) {
+        sexDetails.style.pointerEvents = "";
+        sexDetails.classList.remove("sex-locked");
+    }
+
+    // Remove sex error
+    document
+        .querySelector(".sex__details .category")
+        .classList.remove("sex-error");
+
+    document.getElementById("sexWarning").style.display = "none";
+
+    // Remove all error styles
+    form.querySelectorAll(".input-error").forEach((el) => {
+        el.classList.remove("input-error");
+    });
+
+    // Clear readonly-valid glow
+    form.querySelectorAll(".readonly-valid").forEach((el) => {
+        el.classList.remove("readonly-valid");
+    });
+}
+// ========================
 // DOM Ready
 // ========================
 document.addEventListener("DOMContentLoaded", function () {
     var form = document.querySelector("form");
 
+    const resetBtn = document.getElementById("resetBtn");
+
+    if (resetBtn) {
+        resetBtn.addEventListener("click", resetRegistrationForm);
+    }
     // ========================
     // Show / Hide Password
     // ========================
@@ -56,7 +271,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // ========================
     // Year Dropdown
     // ========================
-    var yearSelect = document.querySelector('select[name="yearEnrolled"]');
+    var yearSelect = document.querySelector('select[name="yearGraduated"]');
 
     if (yearSelect) {
         var currentYear = new Date().getFullYear();
@@ -130,6 +345,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // ========================
     // FORM SUBMIT (AJAX)
     // ========================
+
     form.addEventListener("submit", function (e) {
         e.preventDefault(); // Always stop default — we use fetch instead
 

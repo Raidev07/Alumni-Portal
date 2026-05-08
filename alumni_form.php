@@ -48,19 +48,19 @@ unset($_SESSION['reg_errors'], $_SESSION['reg_old']);
                 <div class="input__box name__row">
                     <div>
                         <span class="details">First Name</span>
-                        <input type="text" name="firstName" required />
+                        <input type="text" name="firstName" id="firstName" required />
                     </div>
                     <div>
                         <span class="details">Middle Name</span>
-                        <input type="text" name="middleName" required />
+                        <input type="text" name="middleName" id="middleName" required />
                     </div>
                     <div>
                         <span class="details">Last Name</span>
-                        <input type="text" name="lastName" required />
+                        <input type="text" name="lastName" id="lastName" required />
                     </div>
                     <div class="suffix-box">
                         <span class="details">Suffix</span>
-                        <select name="suffix">
+                        <select name="suffix" id="suffix">
                             <option value="">None</option>
                             <option value="Jr">Jr</option>
                             <option value="Sr">Sr</option>
@@ -75,14 +75,14 @@ unset($_SESSION['reg_errors'], $_SESSION['reg_old']);
                 <div class="input__box name__row">
                     <div>
                         <span class="details">Address</span>
-                        <input type="text" name="address" required />
+                        <input type="text" name="address" id="address" required />
                     </div>
                 </div>
 
                 <div class="input__box name__row">
                     <div>
                         <span class="details">Birth Date</span>
-                        <input type="date" name="birthdate" required />
+                        <input type="date" name="birthdate" id="birthdate" required />
                     </div>
 
                     <div>
@@ -129,8 +129,8 @@ unset($_SESSION['reg_errors'], $_SESSION['reg_old']);
             <div class="academic__details">
                 <div class="input__box name__row">
                     <div class="course-box">
-                        <span class="details">Course</span>
-                        <select class="course" name="course" required>
+                        <span class="details">Program</span>
+                        <select class="course" name="course" id="course" required>
                             <option value="">Select a Course</option>
                             <option value="1">Bachelor of Science in Information Technology</option>
                             <option value="2">Bachelor of Science in Computer Science</option>
@@ -147,7 +147,7 @@ unset($_SESSION['reg_errors'], $_SESSION['reg_old']);
 
                     <div>
                         <span class="details">Year Graduated</span>
-                        <select name="yearEnrolled" required>
+                        <select name="yearGraduated" id="yearGraduated" required>
                             <option value="">Select year</option>
                         </select>
                     </div>
@@ -191,9 +191,14 @@ unset($_SESSION['reg_errors'], $_SESSION['reg_old']);
             </div>
 
             <div class="button">
+                <button type="button" class="btn" id="resetBtn">
+                    Reset
+                </button>
+
                 <button type="button" class="btn" onclick="window.location.href = 'index.php'">
                     Cancel
                 </button>
+
                 <input type="submit" value="Register" />
             </div>
         </form>

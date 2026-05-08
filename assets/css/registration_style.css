@@ -301,8 +301,11 @@ form .pass__details .input__box.name__row div .password-container input:focus {
     box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.12);
 }
 
-form input:valid:not([type="radio"]):not(.input-error):not([value=""]) {
+form input:not(.input-error):valid,
+form input.readonly-valid {
     border-color: var(--green-500) !important;
+    /* background-color: #f0fdf4 !important; */
+    box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.12);
 }
 
 input[name="studentId"] {
@@ -331,10 +334,17 @@ form .user__details .input__box.name__row .suffix-box select {
         box-shadow var(--transition);
 }
 
+select:not(.input-error):valid {
+    border-color: var(--green-500) !important;
+}
+
 .suffix-box select {
     width: 10px;
     background-position: right 10px center;
     padding-right: 32px;
+}
+select[required]:not(.input-error):valid {
+    border-color: var(--green-500) !important;
 }
 
 .academic__details select:focus,
@@ -652,7 +662,6 @@ form .button .btn:hover {
     }
 }
 
-
 .field-error {
     color: #ef4444;
     font-size: 0.74rem;
@@ -730,4 +739,12 @@ form .user__details .input__box.name__row .suffix-box select {
         margin: 4px 0;
         font-size: 0.9rem;
     }
+}
+
+.locked-field {
+    cursor: not-allowed;
+}
+
+.sex-locked .category label {
+    cursor: not-allowed;
 }

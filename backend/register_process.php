@@ -15,7 +15,7 @@ $sex = trim($_POST['sex'] ?? '');
 $email = trim($_POST['email'] ?? '');
 $contact_number = trim($_POST['contactNum'] ?? '');
 $course_id = (int) ($_POST['course'] ?? 0);
-$year_graduated = (int) ($_POST['yearEnrolled'] ?? 0);
+$year_graduated = (int) ($_POST['yearGraduated'] ?? 0);
 $raw_password = $_POST['password'] ?? '';
 $confirm_pass = $_POST['confirmPassword'] ?? '';
 
@@ -50,6 +50,32 @@ if (!empty($errors)) {
     echo json_encode(['success' => false, 'errors' => $errors]);
     exit;
 }
+
+
+// ─── Verify if student is an alumni ─────────────────────────────
+$checkGraduate = $conn->prepare("
+    SELECT grad_id 
+    FROM graduates 
+    WHERE student_number = ?
+");
+
+$checkGraduate->bind_param("s", $student_number);
+$checkGraduate->execute();
+
+$result = $checkGraduate->get_result();
+
+if ($result->num_rows === 0) {
+    echo json_encode([
+        'success' => false,
+        'errors' => ['School ID not found in alumni records. Only graduates can register.']
+    ]);
+    
+    $checkGraduate->close();
+    $conn->close();
+    exit;
+}
+
+$checkGraduate->close();
 
 // ─── Hash password ───────────────────────────────────────────────────────────
 $hashed_password = password_hash($raw_password, PASSWORD_DEFAULT);
