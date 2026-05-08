@@ -6,6 +6,11 @@ document.addEventListener("DOMContentLoaded", () => {
   const logoutOverlay     = document.getElementById("logoutOverlay");
   const logoutNo          = document.getElementById("logoutNo");
   const logoutYes         = document.getElementById("logoutYes");
+  const securityTrigger   = document.getElementById("securityTrigger");
+  const securityOverlay   = document.getElementById("securityOverlay");
+  const securityClose     = document.getElementById("securityClose");
+  const twoFactorBtn      = document.getElementById("twoFactorBtn");
+  const changePasswordBtn = document.getElementById("changePasswordBtn");
 
   /* ── HAMBURGER TOGGLE ──────────────────────────────────────── */
   if (hamburgerBtn && hamburgerDropdown) {
@@ -35,6 +40,48 @@ document.addEventListener("DOMContentLoaded", () => {
     document.addEventListener("keydown", (e) => {
       if (e.key === "Escape") closeMenu();
     });
+  }
+
+  /* ── SECURITY MODAL ────────────────────────────────────────── */
+  if (securityTrigger && securityOverlay && securityClose) {
+    function openSecurityModal() {
+      if (hamburgerDropdown) hamburgerDropdown.classList.remove("show");
+      securityOverlay.classList.add("show");
+      securityClose.focus();
+    }
+
+    function closeSecurityModal() {
+      securityOverlay.classList.remove("show");
+    }
+
+    securityTrigger.addEventListener("click", (e) => {
+      e.preventDefault();
+      openSecurityModal();
+    });
+
+    securityClose.addEventListener("click", closeSecurityModal);
+
+    securityOverlay.addEventListener("click", (e) => {
+      if (e.target === securityOverlay) closeSecurityModal();
+    });
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && securityOverlay.classList.contains("show")) {
+        closeSecurityModal();
+      }
+    });
+
+    if (twoFactorBtn) {
+      twoFactorBtn.addEventListener("click", () => {
+        window.location.href = "two_factor_authentication.php";
+      });
+    }
+
+    if (changePasswordBtn) {
+      changePasswordBtn.addEventListener("click", () => {
+        window.location.href = "change_password.php";
+      });
+    }
   }
 
   /* ── LOGOUT MODAL ──────────────────────────────────────────── */

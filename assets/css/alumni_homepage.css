@@ -838,6 +838,122 @@ body {
     pointer-events: all;
 }
 
+.security-overlay {
+    position: fixed !important;
+    inset: 0;
+    min-height: 100vh;
+    background: rgba(0, 0, 0, 0.45);
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(3px);
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease;
+}
+
+.security-overlay.show {
+    opacity: 1;
+    pointer-events: all;
+}
+
+.security-modal {
+    position: relative;
+    background: #fff;
+    border-radius: 18px;
+    box-shadow: 0 24px 80px rgba(0, 0, 0, 0.2);
+    padding: 2rem 1.5rem 1.4rem;
+    width: min(100%, 360px);
+    max-width: 360px;
+    margin: 0 1rem;
+    text-align: center;
+    transform: translateY(10px) scale(0.98);
+    transition: transform 0.28s ease, opacity 0.25s ease;
+    opacity: 0;
+}
+
+.security-overlay.show .security-modal {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+}
+
+.security-close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: none;
+    background: #f1f5f9;
+    color: #475569;
+    font-size: 1.25rem;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.2s, color 0.2s;
+}
+
+.security-close:hover {
+    background: #fee2e2;
+    color: #b91c1c;
+}
+
+.security-close:active {
+    transform: scale(0.98);
+}
+
+.security-modal-icon {
+    width: 62px;
+    height: 62px;
+    border-radius: 50%;
+    background: #e8f5f1;
+    border: 2px solid #c6f6d5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.1rem;
+    font-size: 1.55rem;
+    color: #047857;
+}
+
+.security-modal h3 {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #0f172a;
+    margin-bottom: 0.45rem;
+}
+
+.security-modal p {
+    font-size: 0.88rem;
+    color: #64748b;
+    line-height: 1.55;
+    margin-bottom: 1.6rem;
+}
+
+.security-actions {
+    display: grid;
+    gap: 0.85rem;
+}
+
+.security-btn {
+    width: 100%;
+    padding: 0.8rem 1rem;
+    border-radius: 10px;
+    border: none;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.2s;
+    background: #006e14;
+    color: #fff;
+}
+
+.security-btn:hover {
+    background: #045d10;
+    transform: translateY(-1px);
+}
+
 /* ── MODAL BOX ─────────────────────────────────────────────────── */
 .logout-modal {
     background: #fff;

@@ -188,10 +188,10 @@
                 photo: 'assets/image/1x1pic/tao.png',
                 contributions: [
                     'Architected the full-stack structure of the Alumni portal',
-                    'Built the core authentication system — login, signup, and session handling',
-                    'Developed the Jobs and Events listing modules',
-                    'Integrated the database schema and backend API routes',
-                    'Led code reviews and maintained repository standards'
+                    'Developed the admin dashboard and all of its core functionalities',
+                    'Supervised the integration of frontend components with backend API (DOM)',
+                    'Developed the homepage and handled account management features',
+                    'Supervised the development and documentation of the project'
                 ],
                 fb: 'https://www.facebook.com/johnjesse.escalona.96',
                 email: 'https://mail.google.com/mail/?view=cm&fs=1&to=jay.escalona.je@gmail.com'
@@ -203,11 +203,11 @@
                 id: '24-00662',
                 photo: 'assets/image/1x1pic/Gonzaga, Sam Aidan.jfif',
                 contributions: [
-                    'Assisted in gathering and documenting system requirements',
+                    'Managed database design and implemented all SQL queries for data retrieval and manipulation',
                     'Prepared test cases and performed functional testing',
-                    'Supported content entry and data verification tasks',
-                    'Coordinated with the project lead on scheduling and progress reports',
-                    'Managed documentation for the About and Contact sections'
+                    'Facilitated database structural design (ERD, Schemas, and Relationships)',
+                    'Created email indexing under the database structure',
+                    'Formulated solutions for loose ends via stored procedures and triggers'
                 ],
                 fb: 'https://www.facebook.com/samaidan.gonzaga',
                 email: 'https://mail.google.com/mail/?view=cm&fs=1&to=gonzaga_samaidan@plpasig.edu.ph'
@@ -219,11 +219,11 @@
                 id: '24-00607',
                 photo: 'assets/image/1x1pic/bryl.png',
                 contributions: [
-                    'Defined the project scope, timeline, and key deliverables',
-                    'Coordinated team meetings and tracked milestone progress',
-                    'Handled stakeholder communication and official documentation',
-                    'Designed the overall user flow and initial wireframes',
-                    'Ensured all features aligned with the alumni office requirements'
+                    'Designed the UI/UX along with user flow and wireframes',
+                    'Collaborated with backend developers on seamless feature integration.',
+                    'Handled project documentation and user manual',
+                    'Simulated backend functionality before implementation',
+                    'Ensured all features aligned with the project goals and user needs'
                 ],
                 fb: 'https://www.facebook.com/jb.vasquezrollamas',
                 email: 'https://mail.google.com/mail/?view=cm&fs=1&to=rollamas_justinebryle@plpasig.edu.ph'
@@ -235,11 +235,11 @@
                 id: '24-00585',
                 photo: 'assets/image/1x1pic/VehniahSamson 1x1pic.jpg',
                 contributions: [
-                    'Developed all frontend UI components and responsive layouts',
-                    'Implemented the sticky navbar and smooth scroll behaviors',
-                    'Built the contact form with full client-side validation',
-                    'Designed and styled the About and Contact pages end-to-end',
-                    'Optimized CSS for cross-browser and mobile compatibility'
+                    'Collaborated with other backend developers for functionality implementation.',
+                    'Designed verification and validation logic forform submissions',
+                    'Handled user-input validation and error handling',
+                    'Built the core authentication system — login, signup, and session handling',
+                    'Implemented security measures for data protection and secure access control'
                 ],
                 fb: 'https://www.facebook.com/vehniah.samson',
                 email: 'https://mail.google.com/mail/?view=cm&fs=1&to=samson_vehniah@plpasig.edu.ph'
