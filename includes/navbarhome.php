@@ -1,7 +1,7 @@
 <?php $current_page = basename(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH)); ?>
 <nav class="navbar" id="navbar">
     <div class="nav-left">
-        <a href="#" class="logo-link1"><img src="assets/image/alumni-logo.png" alt="alumni Logo"></a>
+        <a href="#" class="logo-link1"><img src="assets/image/alumni-logo.png" alt="alumni Logo"></a>    
         <div class="title">
             <div>Pamantasan ng Lungsod ng Pasig</div>
             <div>ALUMNI</div>
