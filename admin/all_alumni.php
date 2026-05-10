@@ -45,7 +45,8 @@ TRIM(CONCAT_WS(' ',
 c.course_code AS Programme,
 ad.year_graduated AS Academic_year,
 u.email AS Email,
-up.contact_number AS Phone
+up.contact_number AS Phone,
+u.status AS Status
 
 FROM alumnidetails ad
 INNER JOIN users u ON ad.user_id = u.id
@@ -265,6 +266,7 @@ if (isset($_GET['id'])) {
                                                         </th>
                                                         <th>Email</th>
                                                         <th>Phone</th>
+                                                        <th>Status</th>
                                                         <th style="width: 40px">Action</th>
                                                     </tr>
                                                 </thead>
@@ -281,6 +283,17 @@ if (isset($_GET['id'])) {
                                                                 <td><?= $row['Academic_year'] ?></td>
                                                                 <td><?= $row['Email'] ?></td>
                                                                 <td><?= $row['Phone'] ?></td>
+                                                                <td>
+                                                                    <?php if ($row['Status'] == 'active') : ?>
+                                                                        <span class="badge text-bg-success">Active</span>
+
+                                                                    <?php elseif ($row['Status'] == 'pending') : ?>
+                                                                        <span class="badge text-bg-warning">Pending</span>
+
+                                                                    <?php else : ?>
+                                                                        <span class="badge text-bg-danger">Inactive</span>
+                                                                    <?php endif; ?>
+                                                                </td>
 
                                                                 <td>
                                                                     <a href="view_alumnus.php?id=<?= $row['alumni_id'] ?>" class="view">
@@ -303,7 +316,7 @@ if (isset($_GET['id'])) {
                                                         }
                                                     } else { ?>
                                                         <tr>
-                                                            <th style="text-align:center; color:red;" colspan="7">No Record Found</th>
+                                                            <th style="text-align:center; color:red;" colspan="8">No Record Found</th>
                                                         </tr>
                                                     <?php } ?>
                                                 </tbody>

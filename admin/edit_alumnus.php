@@ -43,9 +43,10 @@ if (isset($_POST['update_alumni'])) {
     $course_id       = intval($_POST['course_id']);
     $year_graduated  = trim($_POST['year_graduated']);
     $address         = trim($_POST['address']);
-    $suffix        = trim($_POST['suffix']);
-    $birth_date    = trim($_POST['birthdate']);
-    $sex           = trim($_POST['gender']);
+    $suffix          = trim($_POST['suffix']);
+    $birth_date      = trim($_POST['birthdate']);
+    $sex             = trim($_POST['gender']);
+    $status          = trim($_POST['status']);
 
     /*
     |--------------------------------------------------------------------------
@@ -66,40 +67,45 @@ if (isset($_POST['update_alumni'])) {
     } else {
 
         /*
-        |--------------------------------------------------------------------------
-        | UPDATE QUERY
-        |--------------------------------------------------------------------------
-        */
+|--------------------------------------------------------------------------
+| UPDATE QUERY
+|--------------------------------------------------------------------------
+*/
+
+        // admin bypass for trigger
+        mysqli_query($conn, "SET @is_admin = 1");
+
         $query = "
-                UPDATE users u
+    UPDATE users u
 
-                INNER JOIN userprofile up
-                    ON u.id = up.user_id
+    INNER JOIN userprofile up
+        ON u.id = up.user_id
 
-                INNER JOIN alumnidetails ad
-                    ON u.id = ad.user_id
+    INNER JOIN alumnidetails ad
+        ON u.id = ad.user_id
 
-                SET
-                    up.first_name = ?,
-                    up.middle_name = ?,
-                    up.last_name = ?,
-                    up.contact_number = ?,
-                    up.address = ?,
-                    up.suffix = ?,
-                    up.birthdate = ?,
-                    up.gender = ?,
-                    u.email = ?,
-                    ad.student_number = ?,
-                    ad.course_id = ?,
-                    ad.year_graduated = ?
+    SET
+        up.first_name = ?,
+        up.middle_name = ?,
+        up.last_name = ?,
+        up.contact_number = ?,
+        up.address = ?,
+        up.suffix = ?,
+        up.birthdate = ?,
+        up.gender = ?,
+        u.email = ?,
+        u.status = ?,
+        ad.student_number = ?,
+        ad.course_id = ?,
+        ad.year_graduated = ?
 
-                WHERE ad.alumni_id = ?
-            ";
+    WHERE ad.alumni_id = ?
+";
 
         $stmt = $conn->prepare($query);
 
         $stmt->bind_param(
-            "ssssssssssssi",
+            "sssssssssssssi",
             $first_name,
             $middle_name,
             $last_name,
@@ -109,20 +115,31 @@ if (isset($_POST['update_alumni'])) {
             $birth_date,
             $sex,
             $email,
+            $status,
             $student_number,
             $course_id,
             $year_graduated,
             $alumni_id
         );
 
-        if ($stmt->execute()) {
+        try {
+            $conn->query("SET @is_admin = 1");
 
-            header("Location: all_alumni.php?update=success");
-            exit();
-        } else {
+            if ($stmt->execute()) {
 
-            $error = "Something went wrong. Please try again.";
+                $conn->query("SET @is_admin = 0");
+
+                header("Location: all_alumni.php?update=success");
+                exit();
+            }
+        } catch (mysqli_sql_exception $e) {
+
+            $conn->query("SET @is_admin = 0");
+
+            $error = $e->getMessage();
         }
+
+        $stmt->close();
     }
 }
 
@@ -140,6 +157,7 @@ $query = "
         ad.year_graduated,
 
         u.email,
+        u.status,
 
         up.first_name,
         up.middle_name,
@@ -236,7 +254,7 @@ if (!$row) {
                                                 <div class="col-md-3">
                                                     <label class="form-label">Student Number <span class="text-danger">*</span></label>
                                                     <input type="text" class="form-control" name="student_number"
-                                                        value="<?php echo htmlspecialchars($row['student_number']); ?>" readonly>
+                                                        value="<?php echo htmlspecialchars($row['student_number']); ?>" required>
                                                 </div>
                                             </div>
 
@@ -346,6 +364,32 @@ if (!$row) {
                                                     <label class="form-label">Year Graduated <span class="text-danger">*</span></label>
                                                     <input type="number" class="form-control" name="year_graduated"
                                                         value="<?php echo $row['year_graduated']; ?>" required>
+                                                </div>
+
+                                                <!-- ROW STATUS -->
+                                                <div class="row g-3 mt-2">
+                                                    <div class="col-md-6">
+                                                        <label class="form-label">Status</label>
+
+                                                        <select class="form-select" name="status">
+
+                                                            <option value="active"
+                                                                <?= ($row['status'] == 'active') ? 'selected' : '' ?>>
+                                                                Active
+                                                            </option>
+
+                                                            <option value="pending"
+                                                                <?= ($row['status'] == 'pending') ? 'selected' : '' ?>>
+                                                                Pending
+                                                            </option>
+
+                                                            <option value="inactive"
+                                                                <?= ($row['status'] == 'inactive') ? 'selected' : '' ?>>
+                                                                Inactive
+                                                            </option>
+
+                                                        </select>
+                                                    </div>
                                                 </div>
                                             </div>
 
