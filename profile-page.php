@@ -325,6 +325,15 @@ if (!empty($profile['last_name'])) {
                         <label for="mExpLocation">Location</label>
                         <input type="text" id="mExpLocation" placeholder="e.g. Pasig City">
                     </div>
+                    <div class="formGroup">
+                        <label for="mExpType">Employment Type</label>
+                        <select id="mExpType">
+                            <option value="">Select Type</option>
+                            <option value="Full-time">Full-time</option>
+                            <option value="Part-time">Part-time</option>
+                            <option value="Contract">Contract</option>
+                        </select>
+                    </div>
                     <div class="formRow">
                         <div class="formGroup">
                             <label for="mExpStart">Start Date</label>
