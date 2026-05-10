@@ -11,7 +11,13 @@ if ($id == 0) {
 
 // fetch single article
 $stmt = $conn->prepare("
-    SELECT af.*, up.about, up.first_name, up.last_name, up.middle_name, up.suffix
+    SELECT af.*, 
+            up.about,
+            up.first_name,
+            up.last_name,
+            up.middle_name,
+            up.suffix,
+            up.profile_picture
     FROM alumnifeatured af
     LEFT JOIN users u ON af.user_id = u.id
     LEFT JOIN userprofile up ON u.id = up.user_id
@@ -30,11 +36,13 @@ if (!$article) {
 $eduStmt = $conn->prepare("
     SELECT degree, school, start_year, end_year
     FROM education
-    WHERE user_id = ?
+    WHERE user_id = (
+        SELECT user_id FROM alumnifeatured WHERE id = ?
+    )
     ORDER BY end_year DESC
 ");
 
-$eduStmt->bind_param("i", $article['user_id']);
+$eduStmt->bind_param("i", $id);
 $eduStmt->execute();
 $eduResult = $eduStmt->get_result();
 
@@ -128,9 +136,8 @@ while ($edu = $eduResult->fetch_assoc()) {
         <main class="article-main">
 
             <div class="cover-image-wrap">
-                <!-- Swap <span> for <img src="..." alt="..."> when you have a real image -->
                 <?php if (!empty($article['cover_image'])): ?>
-                    <img src="<?php echo $article['cover_image']; ?>" alt="Cover Image">
+                    <img src="<?php echo htmlspecialchars($article['cover_image']); ?>" alt="Cover Image">
                 <?php else: ?>
                     <span class="cover-placeholder-text">FEATURE STORY</span>
                 <?php endif; ?>
@@ -149,6 +156,7 @@ while ($edu = $eduResult->fetch_assoc()) {
                         <div class="grad-year">B.S. Computer Science &middot; Class of <?php echo htmlspecialchars($article['year_graduated']); ?>
                         </div>
                     </div>
+                </div>
             </header>
 
             <blockquote class="article-excerpt">
@@ -156,7 +164,7 @@ while ($edu = $eduResult->fetch_assoc()) {
             </blockquote>
 
             <article class="article-body">
-                <?php echo nl2br($article['content']); ?>
+                <?php echo nl2br(htmlspecialchars($article['content'])); ?>
             </article>
 
             <div style="height: 2rem;"></div>
@@ -167,21 +175,32 @@ while ($edu = $eduResult->fetch_assoc()) {
 
             <div class="sidebar-card">
                 <p class="sidebar-card-title">About the Alumni</p>
+
                 <div class="author-inner">
+
+                    <?php
+                    $image = $article['profile_picture'] ?? null;
+                    $parts = explode(" ", trim($article['alumni_name']));
+                    $initials = strtoupper($parts[0][0] . ($parts[1][0] ?? ""));
+                    ?>
+
                     <div class="author-avatar-lg" aria-hidden="true">
-                        <?php
-                        $parts = explode(" ", trim($article['alumni_name']));
-                        $initials = strtoupper($parts[0][0] . (isset($parts[1]) ? $parts[1][0] : ""));
-                        echo $initials;
-                        ?>
+                        <?php if (!empty($image)): ?>
+                            <img src="uploads/profile/<?= htmlspecialchars($image) ?>">
+                        <?php else: ?>
+                            <div class="avatar-initials">
+                                <?= $initials ?>
+                            </div>
+                        <?php endif; ?>
                     </div>
-                    <div class="author-name-lg"><?php echo htmlspecialchars($article['alumni_name']); ?></div>
-                    <div class="author-degree"><?php echo $educationText ?: "No education record available."; ?></div>
-                    <span class="year-chip">Class of <?php echo htmlspecialchars($article['year_graduated']); ?></span>
-                    <p class="author-bio"><?php echo htmlspecialchars($article['about'] ?? 'No bio available.'); ?></p>
+
+                    <div class="author-name-lg"><?= htmlspecialchars($article['alumni_name']); ?></div>
+                    <div class="author-degree"><?= $educationText ?: "No education record available."; ?></div>
+                    <span class="year-chip">Class of <?= htmlspecialchars($article['year_graduated']); ?></span>
+                    <p class="author-bio">
+                        <?= htmlspecialchars($article['about'] ?? 'No bio available.'); ?></p>
                 </div>
             </div>
-
             <div class="sidebar-card">
                 <p class="sidebar-card-title">Article Details</p>
                 <div class="detail-list">

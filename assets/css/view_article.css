@@ -643,3 +643,19 @@ body {
 .logout-btn-yes:hover {
   background: #b91c1c;
 }
+
+.author-avatar-lg img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.avatar-initials {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+}

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 10, 2026 at 10:22 AM
+-- Generation Time: May 10, 2026 at 11:36 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -775,7 +775,7 @@ CREATE TABLE `alumnifeatured` (
 --
 
 INSERT INTO `alumnifeatured` (`id`, `title`, `alumni_name`, `year_graduated`, `category`, `cover_image`, `excerpt`, `content`, `created_at`, `user_id`) VALUES
-(1, 'Bridging Innovation and Infrastructure: A Journey in Full-Stack Development', 'John Jesses Macuana Escalona III', '2023', 'Technology', NULL, 'From mastering the fundamentals of database normalization to building responsive multi-role web platforms, John has dedicated his career to creating seamless digital experiences. His work focuses on integrating robust back-end logic with user-centric design to solve real-world community challenges.', 'The path to becoming a proficient developer is rarely a straight line, but for John, it has always been driven by a fascination with how things work behind the scenes. During his time at Pamantasan ng Lungsod ng Pasig, John distinguished himself through a deep dive into back-end technologies, mastering the intricacies of PHP, MySQL, and MariaDB.\r\n\r\nOne of his most significant early milestones involved a complex database normalization project, where he successfully restructured legacy flat-file data into efficient, relational systems. This foundation in data integrity paved the way for more ambitious projects, including the development of an integrated Alumni Management System. This platform featured a sophisticated multi-role interface tailored for students, professors, and alumni, ensuring that each user had a customized and secure experience.\r\n\r\nBeyond the code, John’s work is characterized by a unique aesthetic flair. Influenced by atmospheric and neon-inspired UI trends, he has a knack for creating interfaces that are not only functional but visually captivating. Whether he is configuring network topologies in Cisco Packet Tracer or implementing secure API authentication, his goal remains the same: to build technology that is reliable, scalable, and impactful.\r\n\r\nToday, John continues to push the boundaries of information technology, proving that with a solid technical foundation and a creative mindset, one can transform complex data into meaningful digital solutions.', '2026-05-10 08:20:29', 3);
+(1, 'hello', 'John Jesses Macuana Escalona III', '2023', 'Sports', 'uploads/stories/6a004e0f3e916_tao (1).png', 'test', 'test', '2026-05-10 09:21:19', 5);
 
 --
 -- Triggers `alumnifeatured`
@@ -889,7 +889,8 @@ INSERT INTO `audit_logs` (`log_id`, `table_name`, `record_id`, `action_type`, `u
 (48, 'userprofile', 4, 'UPDATE', 5, '2026-05-06 08:21:20'),
 (49, 'users', 3, 'UPDATE', 3, '2026-05-10 08:18:06'),
 (50, 'users', 5, 'UPDATE', 5, '2026-05-10 08:18:57'),
-(51, 'userprofile', 4, 'UPDATE', 5, '2026-05-10 08:18:57');
+(51, 'userprofile', 4, 'UPDATE', 5, '2026-05-10 08:18:57'),
+(52, 'userprofile', 4, 'UPDATE', 5, '2026-05-10 09:27:19');
 
 -- --------------------------------------------------------
 
@@ -1492,7 +1493,7 @@ CREATE TABLE `userprofile` (
 INSERT INTO `userprofile` (`profile_id`, `user_id`, `first_name`, `last_name`, `suffix`, `middle_name`, `contact_number`, `address`, `birthdate`, `gender`, `profile_picture`, `about`) VALUES
 (1, 1, 'Vehniah', 'Samson', '', 'Perol', '09929952041', 'Callejon 2', '2006-09-11', 'Male', NULL, NULL),
 (3, 4, 'Mark Venice', 'Escalomos', 'Sr.', 'Ash', '09324424232', 'hello', '2015-10-01', 'Male', NULL, NULL),
-(4, 5, 'John Jesses', 'Escalona', 'III', 'Macuana', '09927756044', '3078 barangay saksakan st. pasig city', '2005-07-07', 'Male', 'avatar_5_1777951454.png', 'HELLO ITS ME KAT BADING'),
+(4, 5, 'John Jesses', 'Escalona', 'III', 'Macuana', '09927756044', '3078 barangay saksakan st. pasig city', '2005-07-07', 'Male', 'avatar_5_1778405239.png', 'HELLO ITS ME KAT BADING'),
 (5, 7, 'Mark Venice', 'Samson', 'Sr.', 'Ash', '09927756044', 'tao', '2026-03-25', 'Male', NULL, NULL),
 (6, 9, 'Sam Aidan', 'Gonzaga', '', 'Capalaran', '09625928701', 'Mulawin St.', '2005-11-17', 'Male', NULL, NULL);
 
@@ -1758,7 +1759,7 @@ ALTER TABLE `alumnifeatured`
 -- AUTO_INCREMENT for table `audit_logs`
 --
 ALTER TABLE `audit_logs`
-  MODIFY `log_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=52;
+  MODIFY `log_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=53;
 
 --
 -- AUTO_INCREMENT for table `courses`

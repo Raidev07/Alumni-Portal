@@ -8,15 +8,47 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
 }
 
 /*
-|----------------------------------------------------------------------
-| PREFILL FROM VIEW ALUMNI (OPTIONAL)
-|----------------------------------------------------------------------
+|-------------------------------------------------------
+| GET ALUMNI ID (FROM URL)
+|-------------------------------------------------------
+*/
+$alumni_user_id = null;
+$alumni_id = null;
+
+if (isset($_GET['id'])) {
+    $alumni_id = (int) $_GET['id'];
+
+    $stmt = $conn->prepare("
+        SELECT user_id 
+        FROM alumnidetails 
+        WHERE alumni_id = ?
+        LIMIT 1
+    ");
+
+    $stmt->bind_param("i", $alumni_id);
+    $stmt->execute();
+    $res = $stmt->get_result();
+
+    if ($row = $res->fetch_assoc()) {
+        $alumni_user_id = $row['user_id'];
+    }
+
+    $stmt->close();
+}
+
+if (!$alumni_user_id) {
+    die("Invalid alumni selected.");
+}
+
+/*
+|-------------------------------------------------------
+| PREFILL DATA
+|-------------------------------------------------------
 */
 $prefill_name = "";
 $prefill_year = "";
 
-if (isset($_GET['id'])) {
-    $id = (int) $_GET['id'];
+if ($alumni_id) {
 
     $stmt = $conn->prepare("
         SELECT 
@@ -31,7 +63,7 @@ if (isset($_GET['id'])) {
         LIMIT 1
     ");
 
-    $stmt->bind_param("i", $id);
+    $stmt->bind_param("i", $alumni_id);
     $stmt->execute();
     $res = $stmt->get_result();
 
@@ -52,15 +84,15 @@ if (isset($_GET['id'])) {
 }
 
 /*
-|----------------------------------------------------------------------
+|-------------------------------------------------------
 | INSERT STORY
-|----------------------------------------------------------------------
+|-------------------------------------------------------
 */
 if (isset($_POST['publish_story'])) {
 
     $title           = trim($_POST['title']);
     $alumni_name     = trim($_POST['alumniName']);
-    $year_graduated = date('Y', strtotime($_POST['gradYear'] . '-01-01'));
+    $year_graduated  = date('Y', strtotime($_POST['gradYear'] . '-01-01'));
     $category        = trim($_POST['category']);
     $excerpt         = trim($_POST['excerpt']);
     $content         = trim($_POST['content']);
@@ -108,7 +140,7 @@ if (isset($_POST['publish_story'])) {
     }
 
     /*
-    | VALIDATION
+    | INSERT
     */
     if (empty($title) || empty($alumni_name) || empty($year_graduated) || empty($content)) {
         $error = "Please fill in required fields.";
@@ -129,7 +161,7 @@ if (isset($_POST['publish_story'])) {
             $cover_image,
             $excerpt,
             $content,
-            $_SESSION['user_id']
+            $alumni_user_id
         );
 
         if ($stmt->execute()) {
