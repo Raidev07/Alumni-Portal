@@ -1,10 +1,15 @@
 <?php
 $error = '';
 if (isset($_GET['error'])) {
+
     if ($_GET['error'] === 'wrong_password') {
         $error = 'Incorrect password. Please try again.';
     } elseif ($_GET['error'] === 'user_not_found') {
         $error = 'No account found with that email.';
+    } elseif ($_GET['error'] === 'pending') {
+        $error = 'Your account is still pending approval.';
+    } elseif ($_GET['error'] === 'inactive') {
+        $error = 'Your account has been deactivated.';
     }
 }
 ?>
@@ -72,7 +77,7 @@ if (isset($_GET['error'])) {
             </div>
 
             <div class="login__image">
-                <img src="assets/image/login.png" alt="" class="login__img" >
+                <img src="assets/image/login.png" alt="" class="login__img">
             </div>
             <a href="index.php" class="back__home">
                 <i class="ri-arrow-left-s-line"></i>

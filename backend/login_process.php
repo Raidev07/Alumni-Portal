@@ -15,28 +15,39 @@ if (empty($email) || empty($password)) {
     die("Please fill in all fields.");
 }
 
-// Use prepared statement (prevents SQL injection)
-$stmt = $conn->prepare("SELECT id, email, password, role FROM users WHERE email = ?");
+// Include status in query
+$stmt = $conn->prepare("SELECT id, email, password, role, status FROM users WHERE email = ?");
 $stmt->bind_param("s", $email);
 $stmt->execute();
 $result = $stmt->get_result();
 
-// Check user exists
+// Check if user exists
 if ($result->num_rows === 1) {
 
     $user = $result->fetch_assoc();
 
-    // Verify password (secure hashing)
+    // Check account status FIRST
+    if ($user['status'] === 'pending') {
+        header("Location: ../login.php?error=pending");
+        exit();
+    }
+
+    if ($user['status'] === 'inactive') {
+        header("Location: ../login.php?error=inactive");
+        exit();
+    }
+
+    // Verify password
     if (password_verify($password, $user['password'])) {
 
-        // Secure session setup
+        // Secure session
         session_regenerate_id(true);
 
         $_SESSION['user_id'] = $user['id'];
         $_SESSION['user_email'] = $user['email'];
         $_SESSION['role'] = $user['role'];
 
-        // Role-based redirect
+        // Redirect by role
         if ($user['role'] === 'admin') {
             header("Location: ../admin/dashboard.php");
         } elseif ($user['role'] === 'alumni') {
@@ -46,12 +57,14 @@ if ($result->num_rows === 1) {
         exit();
 
     } else {
+
         // Wrong password
         header("Location: ../login.php?error=wrong_password");
         exit();
     }
 
 } else {
+
     // User not found
     header("Location: ../login.php?error=user_not_found");
     exit();
