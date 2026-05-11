@@ -53,6 +53,24 @@ if ($result_jobs) {
     $total_jobs = $row_jobs['total_jobs'] ?? 0;
 }
 
+$featuredQuery = $conn->query("
+    SELECT 
+        af.id,
+        af.title,
+        af.excerpt,
+        af.category,
+        af.cover_image,
+        af.alumni_name,
+        up.profile_picture,
+        ad.course_id,
+        c.course_name
+    FROM alumnifeatured af
+    LEFT JOIN userprofile up ON af.user_id = up.user_id
+    LEFT JOIN alumnidetails ad ON af.user_id = ad.user_id
+    LEFT JOIN courses c ON ad.course_id = c.course_id
+    ORDER BY af.created_at DESC
+    LIMIT 5
+");
 
 $full_name = 'Guest';
 
@@ -94,7 +112,7 @@ if ($isLoggedIn) {
 <body>
     <?php
     if ($isLoggedIn) {
-        include('includes/navbarhome.php'); 
+        include('includes/navbarhome.php');
     } else {
         include('includes/navbarindex.php');
     } ?>
@@ -201,120 +219,85 @@ if ($isLoggedIn) {
         <div class="container swiper">
             <div class="wrapper">
                 <div class="card-list swiper-wrapper">
-                    <!-- Single Card -->
-                    <div class="card swiper-slide">
-                        <div class="card-image">
-                            <img src="assets/image/design.jpg" alt="Design Trends" />
-                            <div class="card-tag">Design</div>
-                        </div>
-                        <div class="card-content">
-                            <h3 class="card-title">Modern UI Trends for 2025</h3>
-                            <p class="card-text">Explore the latest user interface design trends that are shaping the
-                                digital landscape this year. From neumorphism to glassmorphism and beyond.</p>
-                            <div class="card-footer">
-                                <div class="card-profile">
-                                    <img src="assets/image/user-1.jpg" alt="Alex Smith" />
-                                    <div class="card-profile-info">
-                                        <span class="card-profile-name">Alex Smith</span>
-                                        <span class="card-profile-role">UI Designer</span>
-                                    </div>
-                                </div>
-                                <a href="DPA.php" class="card-button">Read More</a>
-                            </div>
-                        </div>
-                    </div>
 
-                    <!-- Single Card -->
-                    <div class="card swiper-slide">
-                        <div class="card-image">
-                            <img src="assets/image/development.jpg" alt="Development" />
-                            <div class="card-tag">Development</div>
-                        </div>
-                        <div class="card-content">
-                            <h3 class="card-title">Best Frontend Frameworks</h3>
-                            <p class="card-text">A comprehensive comparison of the most popular frontend frameworks and
-                                libraries that developers are using to build modern web applications.</p>
-                            <div class="card-footer">
-                                <div class="card-profile">
-                                    <img src="assets/image/user-2.jpg" alt="Jessica Chen" />
-                                    <div class="card-profile-info">
-                                        <span class="card-profile-name">Jessica Chen</span>
-                                        <span class="card-profile-role">Developer</span>
-                                    </div>
-                                </div>
-                                <a href="DPA.php" class="card-button">Read More</a>
-                            </div>
-                        </div>
-                    </div>
+                    <?php while ($featured = $featuredQuery->fetch_assoc()): ?>
 
-                    <!-- Single Card -->
-                    <div class="card swiper-slide">
-                        <div class="card-image">
-                            <img src="assets/image/ai.jpg" alt="AI" />
-                            <div class="card-tag">AI</div>
-                        </div>
-                        <div class="card-content">
-                            <h3 class="card-title">AI User Experience Design</h3>
-                            <p class="card-text">How artificial intelligence is revolutionizing user experience design
-                                and enabling more personalized, intuitive interfaces for digital products.</p>
-                            <div class="card-footer">
-                                <div class="card-profile">
-                                    <img src="assets/image/user-3.jpg" alt="Marcus Johnson" />
-                                    <div class="card-profile-info">
-                                        <span class="card-profile-name">Marcus Johnson</span>
-                                        <span class="card-profile-role">UX Researcher</span>
-                                    </div>
-                                </div>
-                                <a href="DPA.php" class="card-button">Read More</a>
-                            </div>
-                        </div>
-                    </div>
+                        <?php
+                        $profilePic = !empty($featured['profile_picture'])
+                            ? "uploads/profile/" . htmlspecialchars($featured['profile_picture'])
+                            : "assets/image/default-profile.png";
 
-                    <!-- Single Card -->
-                    <div class="card swiper-slide">
-                        <div class="card-image">
-                            <img src="assets/image/productivity.jpg" alt="Productivity" />
-                            <div class="card-tag">Productivity</div>
-                        </div>
-                        <div class="card-content">
-                            <h3 class="card-title">Workspace Design for Focus</h3>
-                            <p class="card-text">Designing workspaces that maximize productivity and minimize
-                                distractions for creative professionals in the hybrid work environment.</p>
-                            <div class="card-footer">
-                                <div class="card-profile">
-                                    <img src="assets/image/user-4.jpg" alt="Sarah Miller" />
-                                    <div class="card-profile-info">
-                                        <span class="card-profile-name">Sarah Miller</span>
-                                        <span class="card-profile-role">Interior Designer</span>
-                                    </div>
-                                </div>
-                                <a href="DPA.php" class="card-button">Read More</a>
-                            </div>
-                        </div>
-                    </div>
+                        $coverImage = !empty($featured['cover_image'])
+                            ? htmlspecialchars($featured['cover_image'])
+                            : "assets/image/default-cover.jpg";
 
-                    <!-- Single Card -->
-                    <div class="card swiper-slide">
-                        <div class="card-image">
-                            <img src="assets/image/animation.jpg" alt="Animation" />
-                            <div class="card-tag">Animation</div>
-                        </div>
-                        <div class="card-content">
-                            <h3 class="card-title">Micro Animation Designs</h3>
-                            <p class="card-text">The small animations and interactions that make a big difference in
-                                user experience and how to implement them effectively in your designs.</p>
-                            <div class="card-footer">
-                                <div class="card-profile">
-                                    <img src="assets/image/user-5.jpg" alt="David Park" />
-                                    <div class="card-profile-info">
-                                        <span class="card-profile-name">David Park</span>
-                                        <span class="card-profile-role">Motion Designer</span>
-                                    </div>
+                        $parts = explode(" ", trim($featured['alumni_name']));
+                        $initials = strtoupper(
+                            substr($parts[0] ?? '', 0, 1) .
+                                (isset($parts[1]) ? substr($parts[1], 0, 1) : '')
+                        );
+                        ?>
+
+                        <div class="card swiper-slide">
+
+                            <div class="card-image">
+                                <img src="<?= $coverImage ?>" alt="Article Cover">
+
+                                <div class="card-tag">
+                                    <?= htmlspecialchars($featured['category']) ?>
                                 </div>
-                                <a href="DPA.php" class="card-button">Read More</a>
+                            </div>
+
+                            <div class="card-content">
+
+                                <h3 class="card-title">
+                                    <?= htmlspecialchars($featured['title']) ?>
+                                </h3>
+
+                                <p class="card-text">
+                                    <?= htmlspecialchars($featured['excerpt']) ?>
+                                </p>
+
+                                <div class="card-footer">
+
+                                    <div class="card-profile">
+
+                                        <?php if (!empty($featured['profile_picture'])): ?>
+
+                                            <img src="<?= $profilePic ?>" alt="Profile Picture">
+
+                                        <?php else: ?>
+
+                                            <div class="profile-placeholder">
+                                                <?= $initials ?>
+                                            </div>
+
+                                        <?php endif; ?>
+
+                                        <div class="card-profile-info">
+                                            <span class="card-profile-name">
+                                                <?= htmlspecialchars($featured['alumni_name']) ?>
+                                            </span>
+
+                                            <span class="card-profile-role">
+                                                <?= !empty($featured['course_name'])
+                                                    ? htmlspecialchars($featured['course_name'])
+                                                    : 'Alumni' ?>
+                                            </span>
+                                        </div>
+
+                                    </div>
+
+                                    <a href="view_article.php?id=<?= $featured['id'] ?>" class="card-button">
+                                        Read More
+                                    </a>
+
+                                </div>
                             </div>
                         </div>
-                    </div>
+
+                    <?php endwhile; ?>
+
                 </div>
 
                 <!-- Pagination -->

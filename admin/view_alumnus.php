@@ -79,9 +79,34 @@
     $row = $result->fetch_assoc();
 
     $stmt->close();
+
+    /*
+|-------------------------------------------------
+| FETCH ARTICLE ID
+|-------------------------------------------------
+*/
+    $article = null;
+
+    if ($row) {
+
+        $articleQuery = $conn->prepare("
+        SELECT id
+        FROM alumnifeatured
+        WHERE user_id = ?
+        LIMIT 1
+    ");
+
+        $articleQuery->bind_param("i", $row['id']);
+        $articleQuery->execute();
+
+        $articleResult = $articleQuery->get_result();
+        $article = $articleResult->fetch_assoc();
+
+        $articleQuery->close();
+    }
+
     $conn->close();
     ?>
-    <!-- company title -->
     <!DOCTYPE html>
     <html lang="en">
 
@@ -232,7 +257,10 @@
                                     <div class="card-footer">
                                         <a href="all_alumni.php" class="btn btn-primary"><i class="bi bi-arrow-left-circle"></i>&nbsp; Back to All Alumni</a>
                                         <?php if (!empty($row['alumni_id'])): ?>
-                                            <a href="write_article.php?id=<?= (int)$row['alumni_id'] ?>" class="btn btn-success">&nbsp; Write Article</a>
+                                            <a href="write_article.php?id=<?= (int)$row['alumni_id'] ?>" class="btn btn-success"><i class="nav-icon bi bi-newspaper"></i>&nbsp; Write Article</a>
+                                        <?php endif; ?>
+                                        <?php if ($article): ?>
+                                            <a href="edit_article.php?id=<?= (int)$article['id'] ?>" class="btn btn-warning"><i class="nav-icon bi bi-pencil"></i>&nbsp; Edit Article</a>
                                         <?php endif; ?>
                                     </div>
                                 </div>

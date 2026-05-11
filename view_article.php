@@ -11,16 +11,20 @@ if ($id == 0) {
 
 // fetch single article
 $stmt = $conn->prepare("
-    SELECT af.*, 
+    SELECT 
+            af.*, 
             up.about,
             up.first_name,
             up.last_name,
             up.middle_name,
             up.suffix,
-            up.profile_picture
+            up.profile_picture,
+            c.course_name
     FROM alumnifeatured af
     LEFT JOIN users u ON af.user_id = u.id
     LEFT JOIN userprofile up ON u.id = up.user_id
+    LEFT JOIN alumnidetails ad ON ad.user_id = u.id
+    LEFT JOIN courses c ON ad.course_id = c.course_id
     WHERE af.id = ?
 ");
 $stmt->bind_param("i", $id);
@@ -67,6 +71,7 @@ while ($edu = $eduResult->fetch_assoc()) {
     <title>Alumni Article Reader</title>
     <link rel="icon" href="assets/image/alumni-logo.png">
     <link rel="stylesheet" href="assets/css/view_article.css" />
+    <link rel="stylesheet" href="assets/css/alumni_homepage.css" />
     <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;0,700;1,400&family=Roboto+Slab:wght@400;600;700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
@@ -78,58 +83,8 @@ while ($edu = $eduResult->fetch_assoc()) {
         <div class="reading-progress-fill" id="progressFill"></div>
     </div>
 
-    <nav class="navbar" id="navbar">
-        <div class="nav-left">
-            <a href="#" class="logo-link1"><img src="assets/image/alumni-logo.png" alt="alumni Logo"></a>
-            <div class="title">
-                <div>Pamantasan ng Lungsod ng Pasig</div>
-                <div>ALUMNI</div>
-            </div>
-        </div>
+    <?php include('includes/navbarhome.php'); ?>
 
-        <ul class="nav-links">
-            <li><a href="index.php">Home</a></li>
-            <li><a href="jobs.php">Jobs</a></li>
-            <li><a href="events.php">Events</a></li>
-            <li><a href="articles_page.php" class="active">Highlights</a></li>
-        </ul>
-
-        <div class="nav-right">
-
-            <!-- Profile Icon -->
-            <a href="profile-page.php" class="profile-icon" title="My Profile">
-                <i class="fas fa-user"></i>
-            </a>
-
-            <div class="hamburger-wrapper">
-                <button class="hamburger-btn" id="hamburgerBtn" aria-label="Open menu" aria-expanded="false">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </button>
-
-                <div class="hamburger-dropdown" id="hamburgerDropdown">
-                    <ul>
-                        <li>
-                            <a href="contact.php">
-                                <i class="fas fa-envelope"></i> Contact Us
-                            </a>
-                        </li>
-                        <li class="dropdown-divider-top">
-                            <a href="#" id="logoutTrigger">
-                                <i class="fas fa-sign-out-alt"></i> Logout
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-
-
-            <a href="#" class="logo-link2">
-                <img src="assets/image/plplogo.png" alt="PLP Logo">
-            </a>
-        </div>
-    </nav>
     <div class="page-wrap">
 
         <!-- MAIN ARTICLE -->
@@ -150,10 +105,23 @@ while ($edu = $eduResult->fetch_assoc()) {
                 </span>
                 <h1 class="article-title"><?php echo htmlspecialchars($article['title']); ?></h1>
                 <div class="article-meta">
-                    <div class="alumni-avatar" aria-hidden="true">MR</div>
+                    <?php
+                    $image = $article['profile_picture'] ?? null;
+                    $parts = explode(" ", trim($article['alumni_name']));
+                    $initials = strtoupper($parts[0][0] . ($parts[1][0] ?? ""));
+                    ?>
+                    <div class="alumni-avatar" aria-hidden="true">
+                        <?php if (!empty($image)): ?>
+                            <img src="uploads/profile/<?= htmlspecialchars($image) ?>">
+                        <?php else: ?>
+                            <div class="avatar-initials">
+                                <?= $initials ?>
+                            </div>
+                        <?php endif; ?>
+                    </div>
                     <div class="meta-info">
                         <div class="alumni-name"><?php echo htmlspecialchars($article['alumni_name']); ?></div>
-                        <div class="grad-year">B.S. Computer Science &middot; Class of <?php echo htmlspecialchars($article['year_graduated']); ?>
+                        <div class="grad-year"><?= htmlspecialchars($article['course_name'] ?? 'No Course') ?> &middot; Class of <?php echo htmlspecialchars($article['year_graduated']); ?>
                         </div>
                     </div>
                 </div>
