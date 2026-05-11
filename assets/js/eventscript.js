@@ -1,7 +1,6 @@
-// eventscript.js — FULL UPDATED VERSION
-
 let allEvents = [];
 let activeType = "all";
+let activeStatus = "upcoming";
 let deleteEventId = null;
 
 // ── Utility ───────────────────────────────────────────────────────────────────
@@ -79,9 +78,20 @@ function showErrorModal(message) {
 async function fetchEvents() {
     const query = document.getElementById("searchInput").value.trim();
 
-    const fetchType = activeType === "mine" ? "all" : activeType;
+    const isMine =
+        activeType === "mine-upcoming" ||
+        activeType === "mine-ongoing" ||
+        activeType === "mine-archived";
+
+    const fetchType = isMine ? "all" : activeType;
 
     const params = new URLSearchParams();
+
+    params.set("status", activeStatus);
+
+    if (isMine) {
+        params.set("mine", "1");
+    }
 
     if (fetchType !== "all") {
         params.set("type", fetchType);
@@ -104,12 +114,7 @@ async function fetchEvents() {
             throw new Error(data.message);
         }
 
-        const filtered =
-            activeType === "mine"
-                ? data.events.filter(
-                      (e) => Number(e.user_id) === Number(SESSION_USER_ID),
-                  )
-                : data.events;
+        const filtered = data.events;
 
         allEvents = filtered;
 
@@ -237,6 +242,8 @@ function openDetail(id) {
     const isOwner =
         SESSION_LOGGED_IN && Number(e.user_id) === Number(SESSION_USER_ID);
 
+    const isArchived = e.status === "completed" || e.status === "cancelled";
+
     document.getElementById("d-title").textContent = e.title;
 
     document.getElementById("d-organizer").textContent =
@@ -287,22 +294,82 @@ function openDetail(id) {
 
     document.getElementById("d-desc").textContent = e.desc || "";
 
+    // ─── DYNAMIC ACTION BUTTONS ───────────────────────────────
+
+    const actions = document.querySelector(".detail-actions");
+
+    if (isArchived) {
+        actions.innerHTML = `
+
+            <button class="btn-post" id="d-restore">
+                Restore
+            </button>
+
+            <button class="btn-edit" id="d-edit">
+                Edit
+            </button>
+
+            <button class="btn-back" id="closeDetail">
+                Close
+            </button>
+        `;
+    } else {
+        actions.innerHTML = `
+
+            ${
+                !isOwner
+                    ? `
+                    <button class="btn-apply" id="d-register">
+                        ${
+                            SESSION_LOGGED_IN
+                                ? "Register Now"
+                                : "Login to Register"
+                        }
+                    </button>
+                    `
+                    : ""
+            }
+
+            ${
+                isOwner
+                    ? `
+                    <button class="btn-edit" id="d-edit">
+                        Edit
+                    </button>
+
+                    <button class="btn-delete" id="d-delete">
+                        Archive
+                    </button>
+                    `
+                    : ""
+            }
+
+            <button class="btn-back" id="closeDetail">
+                Close
+            </button>
+        `;
+    }
+
+    // ─── GET BUTTONS ──────────────────────────────────────────
+
     const registerBtn = document.getElementById("d-register");
 
-    registerBtn.classList.remove("hidden");
+    const editBtn = document.getElementById("d-edit");
 
-    if (isOwner) {
-        registerBtn.classList.add("hidden");
-    } else {
+    const deleteBtn = document.getElementById("d-delete");
+
+    const restoreBtn = document.getElementById("d-restore");
+
+    const closeBtn = document.getElementById("closeDetail");
+
+    // ─── REGISTER BUTTON ──────────────────────────────────────
+
+    if (registerBtn && !isArchived) {
         if (!SESSION_LOGGED_IN) {
-            registerBtn.textContent = "Login to Register";
-
             registerBtn.onclick = () => {
                 window.location.href = "login.php";
             };
         } else {
-            registerBtn.textContent = "Register Now";
-
             registerBtn.onclick = () => {
                 if (e.email) {
                     const subject = "Event Registration: " + e.title;
@@ -339,16 +406,7 @@ function openDetail(id) {
         }
     }
 
-    const editBtn = document.getElementById("d-edit");
-    const deleteBtn = document.getElementById("d-delete");
-
-    if (editBtn) {
-        editBtn.classList.toggle("hidden", !isOwner);
-    }
-
-    if (deleteBtn) {
-        deleteBtn.classList.toggle("hidden", !isOwner);
-    }
+    // ─── OWNER BUTTONS ────────────────────────────────────────
 
     if (editBtn && isOwner) {
         editBtn.onclick = () => openEdit(e);
@@ -356,6 +414,20 @@ function openDetail(id) {
 
     if (deleteBtn && isOwner) {
         deleteBtn.onclick = () => deleteEvent(e.id);
+    }
+
+    if (restoreBtn && isOwner) {
+        restoreBtn.onclick = () => restoreEvent(e.id);
+    }
+
+    // ─── CLOSE ────────────────────────────────────────────────
+
+    if (closeBtn) {
+        closeBtn.onclick = () => {
+            document.getElementById("detailOverlay").classList.add("hidden");
+
+            document.body.classList.remove("modal-open");
+        };
     }
 
     document.getElementById("detailOverlay").classList.remove("hidden");
@@ -449,7 +521,67 @@ function deleteEvent(id) {
 
     document.body.classList.add("modal-open");
 }
+// ── RESTORE EVENT ──────────────────────────────────────────────
 
+async function restoreEvent(id) {
+    const e = allEvents.find((x) => x.id == id);
+
+    if (!e) return;
+
+    const eventDate = (e.date || e.event_date || "").trim();
+
+    // ─── VALIDATE DATE ─────────────────────────────────
+
+    if (!eventDate) {
+        showErrorModal(
+            "This event no longer has a valid event date.\n\n" +
+                "Please edit the event first before restoring it.",
+        );
+
+        return;
+    }
+
+    const today = new Date().toISOString().split("T")[0];
+
+    // ─── DATE ALREADY PASSED ───────────────────────────
+
+    if (eventDate <= today) {
+        showErrorModal(
+            "This event date has already passed.\n\n" +
+                "Please edit the event date first before restoring the event again.",
+        );
+
+        return;
+    }
+
+    // ─── RESTORE EVENT ─────────────────────────────────
+
+    try {
+        const res = await fetch("backend/event_process.php", {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                id: id,
+            }),
+        });
+
+        const data = await res.json();
+
+        if (!data.success) {
+            throw new Error("Failed to restore event.");
+        }
+
+        document.getElementById("detailOverlay").classList.add("hidden");
+
+        document.body.classList.remove("modal-open");
+
+        fetchEvents();
+    } catch (err) {
+        showErrorModal(err.message);
+    }
+}
 // ── CONFIRM DELETE ────────────────────────────────────────────────────────────
 
 document
@@ -637,6 +769,23 @@ document.querySelectorAll(".filter-item").forEach((el) => {
         el.classList.add("active");
 
         activeType = el.dataset.filter;
+
+        switch (activeType) {
+            case "mine-upcoming":
+                activeStatus = "upcoming";
+                break;
+
+            case "mine-ongoing":
+                activeStatus = "ongoing";
+                break;
+
+            case "mine-archived":
+                activeStatus = "archived";
+                break;
+
+            default:
+                activeStatus = "upcoming";
+        }
 
         fetchEvents();
     });

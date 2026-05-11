@@ -114,7 +114,6 @@ if (!empty($_SESSION['first_name'])) {
                     <p id="d-desc"></p>
                 </div>
                 <div class="detail-actions">
-
                     <button class="btn-apply" id="d-register">
                         Register Now
                     </button>
@@ -123,12 +122,16 @@ if (!empty($_SESSION['first_name'])) {
                         Edit
                     </button>
 
-                    <button class="btn-back" id="closeDetail">
-                        Close
+                    <button class="btn-delete hidden" id="d-delete">
+                        Archive
                     </button>
 
-                    <button class="btn-delete hidden" id="d-delete">
-                        Delete
+                    <button class="btn-post hidden" id="d-restore">
+                        Restore
+                    </button>
+
+                    <button class="btn-back" id="closeDetail">
+                        Close
                     </button>
 
                 </div>
@@ -246,15 +249,18 @@ if (!empty($_SESSION['first_name'])) {
             <aside class="sidebar">
                 <h3>Filter Events</h3>
                 <p class="sidebar-label">Event Type</p>
+
                 <div class="filter-item active" data-filter="all">All</div>
                 <div class="filter-item" data-filter="Networking">Networking</div>
                 <div class="filter-item" data-filter="Workshop">Workshop</div>
                 <div class="filter-item" data-filter="Seminar">Seminar</div>
                 <div class="filter-item" data-filter="Reunion">Reunion</div>
                 <?php if (isset($_SESSION['user_id'])): ?>
-                    <div class="filter-item" data-filter="mine">
-                        Created by Me
-                    </div>
+                    <hr class="sidebar-divider">
+                    <p class="sidebar-label">Created by Me</p>
+                    <div class="filter-item" data-filter="mine-upcoming">My Upcoming Events</div>
+                    <div class="filter-item" data-filter="mine-ongoing">My Ongoing Events</div>
+                    <div class="filter-item" data-filter="mine-archived">My Archived Events</div>
                 <?php endif; ?>
             </aside>
             <main class="main">
@@ -276,10 +282,12 @@ if (!empty($_SESSION['first_name'])) {
         <div class="modal delete-modal">
 
             <div class="modal-header">
-                <h2>Delete Event</h2>
-
+                <h2>Archive Event</h2>
                 <p>
-                    Are you sure you want to delete this event?
+                    Are you sure you want to archive this event?
+
+                    You can restore it again anytime from
+                    <strong>My Archived Events</strong>.
                 </p>
             </div>
 
@@ -290,7 +298,7 @@ if (!empty($_SESSION['first_name'])) {
                 </button>
 
                 <button class="btn-delete" id="confirmDeleteBtn">
-                    Delete
+                    Send to Archive
                 </button>
 
             </div>

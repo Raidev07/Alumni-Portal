@@ -754,11 +754,22 @@ h1 {
 
 .detail-actions {
     display: flex;
+    align-items: center;
+    justify-content: flex-start;
     gap: 10px;
     margin-top: 26px;
     padding-top: 20px;
     border-top: 1px solid #e0e0e0;
     flex-wrap: wrap;
+}
+
+.detail-actions .btn-apply,
+.detail-actions .btn-edit,
+.detail-actions .btn-delete,
+.detail-actions .btn-back,
+.detail-actions .btn-post {
+    min-width: 120px;
+    text-align: center;
 }
 
 .btn-apply {
@@ -998,6 +1009,44 @@ h1 {
     vertical-align: middle;
 }
 
+.sidebar-divider {
+    border: none;
+    border-top: 1px solid #dbe4dc;
+    margin: 14px 0;
+}
+
+/* ─── EVENT STATUS TAGS ───────────────────────── */
+
+.event-status-tag {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 700;
+    margin-left: 8px;
+    text-transform: capitalize;
+}
+
+.status-upcoming {
+    background: #dbeafe;
+    color: #1d4ed8;
+}
+
+.status-ongoing {
+    background: #dcfce7;
+    color: #15803d;
+}
+
+.status-completed {
+    background: #e5e7eb;
+    color: #374151;
+}
+
+.status-cancelled {
+    background: #fee2e2;
+    color: #dc2626;
+}
+
 .btn-edit {
     background: transparent;
     border: 1px solid #ccc;
@@ -1060,4 +1109,33 @@ body.modal-open {
 
 #errorOverlay .modal {
     margin-top: 0;
+}
+
+.sidebar-divider {
+    border: none;
+    border-top: 1px solid #dbe4dc;
+    margin: 14px 0;
+}
+
+/* ─── ARCHIVE BUTTON ───────────────────────── */
+
+.btn-delete {
+    border: 1px solid #dc2626;
+    color: #dc2626;
+}
+
+.btn-delete:hover {
+    background: #dc2626;
+    color: #fff;
+}
+
+/* ─── RESTORE BUTTON ───────────────────────── */
+
+#d-restore {
+    background: #15803d;
+    color: #fff;
+}
+
+#d-restore:hover {
+    background: #166534;
 }

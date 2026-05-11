@@ -213,7 +213,7 @@ function openDetail(id) {
             </button>
 
             <button class="btn-back" id="closeDetail">
-                Cancel
+                Close
             </button>
         `;
     } else {
