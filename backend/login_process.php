@@ -8,65 +8,72 @@ if ($_SERVER["REQUEST_METHOD"] !== "POST") {
 }
 
 // 1. Get and sanitize input
-$email = trim($_POST['email']);
-$password = trim($_POST['password']);
+$email = $_POST['email'] ?? '';
+$password = $_POST['password'] ?? '';
 
 if (empty($email) || empty($password)) {
-    die("Please fill in all fields.");
+    header("Location: ../login.php?error=empty_fields");
+    exit();
 }
 
-// Include status in query
-$stmt = $conn->prepare("SELECT id, email, password, role, status FROM users WHERE email = ?");
+// 2. Get user (WITH 2FA FIELD)
+$stmt = $conn->prepare("
+    SELECT id, email, password, role, status, twofa_enabled
+    FROM users
+    WHERE email = ?
+");
 $stmt->bind_param("s", $email);
 $stmt->execute();
 $result = $stmt->get_result();
 
-// Check if user exists
-if ($result->num_rows === 1) {
-
-    $user = $result->fetch_assoc();
-
-    // Check account status FIRST
-    if ($user['status'] === 'pending') {
-        header("Location: ../login.php?error=pending");
-        exit();
-    }
-
-    if ($user['status'] === 'inactive') {
-        header("Location: ../login.php?error=inactive");
-        exit();
-    }
-
-    // Verify password
-    if (password_verify($password, $user['password'])) {
-
-        // Secure session
-        session_regenerate_id(true);
-
-        $_SESSION['user_id'] = $user['id'];
-        $_SESSION['user_email'] = $user['email'];
-        $_SESSION['role'] = $user['role'];
-
-        // Redirect by role
-        if ($user['role'] === 'admin') {
-            header("Location: ../admin/dashboard.php");
-        } elseif ($user['role'] === 'alumni') {
-            header("Location: ../index.php");
-        }
-
-        exit();
-
-    } else {
-
-        // Wrong password
-        header("Location: ../login.php?error=wrong_password");
-        exit();
-    }
-
-} else {
-
-    // User not found
+// 3. Check user exists
+if ($result->num_rows !== 1) {
     header("Location: ../login.php?error=user_not_found");
     exit();
 }
-?>
+
+$user = $result->fetch_assoc();
+
+// 4. Check account status
+if ($user['status'] === 'pending') {
+    header("Location: ../login.php?error=pending");
+    exit();
+}
+
+if ($user['status'] === 'inactive') {
+    header("Location: ../login.php?error=inactive");
+    exit();
+}
+
+// 5. Verify password
+if (!password_verify($password, $user['password'])) {
+    header("Location: ../login.php?error=wrong_password");
+    exit();
+}
+
+// 6. Success login flow
+session_regenerate_id(true);
+
+// CHECK 2FA
+if ((int)$user['twofa_enabled'] === 1) {
+
+    // TEMP SESSION ONLY (NOT FULL LOGIN YET)
+    $_SESSION['temp_user_id'] = $user['id'];
+
+    header("Location: ../verify-otp.php");
+    exit();
+}
+
+// 7. NO 2FA → FULL LOGIN
+$_SESSION['user_id'] = $user['id'];
+$_SESSION['user_email'] = $user['email'];
+$_SESSION['role'] = $user['role'];
+
+// 8. Role redirect
+if ($user['role'] === 'admin') {
+    header("Location: ../admin/dashboard.php");
+} else {
+    header("Location: ../index.php");
+}
+
+exit();

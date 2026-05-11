@@ -37,7 +37,7 @@
                         </a>
                     </li>
                     <li>
-                        <a href="#" id="securityTrigger">
+                        <a href="security.php" id="securityTrigger">
                             <i class="fas fa-shield-alt"></i> Security Settings
                         </a>
                     </li>
@@ -50,7 +50,7 @@
             </div>
         </div>
 
-        <div class="security-overlay" id="securityOverlay" role="dialog" aria-modal="true" aria-labelledby="securityTitle">
+        <!-- <div class="security-overlay" id="securityOverlay" role="dialog" aria-modal="true" aria-labelledby="securityTitle">
             <div class="security-modal">
                 <button class="security-close" id="securityClose" aria-label="Close security dialog">×</button>
                 <div class="security-modal-icon">
@@ -63,7 +63,7 @@
                     <button type="button" class="security-btn" id="changePasswordBtn">Change Password</button>
                 </div>
             </div>
-        </div>
+        </div> -->
 
 
         <a href="#" class="logo-link2">
