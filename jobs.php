@@ -90,10 +90,6 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="f-link">Application Link</label>
-                    <input id="f-link" type="url" placeholder="https://...">
-                </div>
-                <div class="form-group">
                     <label for="f-email">Contact Email</label>
                     <input id="f-email" type="email" placeholder="hr@company.com">
                 </div>
