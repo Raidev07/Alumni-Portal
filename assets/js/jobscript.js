@@ -9,11 +9,21 @@ async function renderJobs() {
     const empty = document.getElementById("emptyState");
     const query = document.getElementById("searchInput").value.trim();
 
-    const fetchType = activeType === "mine" ? "all" : activeType;
+    const isMine =
+        activeType === "mine-active" || activeType === "mine-archived";
+
+    const fetchType = isMine ? "all" : activeType;
+
+    const status = activeType === "mine-archived" ? "archived" : "active";
 
     const fetchParams = new URLSearchParams({
         type: fetchType,
+        status: status,
     });
+
+    if (isMine) {
+        fetchParams.append("mine", "1");
+    }
 
     if (query) {
         fetchParams.append("query", query);
@@ -32,10 +42,7 @@ async function renderJobs() {
         }
 
         // FILTER CREATED BY ME
-        const filtered =
-            activeType === "mine"
-                ? jobs.filter((j) => parseInt(j.user_id) === SESSION_USER_ID)
-                : jobs;
+        const filtered = jobs;
 
         jobsCache = filtered;
 
@@ -147,6 +154,8 @@ function openDetail(id) {
     const isOwner =
         SESSION_LOGGED_IN && Number(j.user_id) === Number(SESSION_USER_ID);
 
+    const isArchived = j.status === "archived";
+
     document.getElementById("d-title").textContent = j.title;
     document.getElementById("d-company").textContent = j.company;
 
@@ -189,27 +198,120 @@ function openDetail(id) {
     document.getElementById("d-req").textContent = j.req;
     document.getElementById("d-ben").textContent = j.benefits;
 
+    // ─── DYNAMIC ACTION BUTTONS ─────────────────────────────────
+
+    const actions = document.querySelector(".detail-actions");
+
+    if (isArchived) {
+        actions.innerHTML = `
+            <button class="btn-post restore-btn" id="d-restore">
+                Restore
+            </button>
+
+            <button class="btn-edit" id="d-edit">
+                Edit
+            </button>
+
+            <button class="btn-back" id="closeDetail">
+                Cancel
+            </button>
+        `;
+    } else {
+        actions.innerHTML = `
+
+            ${
+                SESSION_LOGGED_IN
+                    ? `
+                    <a class="btn-apply" id="d-link" href="#" target="_blank">
+                        Apply Now
+                    </a>
+                    `
+                    : `
+                    <a class="btn-apply" href="login.php">
+                        Login to Apply
+                    </a>
+                    `
+            }
+
+            ${
+                isOwner
+                    ? `
+                    <button class="btn-edit" id="d-edit">
+                        Edit
+                    </button>
+
+                    <button class="btn-delete archive-btn" id="d-delete">
+                        Archive
+                    </button>
+                    `
+                    : ""
+            }
+
+            <button class="btn-back" id="closeDetail">
+                Close
+            </button>
+        `;
+    }
+
+    // ─── GET NEW BUTTON REFERENCES ─────────────────────────────
+
+    const restoreBtn = document.getElementById("d-restore");
+    const editBtn = document.getElementById("d-edit");
+    const deleteBtn = document.getElementById("d-delete");
+    const closeBtn = document.getElementById("closeDetail");
     const applyLink = document.getElementById("d-link");
 
-    if (applyLink) {
-        applyLink.href = j.link || "#";
+    // ─── APPLY LINK ─────────────────────────────────────────────
 
+    if (applyLink) {
         if (isOwner) {
             applyLink.classList.add("hidden");
         } else {
-            applyLink.classList.remove("hidden");
+            applyLink.textContent = "Apply Now";
+
+            applyLink.onclick = (event) => {
+                event.preventDefault();
+
+                if (j.email) {
+                    const subject = "Application for " + j.title;
+
+                    const body =
+                        "Good day,\n\n" +
+                            "I am interested in applying for the following position:\n\n" +
+                            "Position: " +
+                            j.title +
+                            "\n" +
+                            "Company: " +
+                            j.company +
+                            "\n" +
+                            "Location: " +
+                            j.location +
+                            "\n\n" +
+                            "Please find my application attached.\n\n" +
+                            "Thank you and I look forward to hearing from you.\n\n" +
+                            "Best regards,\n" +
+                            SESSION_USER_NAME || "[Your Name]";
+
+                    window.open(
+                        "https://mail.google.com/mail/?view=cm" +
+                            "&to=" +
+                            encodeURIComponent(j.email) +
+                            "&su=" +
+                            encodeURIComponent(subject) +
+                            "&body=" +
+                            encodeURIComponent(body),
+                        "_blank",
+                    );
+                } else {
+                    alert("No contact email provided.");
+                }
+            };
         }
     }
+    // ─── BUTTON EVENTS ──────────────────────────────────────────
 
-    const editBtn = document.getElementById("d-edit");
-    const deleteBtn = document.getElementById("d-delete");
-
-    if (editBtn) {
-        editBtn.classList.toggle("hidden", !isOwner);
-    }
-
-    if (deleteBtn) {
-        deleteBtn.classList.toggle("hidden", !isOwner);
+    if (restoreBtn && isArchived) {
+        restoreBtn.onclick = () => restoreJob(j.id);
     }
 
     if (editBtn && isOwner) {
@@ -218,6 +320,14 @@ function openDetail(id) {
 
     if (deleteBtn && isOwner) {
         deleteBtn.onclick = () => deleteJob(j.id);
+    }
+
+    if (closeBtn) {
+        closeBtn.onclick = () => {
+            document.getElementById("detailOverlay").classList.add("hidden");
+
+            document.body.classList.remove("modal-open");
+        };
     }
 
     document.getElementById("detailOverlay").classList.remove("hidden");
@@ -237,7 +347,6 @@ function openEdit(j) {
     document.getElementById("e-desc").value = j.desc;
     document.getElementById("e-req").value = j.req;
     document.getElementById("e-benefits").value = j.benefits;
-    document.getElementById("e-link").value = j.link || "";
     document.getElementById("e-email").value = j.email || "";
 
     setSelectValue("e-type", j.type);
@@ -275,7 +384,6 @@ document.getElementById("saveEditBtn")?.addEventListener("click", async () => {
         category: document.getElementById("e-category").value,
         req: document.getElementById("e-req").value.trim(),
         benefits: document.getElementById("e-benefits").value.trim(),
-        link: document.getElementById("e-link").value.trim(),
         email: document.getElementById("e-email").value.trim(),
     };
 
@@ -321,6 +429,36 @@ function deleteJob(id) {
     document.getElementById("deleteOverlay").classList.remove("hidden");
 
     document.body.classList.add("modal-open");
+}
+
+// ─── RESTORE JOB ───────────────────────────────────────────────────────────────
+async function restoreJob(id) {
+    try {
+        const res = await fetch("backend/jobs_process.php", {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                id: id,
+            }),
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+            alert(data.error ?? "Failed to restore.");
+            return;
+        }
+
+        document.getElementById("detailOverlay").classList.add("hidden");
+
+        document.body.classList.remove("modal-open");
+
+        renderJobs();
+    } catch (err) {
+        console.error(err);
+    }
 }
 
 // ─── CONFIRM DELETE ───────────────────────────────────────────────────────────
@@ -383,7 +521,6 @@ document.getElementById("postBtn")?.addEventListener("click", async () => {
         category: document.getElementById("f-category").value,
         req: document.getElementById("f-req").value.trim(),
         benefits: document.getElementById("f-benefits").value.trim(),
-        link: document.getElementById("f-link").value.trim(),
         email: document.getElementById("f-email").value.trim(),
     };
 

@@ -1007,7 +1007,37 @@ body.modal-open {
     overscroll-behavior: contain;
 }
 
-
 .hidden {
     display: none !important;
+}
+
+.sidebar-divider {
+    border: none;
+    border-top: 1px solid #dbe4dc;
+    margin: 14px 0;
+}
+
+/* ─── ARCHIVE BUTTON ───────────────────────── */
+
+.archive-btn {
+    background: #dc2626 !important;
+    border: 1px solid #dc2626 !important;
+    color: #fff !important;
+}
+
+.archive-btn:hover {
+    background: #b91c1c !important;
+    border-color: #b91c1c !important;
+}
+
+/* ─── RESTORE BUTTON ───────────────────────── */
+
+.restore-btn {
+    background: #15803d !important;
+    color: #fff !important;
+    border: none !important;
+}
+
+.restore-btn:hover {
+    background: #166534 !important;
 }

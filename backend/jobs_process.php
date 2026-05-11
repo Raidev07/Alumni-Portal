@@ -8,25 +8,36 @@ header('Content-Type: application/json');
 
 require_once __DIR__ . '/db.php'; // Alumni-Portal/backend/db.php
 
-// ─── GET: fetch all active jobs ───────────────────────────────────────────────
+// ─── GET: fetch jobs ───────────────────────────────────────────────
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
     $type = $_GET['type'] ?? 'all';
     $query = trim($_GET['query'] ?? '');
+    $mine = $_GET['mine'] ?? '0';
+    $status = $_GET['status'] ?? 'active';
 
-    $sql = "SELECT * FROM JOBPOSTINGS WHERE status = 'active'";
+    $sql = "SELECT * FROM JOBPOSTINGS WHERE status = '$status'";
 
+    // ONLY MY JOBS
+    if ($mine === '1' && !empty($_SESSION['user_id'])) {
+        $user_id = (int) $_SESSION['user_id'];
+        $sql .= " AND user_id = $user_id";
+    }
+
+    // FILTER BY JOB TYPE
     if ($type !== 'all') {
         $type_safe = $conn->real_escape_string($type);
         $sql .= " AND job_type = '$type_safe'";
     }
 
+    // SEARCH
     if ($query !== '') {
         $q = $conn->real_escape_string($query);
+
         $sql .= " AND (
-            job_title    LIKE '%$q%' OR
+            job_title LIKE '%$q%' OR
             company_name LIKE '%$q%' OR
-            location     LIKE '%$q%'
+            location LIKE '%$q%'
         )";
     }
 
@@ -36,13 +47,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
     if (!$result) {
         http_response_code(500);
-        echo json_encode(['error' => 'Query failed: ' . $conn->error]);
+        echo json_encode([
+            'error' => 'Query failed: ' . $conn->error
+        ]);
         exit;
     }
 
     $jobs = [];
+
     while ($row = $result->fetch_assoc()) {
-        // Human-readable "posted X ago"
+
         $postedAt = new DateTime($row['posted_at']);
         $now = new DateTime();
         $diff = $now->diff($postedAt);
@@ -60,7 +74,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
         $jobs[] = [
             'id' => (int) $row['job_id'],
-            'user_id' => (int) $row['user_id'], // IMPORTANT
+            'user_id' => (int) $row['user_id'],
+            'status' => $row['status'],
 
             'title' => $row['job_title'],
             'company' => $row['company_name'],
@@ -81,7 +96,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     echo json_encode($jobs);
     exit;
 }
-
 // ─── POST: insert a new job posting ──────────────────────────────────────────
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
@@ -110,7 +124,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $modality = $conn->real_escape_string($data['modality'] ?? 'Onsite');
     $category = $conn->real_escape_string($data['category'] ?? 'Other');
     $salary = $conn->real_escape_string(trim($data['salary'] ?? 'Negotiable'));
-    $app_link = $conn->real_escape_string(trim($data['link'] ?? ''));
     $email = $conn->real_escape_string(trim($data['email'] ?? ''));
     $desc = $conn->real_escape_string(trim($data['desc'] ?? ''));
     $req = $conn->real_escape_string(trim($data['req'] ?? ''));
@@ -118,12 +131,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $sql = "INSERT INTO JOBPOSTINGS
                 (user_id, job_title, company_name, location, job_type, modality,
-                 category, salary_range, application_link, contact_email,
+                 category, salary_range, contact_email,
                  job_description, requirements_qualifications, benefits,
                  status, posted_at)
             VALUES
                 ($user_id, '$title_s', '$company_s', '$location', '$job_type', '$modality',
-                 '$category', '$salary', '$app_link', '$email',
+                 '$category', '$salary', '$email',
                  '$desc', '$req', '$benefits',
                  'active', NOW())";
 
@@ -172,7 +185,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
     $category = $conn->real_escape_string($data['category']);
     $req = $conn->real_escape_string($data['req']);
     $benefits = $conn->real_escape_string($data['benefits']);
-    $link = $conn->real_escape_string($data['link']);
     $email = $conn->real_escape_string($data['email']);
 
     $sql = "
@@ -188,7 +200,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
             category = '$category',
             requirements_qualifications = '$req',
             benefits = '$benefits',
-            application_link = '$link',
             contact_email = '$email'
         WHERE job_id = $id
     ";
@@ -203,6 +214,41 @@ if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
     exit;
 }
 
+
+// ─── RESTORE JOB ──────────────────────────────────────────────
+if ($_SERVER['REQUEST_METHOD'] === 'PATCH') {
+
+    if (empty($_SESSION['user_id'])) {
+        http_response_code(401);
+        echo json_encode(['error' => 'Unauthorized']);
+        exit;
+    }
+
+    $data = json_decode(file_get_contents("php://input"), true);
+
+    $id = (int) ($data['id'] ?? 0);
+    $user_id = (int) $_SESSION['user_id'];
+
+    $sql = "
+        UPDATE JOBPOSTINGS
+        SET
+            status = 'active',
+            posted_at = NOW()
+        WHERE job_id = $id
+        AND user_id = $user_id
+    ";
+
+    if ($conn->query($sql)) {
+        echo json_encode(['success' => true]);
+    } else {
+        http_response_code(500);
+        echo json_encode([
+            'error' => $conn->error
+        ]);
+    }
+
+    exit;
+}
 // ─── DELETE JOB ──────────────────────────────────────────────
 if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
 
@@ -218,7 +264,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
     $user_id = (int) $_SESSION['user_id'];
 
     $sql = "
-        DELETE FROM JOBPOSTINGS
+        UPDATE JOBPOSTINGS
+        SET status = 'archived'
         WHERE job_id = $id
         AND user_id = $user_id
     ";

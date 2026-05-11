@@ -19,6 +19,32 @@
     // Pass session data to JavaScript safely
     $isLoggedIn = isset($_SESSION['user_id']);
     $userId = isset($_SESSION['user_id']) ? (int) $_SESSION['user_id'] : 0;
+    $userName = '';
+
+    if ($isLoggedIn) {
+
+        include 'backend/db.php';
+
+        $uid = (int) $_SESSION['user_id'];
+
+        $res = $conn->query("
+        SELECT first_name, last_name
+        FROM userprofile
+        WHERE user_id = $uid
+        LIMIT 1
+    ");
+
+        if ($res && $res->num_rows > 0) {
+
+            $row = $res->fetch_assoc();
+
+            $userName =
+                trim(
+                    $row['first_name'] . ' ' .
+                    $row['last_name']
+                );
+        }
+    }
 
     if ($isLoggedIn) {
         include('includes/navbarhome.php');
@@ -30,6 +56,8 @@
     <script>
         const SESSION_LOGGED_IN = <?= $isLoggedIn ? 'true' : 'false' ?>;
         const SESSION_USER_ID = <?= $userId ?>;
+        const SESSION_USER_NAME =
+    <?= json_encode($userName) ?>;
     </script>
 
 
@@ -90,10 +118,6 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="f-link">Application Link</label>
-                    <input id="f-link" type="url" placeholder="https://...">
-                </div>
-                <div class="form-group">
                     <label for="f-email">Contact Email</label>
                     <input id="f-email" type="email" placeholder="hr@company.com">
                 </div>
@@ -145,7 +169,7 @@
                 <div class="detail-actions">
 
                     <?php if (isset($_SESSION['user_id'])): ?>
-                        <a class="btn-apply" id="d-link" href="#" target="_blank">
+                        <a class="btn-apply" id="d-link" href="#">
                             Apply Now
                         </a>
                     <?php else: ?>
@@ -156,6 +180,10 @@
 
                     <button class="btn-edit hidden" id="d-edit">
                         Edit
+                    </button>
+
+                    <button class="btn-post hidden" id="d-restore">
+                        Restore
                     </button>
 
                     <button class="btn-back" id="closeDetail">
@@ -236,12 +264,6 @@
                         <option>Other</option>
                     </select>
                 </div>
-
-                <div class="form-group">
-                    <label>Application Link</label>
-                    <input id="e-link" type="url">
-                </div>
-
                 <div class="form-group">
                     <label>Email</label>
                     <input id="e-email" type="email">
@@ -298,15 +320,16 @@
             <aside class="sidebar">
                 <h3>Filter Jobs</h3>
                 <p class="sidebar-label">Job Type</p>
-                <div class="filter-item active" data-filter="all">All</div>
+                <div class="filter-item active" data-filter="all">All </div>
                 <div class="filter-item" data-filter="Full-time">Full-time</div>
                 <div class="filter-item" data-filter="Part-time">Part-time</div>
                 <div class="filter-item" data-filter="Contract">Contract</div>
                 <div class="filter-item" data-filter="Internship">Internship</div>
                 <?php if (isset($_SESSION['user_id'])): ?>
-                    <div class="filter-item" data-filter="mine">
-                        Created by Me
-                    </div>
+                    <hr class="sidebar-divider">
+                    <p class="sidebar-label">Created By Me</p>
+                    <div class="filter-item" data-filter="mine-active">My Active Jobs</div>
+                    <div class="filter-item" data-filter="mine-archived">My Archived Jobs</div>
                 <?php endif; ?>
             </aside>
             <main class="main">
@@ -327,10 +350,12 @@
         <div class="modal delete-modal">
 
             <div class="modal-header">
-                <h2>Delete Job Post</h2>
+                <h2>Archive Job Post</h2>
                 <p>
-                    Are you sure you want to delete this job posting?
-                    This action cannot be undone.
+                    Are you sure you want to archive this job posting?
+
+                    You can restore it again anytime from
+                    <strong>My Archived Jobs</strong>.
                 </p>
             </div>
 
@@ -340,7 +365,7 @@
                 </button>
 
                 <button class="btn-delete" id="confirmDeleteBtn">
-                    Delete
+                    Send to Archive
                 </button>
             </div>
 
