@@ -35,12 +35,27 @@ if (!isset($_SESSION['temp_user_id'])) {
             padding: 10px;
             margin-top: 10px;
             font-size: 16px;
+            border: 1px solid #d9e8e3;
+            border-radius: 10px;
+            background: #f8faf8;
+            transition: background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        input:hover {
+            background: #f0f5f2;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #006e14;
+            background: #ffffff;
+            box-shadow: 0 0 0 4px rgba(0, 110, 20, 0.12);
         }
 
         button {
             margin-top: 15px;
             padding: 10px 15px;
-            background: #007bff;
+            background: #006e14;
             color: white;
             border: none;
             border-radius: 6px;
@@ -48,7 +63,7 @@ if (!isset($_SESSION['temp_user_id'])) {
         }
 
         button:hover {
-            background: #0056b3;
+            background: #006e14;
         }
 
         .error {

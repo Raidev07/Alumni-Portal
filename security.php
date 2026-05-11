@@ -239,6 +239,23 @@ unset($_SESSION['message']);
             margin-top: 0.5rem;
         }
 
+        .security-actions .btn {
+            background: #ffffff;
+            color: #006e14;
+            border: 1px solid #006e14;
+            padding: 0.65rem 1.25rem;
+            border-radius: 5px;
+            font-weight: 600;
+            transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
+        }
+
+        .security-actions .btn:hover {
+            background: #006e14;
+            color: #ffffff;
+                transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+        }
+
         .security-qr {
             display: grid;
             gap: 1.25rem;
@@ -340,7 +357,7 @@ unset($_SESSION['message']);
             width: 38px;
             height: 38px;
             border-radius: 8px;
-            background: #f0f5f2;
+            background: #ffffff;
             border: 1.5px solid #a8d5b0;
             cursor: pointer;
             padding: 0;
