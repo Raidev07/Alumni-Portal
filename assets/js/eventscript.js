@@ -1,6 +1,6 @@
 let allEvents = [];
 let activeType = "all";
-let activeStatus = "upcoming";
+let activeStatus = "all";
 let deleteEventId = null;
 
 // ── Utility ───────────────────────────────────────────────────────────────────
@@ -158,8 +158,22 @@ function renderEvents(events) {
                     ${escHtml(e.title)}
 
                     ${
+                        e.status === "ongoing"
+                            ? `
+                            <span class="ongoing-tag">
+                                Ongoing
+                            </span>
+                            `
+                            : ""
+                    }
+
+                    ${
                         isOwner
-                            ? `<span class="owner-tag">Your Event</span>`
+                            ? `
+                            <span class="owner-tag">
+                                Your Event
+                            </span>
+                            `
                             : ""
                     }
 
@@ -783,8 +797,12 @@ document.querySelectorAll(".filter-item").forEach((el) => {
                 activeStatus = "archived";
                 break;
 
+            case "all":
+                activeStatus = "all";
+                break;
+
             default:
-                activeStatus = "upcoming";
+                activeStatus = "all";
         }
 
         fetchEvents();

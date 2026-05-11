@@ -101,6 +101,12 @@ function handleGetEvents()
         AND e.status IN ('completed', 'cancelled')
     ";
 
+        } elseif ($status === 'all') {
+
+            $sql .= "
+        AND e.status IN ('upcoming', 'ongoing')
+    ";
+
         } else {
 
             $sql .= " AND e.status = ?";
