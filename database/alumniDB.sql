@@ -457,7 +457,7 @@ CREATE TABLE `events` (
 
 LOCK TABLES `events` WRITE;
 /*!40000 ALTER TABLE `events` DISABLE KEYS */;
-INSERT INTO `events` VALUES (1,5,'SD','2026-05-04','02:25:00','16:25:00','TA','Workshop',111,'2026-03-10','jay.escalona.je@gmail.com','hello its me text','upcoming','2026-05-05 03:26:03');
+INSERT INTO `events` VALUES (1,5,'SD','2026-05-04','02:25:00','16:25:00','TA','Workshop',111,'2026-03-10','jay.escalona.je@gmail.com','hello its me text','completed','2026-05-05 03:26:03');
 /*!40000 ALTER TABLE `events` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
@@ -829,7 +829,7 @@ CREATE TABLE `jobpostings` (
 
 LOCK TABLES `jobpostings` WRITE;
 /*!40000 ALTER TABLE `jobpostings` DISABLE KEYS */;
-INSERT INTO `jobpostings` VALUES (1,1,'Job Test','Poh.inc','Pasig City','Full-time','Onsite','Programming','20000','https://youtu.be/Aq5WXmQQooo?si=5Ki5WhNnXJZNeE6V','vehniahsamson@gmail.com','Dapat magaling','8 years of experience 5 years old male','Libre Samgyup araw-araw','active','2026-05-03 10:34:37'),(2,1,'Software Engineer','TectTalk.Inc','Pasig Ortigas Avenue','Full-time','Onsite','Engineering','10,000','https://docs.google.com/spreadsheets/d/1t9q6ugZPIeNdAVjit5rJIxrh1amkz4Udgax2_RoT8AA/edit?gid=0#gid=0','TectTalk@gmail.com','Dapat magaling mag tiktok','Nag titinda ng KangKong Chips','May Insurance sa akin','active','2026-05-03 11:00:47');
+INSERT INTO `jobpostings` VALUES (1,1,'Job Test','Poh.inc','Pasig City','Full-time','Onsite','Programming','20000','https://youtu.be/Aq5WXmQQooo?si=5Ki5WhNnXJZNeE6V','vehniahsamson@gmail.com','Dapat magaling','8 years of experience 5 years old male','Libre Samgyup araw-araw','archived','2026-04-10 10:07:03'),(2,1,'Software Engineer','TectTalk.Inc','Pasig Ortigas Avenue','Full-time','Onsite','Engineering','10,000','https://docs.google.com/spreadsheets/d/1t9q6ugZPIeNdAVjit5rJIxrh1amkz4Udgax2_RoT8AA/edit?gid=0#gid=0','TectTalk@gmail.com','Dapat magaling mag tiktok','Nag titinda ng KangKong Chips','May Insurance sa akin','active','2026-05-03 11:00:47');
 /*!40000 ALTER TABLE `jobpostings` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
@@ -1143,6 +1143,8 @@ CREATE TABLE `users` (
   `role` enum('alumni','admin') NOT NULL,
   `status` enum('active','pending','inactive') DEFAULT 'pending',
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `twofa_secret` varchar(255) DEFAULT NULL,
+  `twofa_enabled` tinyint(1) DEFAULT 0,
   PRIMARY KEY (`id`),
   UNIQUE KEY `email` (`email`),
   KEY `idx_user_email` (`email`)
@@ -1155,7 +1157,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'vehniahsamson11@gmail.com','$2y$10$AVpzAFJ052lgkIMI/1sdS.uJyfq6mI0q/BKLbpXzhk8e2DEPYH.nW','alumni','pending','2026-04-30 14:59:11'),(3,'admin@plpasig.com','$2y$10$fz/M1Ji7xtwDBRDAeL6ptOQHpKXyABKpXe98RsyvdxWUH2ks6ym6O','admin','active','2026-05-01 01:49:23'),(4,'yehey@gmail.com','$2y$10$1M8eAkVIzDux81flh282ZOFkwjafp0GCD0hE4ZQa.mXuH4g9RimyO','alumni','pending','2026-05-01 01:58:40'),(5,'jay.escalona.je@gmail.com','$2y$10$EbJmsz5mIJSMX73tHb0Xv.RiLinVmW/X3llHsuigjTQBKAgKOoznK','alumni','active','2026-05-01 14:01:08'),(7,'escalonajj11ictc.bshs2122@gmail.com','$2y$10$ZURJzfW797KNlpCaYSrp..OHOYAT.p/lPDJsZiZjLPzXoVErXVhBK','alumni','pending','2026-05-01 14:11:29'),(9,'samaidangonzaga@gmail.com','$2y$10$Z88Xl62AX87rmzFzwbIXq.pdD/KrXz9mD6tlEbkisdbJXuBav.zgS','alumni','pending','2026-05-03 06:07:04');
+INSERT INTO `users` VALUES (1,'vehniahsamson11@gmail.com','$2y$10$AVpzAFJ052lgkIMI/1sdS.uJyfq6mI0q/BKLbpXzhk8e2DEPYH.nW','alumni','pending','2026-04-30 14:59:11',NULL,0),(3,'admin@plpasig.com','$2y$10$fz/M1Ji7xtwDBRDAeL6ptOQHpKXyABKpXe98RsyvdxWUH2ks6ym6O','admin','active','2026-05-01 01:49:23',NULL,0),(4,'yehey@gmail.com','$2y$10$1M8eAkVIzDux81flh282ZOFkwjafp0GCD0hE4ZQa.mXuH4g9RimyO','alumni','pending','2026-05-01 01:58:40',NULL,0),(5,'jay.escalona.je@gmail.com','$2y$10$EbJmsz5mIJSMX73tHb0Xv.RiLinVmW/X3llHsuigjTQBKAgKOoznK','alumni','active','2026-05-01 14:01:08',NULL,0),(7,'escalonajj11ictc.bshs2122@gmail.com','$2y$10$ZURJzfW797KNlpCaYSrp..OHOYAT.p/lPDJsZiZjLPzXoVErXVhBK','alumni','pending','2026-05-01 14:11:29',NULL,0),(9,'samaidangonzaga@gmail.com','$2y$10$Z88Xl62AX87rmzFzwbIXq.pdD/KrXz9mD6tlEbkisdbJXuBav.zgS','alumni','pending','2026-05-03 06:07:04',NULL,0);
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
@@ -1265,7 +1267,34 @@ DELIMITER ;
 -- Dumping events for database 'alumniDB'
 --
 /*!50106 SET @save_time_zone= @@TIME_ZONE */ ;
-/*!50106 DROP EVENT IF EXISTS `evt_AutomateEventStatus` */;
+/*!50106 DROP EVENT IF EXISTS `evt_ArchiveOldJobs` */;
+DELIMITER ;;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;;
+/*!50003 SET character_set_client  = utf8mb4 */ ;;
+/*!50003 SET character_set_results = utf8mb4 */ ;;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;;
+/*!50003 SET sql_mode              = 'NO_ZERO_IN_DATE,NO_ZERO_DATE,NO_ENGINE_SUBSTITUTION' */ ;;
+/*!50003 SET @saved_time_zone      = @@time_zone */ ;;
+/*!50003 SET time_zone             = 'SYSTEM' */ ;;
+/*!50106 CREATE*/ /*!50117 DEFINER=`root`@`localhost`*/ /*!50106 EVENT `evt_ArchiveOldJobs` ON SCHEDULE EVERY 1 DAY STARTS '2026-05-11 18:10:59' ON COMPLETION PRESERVE ENABLE DO BEGIN
+    
+    
+    
+    UPDATE jobpostings 
+    SET status = 'archived' 
+    WHERE status = 'active' 
+      AND posted_at <= DATE_SUB(CURRENT_TIMESTAMP, INTERVAL 30 DAY);
+
+END */ ;;
+/*!50003 SET time_zone             = @saved_time_zone */ ;;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;;
+/*!50003 SET character_set_results = @saved_cs_results */ ;;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;;
+/*!50106 DROP EVENT IF EXISTS `evt_AutomateEventStatus` */;;
 DELIMITER ;;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;;
@@ -1521,4 +1550,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-05-11 17:32:27
+-- Dump completed on 2026-05-11 18:12:38
