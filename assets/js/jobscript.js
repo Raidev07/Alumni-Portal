@@ -20,25 +20,21 @@ async function renderJobs() {
     }
 
     try {
-
         const res = await fetch(
-            `backend/jobs_process.php?${fetchParams.toString()}`
+            `backend/jobs_process.php?${fetchParams.toString()}`,
         );
 
         const jobs = await res.json();
 
         if (!res.ok) {
-            list.innerHTML =
-                `<p style="color:red;">Error: ${jobs.error ?? "Unknown error"}</p>`;
+            list.innerHTML = `<p style="color:red;">Error: ${jobs.error ?? "Unknown error"}</p>`;
             return;
         }
 
         // FILTER CREATED BY ME
         const filtered =
             activeType === "mine"
-                ? jobs.filter(
-                    (j) => parseInt(j.user_id) === SESSION_USER_ID
-                )
+                ? jobs.filter((j) => parseInt(j.user_id) === SESSION_USER_ID)
                 : jobs;
 
         jobsCache = filtered;
@@ -51,13 +47,13 @@ async function renderJobs() {
 
         empty.classList.remove("show");
 
-        list.innerHTML = filtered.map((j) => {
+        list.innerHTML = filtered
+            .map((j) => {
+                const isOwner =
+                    SESSION_LOGGED_IN &&
+                    parseInt(j.user_id) === SESSION_USER_ID;
 
-            const isOwner =
-                SESSION_LOGGED_IN &&
-                parseInt(j.user_id) === SESSION_USER_ID;
-
-            return `
+                return `
             <div class="job-card ${isOwner ? "job-card--owned" : ""}">
 
                 <div class="job-content">
@@ -65,9 +61,10 @@ async function renderJobs() {
                     <div class="job-title">
                         ${escHtml(j.title)}
 
-                        ${isOwner
-                            ? `<span class="owner-tag">Your Post</span>`
-                            : ""
+                        ${
+                            isOwner
+                                ? `<span class="owner-tag">Your Post</span>`
+                                : ""
                         }
                     </div>
 
@@ -76,9 +73,10 @@ async function renderJobs() {
                     </div>
 
                     <p class="job-desc">
-                        ${j.desc.length > 110
-                            ? escHtml(j.desc.slice(0, 110)) + "…"
-                            : escHtml(j.desc)
+                        ${
+                            j.desc.length > 110
+                                ? escHtml(j.desc.slice(0, 110)) + "…"
+                                : escHtml(j.desc)
                         }
                     </p>
 
@@ -131,12 +129,10 @@ async function renderJobs() {
 
             </div>
             `;
-        }).join("");
-
+            })
+            .join("");
     } catch (err) {
-
-        list.innerHTML =
-            `<p style="color:red;">Failed to load jobs.</p>`;
+        list.innerHTML = `<p style="color:red;">Failed to load jobs.</p>`;
 
         console.error(err);
     }
@@ -144,14 +140,12 @@ async function renderJobs() {
 
 // ─── OPEN DETAIL MODAL ────────────────────────────────────────────────────────
 function openDetail(id) {
-
     const j = jobsCache.find((x) => x.id === id);
 
     if (!j) return;
 
     const isOwner =
-        SESSION_LOGGED_IN &&
-        parseInt(j.user_id) === SESSION_USER_ID;
+        SESSION_LOGGED_IN && Number(j.user_id) === Number(SESSION_USER_ID);
 
     document.getElementById("d-title").textContent = j.title;
     document.getElementById("d-company").textContent = j.company;
@@ -199,6 +193,12 @@ function openDetail(id) {
 
     if (applyLink) {
         applyLink.href = j.link || "#";
+
+        if (isOwner) {
+            applyLink.classList.add("hidden");
+        } else {
+            applyLink.classList.remove("hidden");
+        }
     }
 
     const editBtn = document.getElementById("d-edit");
@@ -220,19 +220,14 @@ function openDetail(id) {
         deleteBtn.onclick = () => deleteJob(j.id);
     }
 
-    document
-        .getElementById("detailOverlay")
-        .classList.remove("hidden");
+    document.getElementById("detailOverlay").classList.remove("hidden");
 
     document.body.classList.add("modal-open");
 }
 
 // ─── OPEN EDIT MODAL ──────────────────────────────────────────────────────────
 function openEdit(j) {
-
-    document
-        .getElementById("detailOverlay")
-        .classList.add("hidden");
+    document.getElementById("detailOverlay").classList.add("hidden");
 
     document.getElementById("e-id").value = j.id;
     document.getElementById("e-title").value = j.title;
@@ -249,15 +244,12 @@ function openEdit(j) {
     setSelectValue("e-modality", j.modality);
     setSelectValue("e-category", j.category);
 
-    document
-        .getElementById("editOverlay")
-        .classList.remove("hidden");
+    document.getElementById("editOverlay").classList.remove("hidden");
 
     document.body.classList.add("modal-open");
 }
 
 function setSelectValue(id, value) {
-
     const el = document.getElementById(id);
 
     if (!el) return;
@@ -268,86 +260,65 @@ function setSelectValue(id, value) {
 }
 
 // ─── SAVE EDIT ────────────────────────────────────────────────────────────────
-document
-    .getElementById("saveEditBtn")
-    ?.addEventListener("click", async () => {
+document.getElementById("saveEditBtn")?.addEventListener("click", async () => {
+    const id = document.getElementById("e-id").value;
 
-        const id = document.getElementById("e-id").value;
+    const payload = {
+        id: parseInt(id),
+        title: document.getElementById("e-title").value.trim(),
+        company: document.getElementById("e-company").value.trim(),
+        type: document.getElementById("e-type").value,
+        location: document.getElementById("e-location").value.trim(),
+        salary: document.getElementById("e-salary").value.trim(),
+        desc: document.getElementById("e-desc").value.trim(),
+        modality: document.getElementById("e-modality").value,
+        category: document.getElementById("e-category").value,
+        req: document.getElementById("e-req").value.trim(),
+        benefits: document.getElementById("e-benefits").value.trim(),
+        link: document.getElementById("e-link").value.trim(),
+        email: document.getElementById("e-email").value.trim(),
+    };
 
-        const payload = {
-            id: parseInt(id),
-            title: document.getElementById("e-title").value.trim(),
-            company: document.getElementById("e-company").value.trim(),
-            type: document.getElementById("e-type").value,
-            location: document.getElementById("e-location").value.trim(),
-            salary: document.getElementById("e-salary").value.trim(),
-            desc: document.getElementById("e-desc").value.trim(),
-            modality: document.getElementById("e-modality").value,
-            category: document.getElementById("e-category").value,
-            req: document.getElementById("e-req").value.trim(),
-            benefits: document.getElementById("e-benefits").value.trim(),
-            link: document.getElementById("e-link").value.trim(),
-            email: document.getElementById("e-email").value.trim(),
-        };
+    try {
+        const res = await fetch("backend/jobs_process.php", {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(payload),
+        });
 
-        try {
+        const data = await res.json();
 
-            const res = await fetch(
-                "backend/jobs_process.php",
-                {
-                    method: "PUT",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify(payload),
-                }
-            );
-
-            const data = await res.json();
-
-            if (!res.ok) {
-                alert(data.error ?? "Failed to update.");
-                return;
-            }
-
-            document
-                .getElementById("editOverlay")
-                .classList.add("hidden");
-
-            document.body.classList.remove("modal-open");
-
-            renderJobs();
-
-        } catch (err) {
-
-            console.error(err);
+        if (!res.ok) {
+            alert(data.error ?? "Failed to update.");
+            return;
         }
-    });
 
-// ─── CANCEL EDIT ──────────────────────────────────────────────────────────────
-document
-    .getElementById("cancelEditBtn")
-    ?.addEventListener("click", () => {
-
-        document
-            .getElementById("editOverlay")
-            .classList.add("hidden");
+        document.getElementById("editOverlay").classList.add("hidden");
 
         document.body.classList.remove("modal-open");
-    });
+
+        renderJobs();
+    } catch (err) {
+        console.error(err);
+    }
+});
+
+// ─── CANCEL EDIT ──────────────────────────────────────────────────────────────
+document.getElementById("cancelEditBtn")?.addEventListener("click", () => {
+    document.getElementById("editOverlay").classList.add("hidden");
+
+    document.body.classList.remove("modal-open");
+});
 
 // ─── DELETE JOB ───────────────────────────────────────────────────────────────
 function deleteJob(id) {
-
     deleteJobId = id;
 
-    document
-        .getElementById("detailOverlay")
-        .classList.add("hidden");
+    document.getElementById("detailOverlay").classList.add("hidden");
 
-    document
-        .getElementById("deleteOverlay")
-        .classList.remove("hidden");
+    document.getElementById("deleteOverlay").classList.remove("hidden");
 
     document.body.classList.add("modal-open");
 }
@@ -356,23 +327,18 @@ function deleteJob(id) {
 document
     .getElementById("confirmDeleteBtn")
     ?.addEventListener("click", async () => {
-
         if (!deleteJobId) return;
 
         try {
-
-            const res = await fetch(
-                "backend/jobs_process.php",
-                {
-                    method: "DELETE",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({
-                        id: deleteJobId,
-                    }),
-                }
-            );
+            const res = await fetch("backend/jobs_process.php", {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    id: deleteJobId,
+                }),
+            });
 
             const data = await res.json();
 
@@ -381,97 +347,74 @@ document
                 return;
             }
 
-            document
-                .getElementById("deleteOverlay")
-                .classList.add("hidden");
+            document.getElementById("deleteOverlay").classList.add("hidden");
 
             document.body.classList.remove("modal-open");
 
             deleteJobId = null;
 
             renderJobs();
-
         } catch (err) {
-
             console.error(err);
         }
     });
 
 // ─── CANCEL DELETE ────────────────────────────────────────────────────────────
-document
-    .getElementById("cancelDeleteBtn")
-    ?.addEventListener("click", () => {
+document.getElementById("cancelDeleteBtn")?.addEventListener("click", () => {
+    deleteJobId = null;
 
-        deleteJobId = null;
+    document.getElementById("deleteOverlay").classList.add("hidden");
 
-        document
-            .getElementById("deleteOverlay")
-            .classList.add("hidden");
+    document.getElementById("detailOverlay").classList.remove("hidden");
 
-        document
-            .getElementById("detailOverlay")
-            .classList.remove("hidden");
-
-        document.body.classList.add("modal-open");
-    });
+    document.body.classList.add("modal-open");
+});
 
 // ─── POST JOB ─────────────────────────────────────────────────────────────────
-document
-    .getElementById("postBtn")
-    ?.addEventListener("click", async () => {
+document.getElementById("postBtn")?.addEventListener("click", async () => {
+    const payload = {
+        title: document.getElementById("f-title").value.trim(),
+        company: document.getElementById("f-company").value.trim(),
+        type: document.getElementById("f-type").value,
+        location: document.getElementById("f-location").value.trim(),
+        salary: document.getElementById("f-salary").value.trim(),
+        desc: document.getElementById("f-desc").value.trim(),
+        modality: document.getElementById("f-modality").value,
+        category: document.getElementById("f-category").value,
+        req: document.getElementById("f-req").value.trim(),
+        benefits: document.getElementById("f-benefits").value.trim(),
+        link: document.getElementById("f-link").value.trim(),
+        email: document.getElementById("f-email").value.trim(),
+    };
 
-        const payload = {
-            title: document.getElementById("f-title").value.trim(),
-            company: document.getElementById("f-company").value.trim(),
-            type: document.getElementById("f-type").value,
-            location: document.getElementById("f-location").value.trim(),
-            salary: document.getElementById("f-salary").value.trim(),
-            desc: document.getElementById("f-desc").value.trim(),
-            modality: document.getElementById("f-modality").value,
-            category: document.getElementById("f-category").value,
-            req: document.getElementById("f-req").value.trim(),
-            benefits: document.getElementById("f-benefits").value.trim(),
-            link: document.getElementById("f-link").value.trim(),
-            email: document.getElementById("f-email").value.trim(),
-        };
+    try {
+        const res = await fetch("backend/jobs_process.php", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(payload),
+        });
 
-        try {
+        const data = await res.json();
 
-            const res = await fetch(
-                "backend/jobs_process.php",
-                {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify(payload),
-                }
-            );
-
-            const data = await res.json();
-
-            if (!res.ok) {
-                alert(data.error ?? "Failed to post.");
-                return;
-            }
-
-            document
-                .getElementById("postOverlay")
-                .classList.add("hidden");
-
-            document.body.classList.remove("modal-open");
-
-            renderJobs();
-
-        } catch (err) {
-
-            console.error(err);
+        if (!res.ok) {
+            alert(data.error ?? "Failed to post.");
+            return;
         }
-    });
+
+        document.getElementById("postOverlay").classList.add("hidden");
+
+        document.body.classList.remove("modal-open");
+
+        renderJobs();
+    } catch (err) {
+        console.error(err);
+    }
+});
 
 // ─── HELPERS ──────────────────────────────────────────────────────────────────
 function badgeClass(type) {
-
     if (type === "Full-time") return "badge-ft";
     if (type === "Part-time") return "badge-pt";
     if (type === "Internship") return "badge-in";
@@ -480,7 +423,6 @@ function badgeClass(type) {
 }
 
 function escHtml(str = "") {
-
     return String(str)
         .replace(/&/g, "&amp;")
         .replace(/</g, "&lt;")
@@ -489,48 +431,31 @@ function escHtml(str = "") {
 }
 
 // ─── EVENT LISTENERS ──────────────────────────────────────────────────────────
-document
-    .getElementById("closeDetail")
-    ?.addEventListener("click", () => {
+document.getElementById("closeDetail")?.addEventListener("click", () => {
+    document.getElementById("detailOverlay").classList.add("hidden");
 
-        document
-            .getElementById("detailOverlay")
-            .classList.add("hidden");
+    document.body.classList.remove("modal-open");
+});
 
-        document.body.classList.remove("modal-open");
-    });
+document.getElementById("openPostBtn")?.addEventListener("click", () => {
+    if (!SESSION_LOGGED_IN) {
+        window.location.href = "login.php";
+        return;
+    }
 
-document
-    .getElementById("openPostBtn")
-    ?.addEventListener("click", () => {
+    document.getElementById("postOverlay").classList.remove("hidden");
 
-        if (!SESSION_LOGGED_IN) {
-            window.location.href = "login.php";
-            return;
-        }
+    document.body.classList.add("modal-open");
+});
 
-        document
-            .getElementById("postOverlay")
-            .classList.remove("hidden");
+document.getElementById("cancelBtn")?.addEventListener("click", () => {
+    document.getElementById("postOverlay").classList.add("hidden");
 
-        document.body.classList.add("modal-open");
-    });
-
-document
-    .getElementById("cancelBtn")
-    ?.addEventListener("click", () => {
-
-        document
-            .getElementById("postOverlay")
-            .classList.add("hidden");
-
-        document.body.classList.remove("modal-open");
-    });
+    document.body.classList.remove("modal-open");
+});
 
 document.querySelectorAll(".filter-item").forEach((el) => {
-
     el.addEventListener("click", () => {
-
         document
             .querySelectorAll(".filter-item")
             .forEach((e) => e.classList.remove("active"));
@@ -543,9 +468,7 @@ document.querySelectorAll(".filter-item").forEach((el) => {
     });
 });
 
-document
-    .getElementById("searchInput")
-    ?.addEventListener("input", renderJobs);
+document.getElementById("searchInput")?.addEventListener("input", renderJobs);
 
 // ─── INIT ─────────────────────────────────────────────────────────────────────
 renderJobs();

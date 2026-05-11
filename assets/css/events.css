@@ -1015,13 +1015,23 @@ h1 {
 }
 
 .btn-delete {
-    background: #dc2626;
-    color: white;
-    padding: 10px 16px;
-    border: none;
-    border-radius: 8px;
+    background: transparent;
+    border: 1px solid #dc2626;
+    color: #555;
+    padding: 11px 20px;
+    border-radius: 6px;
+    font-size: clamp(12px, 1vw, 14px);
+    font-weight: 700;
     cursor: pointer;
+    font-family: "Roboto", sans-serif;
+    transition: background 0.2s;
+
     margin-left: auto;
+}
+
+.btn-delete:hover {
+    background: #dc2626;
+    color: #ffffff;
 }
 
 .delete-modal {
@@ -1041,4 +1051,13 @@ body.modal-open {
 .overlay,
 .detail-overlay {
     overscroll-behavior: contain;
+}
+
+#errorOverlay {
+    z-index: 5000 !important;
+    align-items: center;
+}
+
+#errorOverlay .modal {
+    margin-top: 0;
 }

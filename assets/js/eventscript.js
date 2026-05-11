@@ -19,7 +19,6 @@ function formatDate(dateStr) {
 }
 
 function formatTime(timeStr) {
-
     if (!timeStr) return "TBD";
 
     const [h, m] = timeStr.split(":");
@@ -28,15 +27,12 @@ function formatTime(timeStr) {
 
     const ampm = hour >= 12 ? "PM" : "AM";
 
-    const display = hour % 12 === 0
-        ? 12
-        : hour % 12;
+    const display = hour % 12 === 0 ? 12 : hour % 12;
 
     return `${display}:${m} ${ampm}`;
 }
 
 function formatTimeRange(timeStart, timeEnd) {
-
     const start = formatTime(timeStart);
     const end = formatTime(timeEnd);
 
@@ -52,9 +48,7 @@ function formatTimeRange(timeStart, timeEnd) {
 }
 
 function typeBadgeClass(type) {
-
     switch (type) {
-
         case "Networking":
             return "text-networking";
 
@@ -72,19 +66,20 @@ function typeBadgeClass(type) {
     }
 }
 
+function showErrorModal(message) {
+    document.getElementById("errorMessage").textContent =
+        message || "Something went wrong.";
+
+    document.getElementById("errorOverlay").classList.remove("hidden");
+
+    document.body.classList.add("modal-open");
+}
 // ── FETCH EVENTS ──────────────────────────────────────────────────────────────
 
 async function fetchEvents() {
+    const query = document.getElementById("searchInput").value.trim();
 
-    const query =
-        document.getElementById("searchInput")
-            .value
-            .trim();
-
-    const fetchType =
-        activeType === "mine"
-            ? "all"
-            : activeType;
+    const fetchType = activeType === "mine" ? "all" : activeType;
 
     const params = new URLSearchParams();
 
@@ -99,9 +94,8 @@ async function fetchEvents() {
     showLoadingState(true);
 
     try {
-
         const res = await fetch(
-            `backend/event_process.php?${params.toString()}`
+            `backend/event_process.php?${params.toString()}`,
         );
 
         const data = await res.json();
@@ -113,21 +107,16 @@ async function fetchEvents() {
         const filtered =
             activeType === "mine"
                 ? data.events.filter(
-                    (e) =>
-                        parseInt(e.user_id) === SESSION_USER_ID
-                )
+                      (e) => Number(e.user_id) === Number(SESSION_USER_ID),
+                  )
                 : data.events;
 
         allEvents = filtered;
 
         renderEvents(filtered);
-
     } catch (err) {
-
         showError(err.message);
-
     } finally {
-
         showLoadingState(false);
     }
 }
@@ -135,12 +124,10 @@ async function fetchEvents() {
 // ── RENDER EVENTS ─────────────────────────────────────────────────────────────
 
 function renderEvents(events) {
-
     const list = document.getElementById("jobsList");
     const empty = document.getElementById("emptyState");
 
     if (!events || events.length === 0) {
-
         list.innerHTML = "";
 
         empty.classList.add("show");
@@ -150,13 +137,13 @@ function renderEvents(events) {
 
     empty.classList.remove("show");
 
-    list.innerHTML = events.map((e) => {
+    list.innerHTML = events
+        .map((e) => {
+            const isOwner =
+                SESSION_LOGGED_IN &&
+                Number(e.user_id) === Number(SESSION_USER_ID);
 
-        const isOwner =
-            SESSION_LOGGED_IN &&
-            parseInt(e.user_id) === SESSION_USER_ID;
-
-        return `
+            return `
         <div class="job-card">
 
             <div class="job-content">
@@ -165,9 +152,10 @@ function renderEvents(events) {
 
                     ${escHtml(e.title)}
 
-                    ${isOwner
-                        ? `<span class="owner-tag">Your Event</span>`
-                        : ""
+                    ${
+                        isOwner
+                            ? `<span class="owner-tag">Your Event</span>`
+                            : ""
                     }
 
                 </div>
@@ -178,9 +166,10 @@ function renderEvents(events) {
 
                 <p class="job-desc">
 
-                    ${e.desc && e.desc.length > 110
-                        ? escHtml(e.desc.slice(0, 110)) + "…"
-                        : escHtml(e.desc || "")
+                    ${
+                        e.desc && e.desc.length > 110
+                            ? escHtml(e.desc.slice(0, 110)) + "…"
+                            : escHtml(e.desc || "")
                     }
 
                 </p>
@@ -234,20 +223,19 @@ function renderEvents(events) {
 
         </div>
         `;
-    }).join("");
+        })
+        .join("");
 }
 
 // ── OPEN DETAIL ───────────────────────────────────────────────────────────────
 
 function openDetail(id) {
-
     const e = allEvents.find((x) => x.id == id);
 
     if (!e) return;
 
     const isOwner =
-        SESSION_LOGGED_IN &&
-        parseInt(e.user_id) === SESSION_USER_ID;
+        SESSION_LOGGED_IN && Number(e.user_id) === Number(SESSION_USER_ID);
 
     document.getElementById("d-title").textContent = e.title;
 
@@ -297,23 +285,58 @@ function openDetail(id) {
         </div>
     `;
 
-    document.getElementById("d-desc").textContent =
-        e.desc || "";
+    document.getElementById("d-desc").textContent = e.desc || "";
 
-    const registerBtn =
-        document.getElementById("d-register");
+    const registerBtn = document.getElementById("d-register");
 
-    if (!SESSION_LOGGED_IN) {
+    registerBtn.classList.remove("hidden");
 
-        registerBtn.textContent = "Login to Register";
-
-        registerBtn.onclick = () => {
-            window.location.href = "login.php";
-        };
-
+    if (isOwner) {
+        registerBtn.classList.add("hidden");
     } else {
+        if (!SESSION_LOGGED_IN) {
+            registerBtn.textContent = "Login to Register";
 
-        registerBtn.textContent = "Register Now";
+            registerBtn.onclick = () => {
+                window.location.href = "login.php";
+            };
+        } else {
+            registerBtn.textContent = "Register Now";
+
+            registerBtn.onclick = () => {
+                if (e.email) {
+                    const subject = "Event Registration: " + e.title;
+
+                    const body =
+                        "Hello,\n\n" +
+                        "I would like to register for the following event:\n\n" +
+                        "Event: " +
+                        e.title +
+                        "\n" +
+                        "Date: " +
+                        formatDate(e.date) +
+                        "\n" +
+                        "Location: " +
+                        e.location +
+                        "\n\n" +
+                        "Please confirm my registration.\n\n" +
+                        "Thank you!";
+
+                    window.open(
+                        "https://mail.google.com/mail/?view=cm" +
+                            "&to=" +
+                            encodeURIComponent(e.email) +
+                            "&su=" +
+                            encodeURIComponent(subject) +
+                            "&body=" +
+                            encodeURIComponent(body),
+                        "_blank",
+                    );
+                } else {
+                    showErrorModal("No contact email provided.");
+                }
+            };
+        }
     }
 
     const editBtn = document.getElementById("d-edit");
@@ -335,9 +358,7 @@ function openDetail(id) {
         deleteBtn.onclick = () => deleteEvent(e.id);
     }
 
-    document
-        .getElementById("detailOverlay")
-        .classList.remove("hidden");
+    document.getElementById("detailOverlay").classList.remove("hidden");
 
     document.body.classList.add("modal-open");
 }
@@ -345,10 +366,7 @@ function openDetail(id) {
 // ── OPEN EDIT ─────────────────────────────────────────────────────────────────
 
 function openEdit(e) {
-
-    document
-        .getElementById("detailOverlay")
-        .classList.add("hidden");
+    document.getElementById("detailOverlay").classList.add("hidden");
 
     document.getElementById("e-id").value = e.id;
     document.getElementById("e-title").value = e.title;
@@ -362,79 +380,72 @@ function openEdit(e) {
     document.getElementById("e-email").value = e.email || "";
     document.getElementById("e-desc").value = e.desc || "";
 
-    document
-        .getElementById("editOverlay")
-        .classList.remove("hidden");
+    document.getElementById("editOverlay").classList.remove("hidden");
 
     document.body.classList.add("modal-open");
 }
 
 // ── SAVE EDIT ─────────────────────────────────────────────────────────────────
 
-document
-    .getElementById("saveEditBtn")
-    ?.addEventListener("click", async () => {
+document.getElementById("saveEditBtn")?.addEventListener("click", async () => {
+    const startTime = document.getElementById("e-time-start").value;
 
-        const payload = {
-            id: parseInt(document.getElementById("e-id").value),
-            title: document.getElementById("e-title").value.trim(),
-            date: document.getElementById("e-date").value,
-            type: document.getElementById("e-type").value,
-            timeStart: document.getElementById("e-time-start").value,
-            timeEnd: document.getElementById("e-time-end").value,
-            location: document.getElementById("e-location").value.trim(),
-            maxAttendees: parseInt(document.getElementById("e-max").value) || 0,
-            deadline: document.getElementById("e-deadline").value,
-            email: document.getElementById("e-email").value.trim(),
-            desc: document.getElementById("e-desc").value.trim(),
-        };
+    const endTime = document.getElementById("e-time-end").value;
 
-        try {
+    if (startTime && endTime) {
+        if (endTime <= startTime) {
+            showErrorModal("End time must be later than the start time.");
 
-            const res = await fetch(
-                "backend/event_process.php",
-                {
-                    method: "PUT",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify(payload),
-                }
-            );
-
-            const data = await res.json();
-
-            if (!data.success) {
-                throw new Error("Failed to update event.");
-            }
-
-            document
-                .getElementById("editOverlay")
-                .classList.add("hidden");
-
-            document.body.classList.remove("modal-open");
-
-            fetchEvents();
-
-        } catch (err) {
-
-            alert(err.message);
+            return;
         }
-    });
+    }
+    const payload = {
+        id: parseInt(document.getElementById("e-id").value),
+        title: document.getElementById("e-title").value.trim(),
+        date: document.getElementById("e-date").value,
+        type: document.getElementById("e-type").value,
+        timeStart: document.getElementById("e-time-start").value,
+        timeEnd: document.getElementById("e-time-end").value,
+        location: document.getElementById("e-location").value.trim(),
+        maxAttendees: parseInt(document.getElementById("e-max").value) || 0,
+        deadline: document.getElementById("e-deadline").value,
+        email: document.getElementById("e-email").value.trim(),
+        desc: document.getElementById("e-desc").value.trim(),
+    };
+
+    try {
+        const res = await fetch("backend/event_process.php", {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(payload),
+        });
+
+        const data = await res.json();
+
+        if (!data.success) {
+            throw new Error("Failed to update event.");
+        }
+
+        document.getElementById("editOverlay").classList.add("hidden");
+
+        document.body.classList.remove("modal-open");
+
+        fetchEvents();
+    } catch (err) {
+        showErrorModal(err.message);
+    }
+});
 
 // ── DELETE EVENT ──────────────────────────────────────────────────────────────
 
 function deleteEvent(id) {
-
     deleteEventId = id;
 
-    document
-        .getElementById("detailOverlay")
-        .classList.add("hidden");
+    document.getElementById("detailOverlay").classList.add("hidden");
 
-    document
-        .getElementById("deleteOverlay")
-        .classList.remove("hidden");
+    document.getElementById("deleteOverlay").classList.remove("hidden");
 
     document.body.classList.add("modal-open");
 }
@@ -444,21 +455,16 @@ function deleteEvent(id) {
 document
     .getElementById("confirmDeleteBtn")
     ?.addEventListener("click", async () => {
-
         try {
-
-            const res = await fetch(
-                "backend/event_process.php",
-                {
-                    method: "DELETE",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({
-                        id: deleteEventId,
-                    }),
-                }
-            );
+            const res = await fetch("backend/event_process.php", {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    id: deleteEventId,
+                }),
+            });
 
             const data = await res.json();
 
@@ -466,92 +472,164 @@ document
                 throw new Error("Failed to delete event.");
             }
 
-            document
-                .getElementById("deleteOverlay")
-                .classList.add("hidden");
+            document.getElementById("deleteOverlay").classList.add("hidden");
 
             document.body.classList.remove("modal-open");
 
             fetchEvents();
-
         } catch (err) {
-
-            alert(err.message);
+            showErrorModal(err.message);
         }
     });
 
 // ── CLOSE / CANCEL ────────────────────────────────────────────────────────────
 
-document
-    .getElementById("closeDetail")
-    ?.addEventListener("click", () => {
+document.getElementById("closeDetail")?.addEventListener("click", () => {
+    document.getElementById("detailOverlay").classList.add("hidden");
 
-        document
-            .getElementById("detailOverlay")
-            .classList.add("hidden");
+    document.body.classList.remove("modal-open");
+});
 
-        document.body.classList.remove("modal-open");
-    });
+document.getElementById("cancelEditBtn")?.addEventListener("click", () => {
+    document.getElementById("editOverlay").classList.add("hidden");
 
-document
-    .getElementById("cancelEditBtn")
-    ?.addEventListener("click", () => {
+    document.body.classList.remove("modal-open");
+});
 
-        document
-            .getElementById("editOverlay")
-            .classList.add("hidden");
+document.getElementById("cancelDeleteBtn")?.addEventListener("click", () => {
+    document.getElementById("deleteOverlay").classList.add("hidden");
 
-        document.body.classList.remove("modal-open");
-    });
+    document.getElementById("detailOverlay").classList.remove("hidden");
 
-document
-    .getElementById("cancelDeleteBtn")
-    ?.addEventListener("click", () => {
-
-        document
-            .getElementById("deleteOverlay")
-            .classList.add("hidden");
-
-        document
-            .getElementById("detailOverlay")
-            .classList.remove("hidden");
-    });
+    document.body.classList.add("modal-open");
+});
 
 // ── POST MODAL ────────────────────────────────────────────────────────────────
 
-document
-    .getElementById("openPostBtn")
-    ?.addEventListener("click", () => {
+document.getElementById("openPostBtn")?.addEventListener("click", () => {
+    if (!SESSION_LOGGED_IN) {
+        window.location.href = "login.php";
+        return;
+    }
 
-        if (!SESSION_LOGGED_IN) {
-            window.location.href = "login.php";
+    document.getElementById("postOverlay").classList.remove("hidden");
+
+    document.body.classList.add("modal-open");
+});
+
+document.getElementById("cancelBtn")?.addEventListener("click", () => {
+    document.getElementById("postOverlay").classList.add("hidden");
+
+    document.body.classList.remove("modal-open");
+});
+
+// ── POST EVENT ────────────────────────────────────────────────────────────────
+
+document.getElementById("postBtn")?.addEventListener("click", async () => {
+    const title = document.getElementById("f-title").value.trim();
+
+    if (!title) {
+        showErrorModal("Event title is required.");
+        return;
+    }
+
+    const startTime = document.getElementById("f-time-start").value;
+
+    const endTime = document.getElementById("f-time-end").value;
+
+    if (startTime && endTime) {
+        if (endTime <= startTime) {
+            showErrorModal("End time must be later than the start time.");
+
             return;
         }
+    }
+    const payload = {
+        title,
+        date: document.getElementById("f-date").value || "",
+        type: document.getElementById("f-type").value,
+        timeStart: document.getElementById("f-time-start").value || "",
+        timeEnd: document.getElementById("f-time-end").value || "",
+        location: document.getElementById("f-location").value.trim() || "TBD",
+        maxAttendees: parseInt(document.getElementById("f-max").value) || 0,
+        deadline: document.getElementById("f-deadline").value || "",
+        email: document.getElementById("f-email").value.trim() || "",
+        desc:
+            document.getElementById("f-desc").value.trim() ||
+            "No description provided.",
+    };
 
-        document
-            .getElementById("postOverlay")
-            .classList.remove("hidden");
+    const postBtn = document.getElementById("postBtn");
 
-        document.body.classList.add("modal-open");
-    });
+    postBtn.disabled = true;
+    postBtn.textContent = "Posting…";
 
-document
-    .getElementById("cancelBtn")
-    ?.addEventListener("click", () => {
+    try {
+        const res = await fetch("backend/event_process.php", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(payload),
+        });
 
-        document
-            .getElementById("postOverlay")
-            .classList.add("hidden");
+        const data = await res.json();
+
+        if (!data.success) {
+            if (res.status === 401) {
+                window.location.href = "login.php";
+                return;
+            }
+
+            throw new Error(data.message || "Failed to post event.");
+        }
+
+        [
+            "f-title",
+            "f-date",
+            "f-time-start",
+            "f-time-end",
+            "f-location",
+            "f-max",
+            "f-deadline",
+            "f-email",
+            "f-desc",
+        ].forEach((id) => {
+            document.getElementById(id).value = "";
+        });
+
+        document.getElementById("postOverlay").classList.add("hidden");
 
         document.body.classList.remove("modal-open");
-    });
+
+        await fetchEvents();
+    } catch (err) {
+        showErrorModal(err.message);
+    } finally {
+        postBtn.disabled = false;
+        postBtn.textContent = "Post Event";
+    }
+});
 
 // ── FILTERS ───────────────────────────────────────────────────────────────────
+document.getElementById("closeErrorBtn")?.addEventListener("click", () => {
+    document.getElementById("errorOverlay").classList.add("hidden");
+
+    const stillOpen =
+        !document
+            .getElementById("detailOverlay")
+            .classList.contains("hidden") ||
+        !document.getElementById("editOverlay").classList.contains("hidden") ||
+        !document.getElementById("postOverlay").classList.contains("hidden") ||
+        !document.getElementById("deleteOverlay").classList.contains("hidden");
+
+    if (!stillOpen) {
+        document.body.classList.remove("modal-open");
+    }
+});
 
 document.querySelectorAll(".filter-item").forEach((el) => {
-
     el.addEventListener("click", () => {
-
         document
             .querySelectorAll(".filter-item")
             .forEach((e) => e.classList.remove("active"));
@@ -568,37 +646,29 @@ document.querySelectorAll(".filter-item").forEach((el) => {
 
 let searchTimer = null;
 
-document
-    .getElementById("searchInput")
-    ?.addEventListener("input", () => {
+document.getElementById("searchInput")?.addEventListener("input", () => {
+    clearTimeout(searchTimer);
 
-        clearTimeout(searchTimer);
-
-        searchTimer = setTimeout(fetchEvents, 350);
-    });
+    searchTimer = setTimeout(fetchEvents, 350);
+});
 
 // ── HELPERS ───────────────────────────────────────────────────────────────────
 
 function showLoadingState(on) {
-
     const list = document.getElementById("jobsList");
 
     if (on) {
-        list.innerHTML =
-            `<p style="padding:1rem;">Loading events…</p>`;
+        list.innerHTML = `<p style="padding:1rem;">Loading events…</p>`;
     }
 }
 
 function showError(msg) {
-
     const list = document.getElementById("jobsList");
 
-    list.innerHTML =
-        `<p style="color:red;padding:1rem;">${escHtml(msg)}</p>`;
+    list.innerHTML = `<p style="color:red;padding:1rem;">${escHtml(msg)}</p>`;
 }
 
 function escHtml(str) {
-
     if (!str) return "";
 
     return String(str)

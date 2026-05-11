@@ -299,6 +299,30 @@ if (!empty($_SESSION['first_name'])) {
 
     </div>
 
+    <!-- ERROR MODAL -->
+    <div class="overlay hidden" id="errorOverlay">
+
+        <div class="modal delete-modal">
+
+            <div class="modal-header">
+                <h2>Error</h2>
+
+                <p id="errorMessage">
+                    End time must be later than the start time.
+                </p>
+            </div>
+
+            <div class="modal-footer">
+
+                <button class="btn-back" id="closeErrorBtn">
+                    OK
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
     <?php include('includes/logoutmodal.php'); ?>
 
     <script src="assets/js/alumni_homepage.js"></script>
