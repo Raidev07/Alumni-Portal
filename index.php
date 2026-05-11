@@ -101,7 +101,7 @@ if ($isLoggedIn) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Alumni Portal</title>
-    <link rel="icon" href="assets/image/alumni-logo.png">
+    <link rel="icon" href="assets/image/alumni_plp_newicon.png">
     <link rel="stylesheet" href="assets/css/style.css">
     <link rel="stylesheet" href="assets/css/alumni_homepage.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
@@ -288,7 +288,7 @@ if ($isLoggedIn) {
 
                                     </div>
 
-                                    <a href="view_article.php?id=<?= $featured['id'] ?>" class="card-button">
+                                    <a href="<?= $isLoggedIn ? 'view_article.php?id=' . $featured['id'] : 'DPA.php' ?>" class="card-button">
                                         Read More
                                     </a>
 

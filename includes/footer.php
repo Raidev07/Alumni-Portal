@@ -3,7 +3,7 @@
 
         <!-- Left: Logo + About -->
         <div class="footer-section">
-            <img src="assets/image/alumni-logo.png" alt="Alumni Logo" class="footer-logo">
+            <img src="assets/image/alumni_plp_newicon.png" alt="Alumni Logo" class="footer-logo">
             <h3>PLP Alumni Portal</h3>
             <p>
                 Connecting graduates of Pamantasan ng Lungsod ng Pasig.

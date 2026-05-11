@@ -13,7 +13,7 @@ unset($_SESSION['reg_errors'], $_SESSION['reg_old']);
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" href="assets/image/alumni-logo.png" />
+    <link rel="icon" href="assets/image/alumni_plp_newicon.png" />
     <link rel="stylesheet" href="assets/css/style.css" />
     <link rel="stylesheet" type="text/css" href="assets/css/registration_style.css" />
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet" />

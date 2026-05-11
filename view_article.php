@@ -69,7 +69,7 @@ while ($edu = $eduResult->fetch_assoc()) {
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Alumni Article Reader</title>
-    <link rel="icon" href="assets/image/alumni-logo.png">
+    <link rel="icon" href="assets/image/alumni_plp_newicon.png">
     <link rel="stylesheet" href="assets/css/view_article.css" />
     <link rel="stylesheet" href="assets/css/alumni_homepage.css" />
     <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;0,700;1,400&family=Roboto+Slab:wght@400;600;700&display=swap" rel="stylesheet" />

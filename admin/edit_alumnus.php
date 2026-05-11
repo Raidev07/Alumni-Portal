@@ -202,7 +202,7 @@ if (!$row) {
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Update Alumnus Details | Alumni Portal</title>
-    <link rel="icon" href="../assets/image/alumni-logo.png" type="image/x-icon">
+    <link rel="icon" href="../assets/image/alumni_plp_newicon.png" type="image/x-icon">
     <?php include('includes/global_styles.php'); ?>
 </head>
 

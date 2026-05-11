@@ -184,7 +184,7 @@ if (isset($_POST['publish_story'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Create Story | Alumni Association</title>
 
-    <link rel="icon" href="../assets/image/alumni-logo.png">
+    <link rel="icon" href="../assets/image/alumni_plp_newicon.png">
 
     <?php include('includes/global_styles.php'); ?>
 </head>
