@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 12, 2026 at 07:56 AM
+-- Generation Time: May 12, 2026 at 05:37 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -129,19 +129,22 @@ CREATE TABLE `alumnidetails` (
   `user_id` int(11) NOT NULL,
   `student_number` varchar(20) NOT NULL,
   `course_id` int(11) DEFAULT NULL,
-  `year_graduated` year(4) NOT NULL
+  `year_graduated` year(4) NOT NULL,
+  `is_archived` tinyint(1) DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `alumnidetails`
 --
 
-INSERT INTO `alumnidetails` (`alumni_id`, `user_id`, `student_number`, `course_id`, `year_graduated`) VALUES
-(1, 1, '24-00580', 1, '2024'),
-(3, 4, '13-31312', 5, '2011'),
-(4, 5, '12-31231', 1, '2023'),
-(5, 7, '43-44112', 7, '2032'),
-(6, 9, '24-00649', 1, '2024');
+INSERT INTO `alumnidetails` (`alumni_id`, `user_id`, `student_number`, `course_id`, `year_graduated`, `is_archived`) VALUES
+(1, 1, '24-00580', 1, '2024', 0),
+(3, 4, '13-31312', 5, '2011', 0),
+(4, 5, '12-31231', 1, '2023', 0),
+(5, 7, '43-44112', 7, '2032', 0),
+(6, 9, '24-00649', 1, '2024', 0),
+(7, 10, '24-00001', 1, '2024', 0),
+(8, 11, '24-00002', 3, '2023', 0);
 
 --
 -- Triggers `alumnidetails`
@@ -450,7 +453,13 @@ INSERT INTO `audit_logs` (`log_id`, `table_name`, `record_id`, `action_type`, `u
 (51, 'userprofile', 4, 'UPDATE', 5, '2026-05-10 08:18:57'),
 (52, 'userprofile', 4, 'UPDATE', 5, '2026-05-10 09:27:19'),
 (53, 'alumnifeatured', 1, 'UPDATE', NULL, '2026-05-11 01:56:53'),
-(54, 'alumnifeatured', 3, 'DELETE', NULL, '2026-05-11 02:16:07');
+(54, 'alumnifeatured', 3, 'DELETE', NULL, '2026-05-11 02:16:07'),
+(55, 'users', 4, 'UPDATE', 4, '2026-05-12 14:59:26'),
+(56, 'users', 4, 'UPDATE', 4, '2026-05-12 15:02:48'),
+(57, 'users', 11, 'UPDATE', 11, '2026-05-12 15:03:09'),
+(58, 'users', 11, 'UPDATE', 11, '2026-05-12 15:03:19'),
+(59, 'users', 11, 'UPDATE', 11, '2026-05-12 15:05:41'),
+(60, 'users', 11, 'UPDATE', 11, '2026-05-12 15:05:47');
 
 -- --------------------------------------------------------
 
@@ -1352,6 +1361,55 @@ DELIMITER ;
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `tickets`
+--
+
+CREATE TABLE `tickets` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) DEFAULT NULL,
+  `full_name` varchar(120) DEFAULT NULL,
+  `email` varchar(120) DEFAULT NULL,
+  `subject` varchar(255) DEFAULT NULL,
+  `message` text DEFAULT NULL,
+  `status` enum('open','in_progress','resolved') DEFAULT 'open',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NULL DEFAULT NULL ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `tickets`
+--
+
+INSERT INTO `tickets` (`id`, `user_id`, `full_name`, `email`, `subject`, `message`, `status`, `created_at`, `updated_at`) VALUES
+(1, 5, 'John Jesse', 'jay.escalona.je@gmail.com', 'hello', 'hello', 'in_progress', '2026-05-12 12:42:09', '2026-05-12 14:38:41');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `ticket_replies`
+--
+
+CREATE TABLE `ticket_replies` (
+  `id` int(11) NOT NULL,
+  `ticket_id` int(11) NOT NULL,
+  `sender_type` enum('user','admin') NOT NULL,
+  `user_id` int(11) DEFAULT NULL,
+  `message` text NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `ticket_replies`
+--
+
+INSERT INTO `ticket_replies` (`id`, `ticket_id`, `sender_type`, `user_id`, `message`, `created_at`) VALUES
+(1, 1, 'user', 5, 'hello', '2026-05-12 12:42:09'),
+(2, 1, 'admin', 3, 'hi', '2026-05-12 13:16:16'),
+(3, 1, 'user', 5, 'dsd', '2026-05-12 13:21:42');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `userprofile`
 --
 
@@ -1379,7 +1437,9 @@ INSERT INTO `userprofile` (`profile_id`, `user_id`, `first_name`, `last_name`, `
 (3, 4, 'Mark Venice', 'Escalomos', 'Sr.', 'Ash', '09324424232', 'hello', '2015-10-01', 'Male', NULL, NULL),
 (4, 5, 'John Jesses', 'Escalona', 'III', 'Macuana', '09927756044', '3078 barangay saksakan st. pasig city', '2005-07-07', 'Male', 'avatar_5_1778405239.png', 'HELLO ITS ME KAT BADING'),
 (5, 7, 'Mark Venice', 'Samson', 'Sr.', 'Ash', '09927756044', 'tao', '2026-03-25', 'Male', NULL, NULL),
-(6, 9, 'Sam Aidan', 'Gonzaga', '', 'Capalaran', '09625928701', 'Mulawin St.', '2005-11-17', 'Male', NULL, NULL);
+(6, 9, 'Sam Aidan', 'Gonzaga', '', 'Capalaran', '09625928701', 'Mulawin St.', '2005-11-17', 'Male', NULL, NULL),
+(7, 10, 'Juan', 'Cruz', 'Jr', 'Dela', '9171234567', 'Quezon City', '2000-05-10', 'Male', NULL, NULL),
+(8, 11, 'Maria', 'Reyes', '', 'Santos', '9179876543', 'Manila', '2001-08-21', 'Female', NULL, NULL);
 
 --
 -- Triggers `userprofile`
@@ -1462,10 +1522,12 @@ CREATE TABLE `users` (
 INSERT INTO `users` (`id`, `email`, `password`, `role`, `status`, `created_at`, `twofa_secret`, `twofa_enabled`, `force_password_change`) VALUES
 (1, 'vehniahsamson11@gmail.com', '$2y$10$AVpzAFJ052lgkIMI/1sdS.uJyfq6mI0q/BKLbpXzhk8e2DEPYH.nW', 'alumni', 'pending', '2026-04-30 14:59:11', NULL, 0, 0),
 (3, 'admin@plpasig.com', '$2y$10$fz/M1Ji7xtwDBRDAeL6ptOQHpKXyABKpXe98RsyvdxWUH2ks6ym6O', 'admin', 'active', '2026-05-01 01:49:23', NULL, 0, 0),
-(4, 'yehey@gmail.com', '$2y$10$1M8eAkVIzDux81flh282ZOFkwjafp0GCD0hE4ZQa.mXuH4g9RimyO', 'alumni', 'pending', '2026-05-01 01:58:40', NULL, 0, 0),
+(4, 'yehey@gmail.com', '$2y$10$1M8eAkVIzDux81flh282ZOFkwjafp0GCD0hE4ZQa.mXuH4g9RimyO', 'alumni', 'active', '2026-05-01 01:58:40', NULL, 0, 0),
 (5, 'jay.escalona.je@gmail.com', '$2y$10$0CWilblv6HhJEL2V2WJZV.H0XxwjG2fZCE2QczfuoH75sJnWONYp.', 'alumni', 'active', '2026-05-01 14:01:08', 'JSULJPR2DHQA2TOPD2TOIPWYADGIAKM4', 1, 1),
 (7, 'escalonajj11ictc.bshs2122@gmail.com', '$2y$10$ZURJzfW797KNlpCaYSrp..OHOYAT.p/lPDJsZiZjLPzXoVErXVhBK', 'alumni', 'pending', '2026-05-01 14:11:29', NULL, 0, 0),
-(9, 'samaidangonzaga@gmail.com', '$2y$10$Z88Xl62AX87rmzFzwbIXq.pdD/KrXz9mD6tlEbkisdbJXuBav.zgS', 'alumni', 'pending', '2026-05-03 06:07:04', NULL, 0, 0);
+(9, 'samaidangonzaga@gmail.com', '$2y$10$Z88Xl62AX87rmzFzwbIXq.pdD/KrXz9mD6tlEbkisdbJXuBav.zgS', 'alumni', 'pending', '2026-05-03 06:07:04', NULL, 0, 0),
+(10, 'juan@gmail.com', '$2y$10$z4ln27dTkthCEtHSej1P3OlEzUesQt1Ohv/gUx/y3nlbrwGqPqm/6', 'alumni', 'active', '2026-05-12 08:53:43', NULL, 0, 0),
+(11, 'maria@gmail.com', '$2y$10$QpmVIoH6i8kDUHqOfmcWUOyOs.KjiWyjG1VykniJKfWfKL1eiE6ai', 'alumni', 'active', '2026-05-12 08:53:43', NULL, 0, 0);
 
 --
 -- Triggers `users`
@@ -1722,6 +1784,21 @@ ALTER TABLE `skills`
   ADD KEY `user_id` (`user_id`);
 
 --
+-- Indexes for table `tickets`
+--
+ALTER TABLE `tickets`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fk_ticket_user` (`user_id`);
+
+--
+-- Indexes for table `ticket_replies`
+--
+ALTER TABLE `ticket_replies`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fk_reply_ticket` (`ticket_id`),
+  ADD KEY `fk_reply_user` (`user_id`);
+
+--
 -- Indexes for table `userprofile`
 --
 ALTER TABLE `userprofile`
@@ -1744,7 +1821,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `alumnidetails`
 --
 ALTER TABLE `alumnidetails`
-  MODIFY `alumni_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `alumni_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `alumnifeatured`
@@ -1756,7 +1833,7 @@ ALTER TABLE `alumnifeatured`
 -- AUTO_INCREMENT for table `audit_logs`
 --
 ALTER TABLE `audit_logs`
-  MODIFY `log_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=55;
+  MODIFY `log_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=61;
 
 --
 -- AUTO_INCREMENT for table `backup_codes`
@@ -1819,16 +1896,28 @@ ALTER TABLE `skills`
   MODIFY `skill_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
+-- AUTO_INCREMENT for table `tickets`
+--
+ALTER TABLE `tickets`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `ticket_replies`
+--
+ALTER TABLE `ticket_replies`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
 -- AUTO_INCREMENT for table `userprofile`
 --
 ALTER TABLE `userprofile`
-  MODIFY `profile_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `profile_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- Constraints for dumped tables
@@ -1906,6 +1995,19 @@ ALTER TABLE `recovery_requests`
 --
 ALTER TABLE `skills`
   ADD CONSTRAINT `skills_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `tickets`
+--
+ALTER TABLE `tickets`
+  ADD CONSTRAINT `fk_ticket_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE SET NULL;
+
+--
+-- Constraints for table `ticket_replies`
+--
+ALTER TABLE `ticket_replies`
+  ADD CONSTRAINT `fk_reply_ticket` FOREIGN KEY (`ticket_id`) REFERENCES `tickets` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `fk_reply_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE SET NULL;
 
 --
 -- Constraints for table `userprofile`
