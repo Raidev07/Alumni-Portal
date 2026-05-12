@@ -311,7 +311,7 @@ if (isset($_POST['add_alumni'])) {
                                         <div class="row g-3">
 
                                             <div class="col-md-6">
-                                                <label>Course <span class="text-danger">*</span></label>
+                                                <label>Program <span class="text-danger">*</span></label>
                                                 <select name="course_id" class="form-select" required>
                                                     <option value="">Select Course</option>
                                                     <?php
