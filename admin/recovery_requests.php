@@ -12,10 +12,13 @@ unset($_SESSION['recovery_msg']);
 ?>
 
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
-    <title>Recovery Requests</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recovery Requests | Alumni Association</title>
+    <link rel="icon" href="../assets/image/alumni_plp_newicon.png" type="image/x-icon">
     <?php include('includes/global_styles.php'); ?>
 </head>
 
@@ -30,7 +33,18 @@ unset($_SESSION['recovery_msg']);
 
             <div class="app-content-header">
                 <div class="container-fluid">
-                    <h3>Account Recovery Requests</h3>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <h3 class="mb-0">Recovery Requests</h3>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <ol class="breadcrumb float-sm-end">
+                                <li class="breadcrumb-item"><a href="dashboard.php">Home</a></li>
+                                <li class="breadcrumb-item active">Recovery Requests</li>
+                            </ol>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -46,11 +60,11 @@ unset($_SESSION['recovery_msg']);
 
                             <?php
                             $stmt = $conn->prepare("
-    SELECT r.id, r.reason, r.status, r.created_at, u.email
-    FROM recovery_requests r
-    JOIN users u ON u.id = r.user_id
-    ORDER BY r.id DESC
-");
+                                        SELECT r.id, r.reason, r.status, r.created_at, u.email
+                                        FROM recovery_requests r
+                                        JOIN users u ON u.id = r.user_id
+                                        ORDER BY r.id DESC
+                                    ");
                             $stmt->execute();
                             $result = $stmt->get_result();
                             ?>

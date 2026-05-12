@@ -13,7 +13,7 @@
                                 <li class="nav-item"> <a href="all_alumni.php" class="nav-link <?= ($activePage == 'all_alumni') ? 'active':''; ?>"> <i class="nav-icon bi bi-circle"></i><p>All Alumni</p></a> </li>
                             </ul>
                         </li>
-                        <li class="nav-item"> <a href="recovery_requests.php" class="nav-link <?= ($activePage == 'recovery_requests') ? 'active':''; ?>"> <i class="nav-icon bi bi-person"></i><p>View Recovery Requests</p></a></li>
+                        <li class="nav-item"> <a href="recovery_requests.php" class="nav-link <?= ($activePage == 'recovery_requests') ? 'active':''; ?>"> <i class="nav-icon bi bi-key"></i><p>View Recovery Requests</p></a></li>
                         <li class="nav-item"> <a href="profile.php" class="nav-link <?= ($activePage == 'profile') ? 'active':''; ?>"> <i class="nav-icon bi bi-person"></i><p>Profile</p></a></li>
                         <li class="nav-header">OPTIONS</li>
                         <li class="nav-item"> <a href="#" class="nav-link" onclick="logout(event)"> <i class="nav-icon bi bi-box-arrow-in-right"></i><p>Sign out</p></a></li>
