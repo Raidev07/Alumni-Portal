@@ -41,6 +41,11 @@
                             <i class="fas fa-shield-alt"></i> Security Settings
                         </a>
                     </li>
+                    <li>
+                        <a href="my_tickets.php" id="securityTrigger">
+                            <i class="fas fa-ticket-alt"></i> My Tickets
+                        </a>
+                    </li>
                     <li class="dropdown-divider-top">
                         <a href="#" id="logoutTrigger">
                             <i class="fas fa-sign-out-alt"></i> Logout
@@ -49,22 +54,6 @@
                 </ul>
             </div>
         </div>
-
-        <!-- <div class="security-overlay" id="securityOverlay" role="dialog" aria-modal="true" aria-labelledby="securityTitle">
-            <div class="security-modal">
-                <button class="security-close" id="securityClose" aria-label="Close security dialog">×</button>
-                <div class="security-modal-icon">
-                    <i class="fas fa-shield-alt"></i>
-                </div>
-                <h3 id="securityTitle">Security Options</h3>
-                <p>Select a security action below.</p>
-                <div class="security-actions">
-                    <button type="button" class="security-btn" id="twoFactorBtn">2 Factor Authentication</button>
-                    <button type="button" class="security-btn" id="changePasswordBtn">Change Password</button>
-                </div>
-            </div>
-        </div> -->
-
 
         <a href="#" class="logo-link2">
             <img src="assets/image/plplogo.png" alt="PLP Logo">

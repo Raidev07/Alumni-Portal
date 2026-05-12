@@ -34,14 +34,12 @@ $selected_year = $_GET['year'] ?? 'All';
 $query = "
 SELECT
 ad.alumni_id,
-
 TRIM(CONCAT_WS(' ',
     up.first_name,
     NULLIF(up.middle_name, ''),
     up.last_name,
     NULLIF(up.suffix, '')
 )) AS full_name,
-
 c.course_code AS Programme,
 ad.year_graduated AS Academic_year,
 u.email AS Email,
@@ -53,9 +51,11 @@ INNER JOIN users u ON ad.user_id = u.id
 INNER JOIN userprofile up ON up.user_id = u.id
 LEFT JOIN courses c ON ad.course_id = c.course_id
 
-WHERE 
+WHERE ad.is_archived = 0
+AND (
     ('$selected_course' = 'All' OR c.course_code = '$selected_course')
     AND ('$selected_year' = 'All' OR ad.year_graduated = '$selected_year')
+)
 
 ORDER BY ad.year_graduated DESC, c.course_code ASC, ad.alumni_id DESC
 LIMIT $limit OFFSET $offset
@@ -85,23 +85,33 @@ $total_pages = ceil($total_records / $limit);
 
 /*
 |--------------------------------------------------------------------------
-| DELETE ALUMNI (SAFE)
+| archived
 |--------------------------------------------------------------------------
 */
-if (isset($_GET['id'])) {
-    $rid = intval($_GET['id']);
+if (isset($_GET['archive_id'])) {
+
+    $rid = intval($_GET['archive_id']);
 
     $getUser = mysqli_query($conn, "SELECT user_id FROM alumnidetails WHERE alumni_id = $rid");
     $data = mysqli_fetch_assoc($getUser);
     $user_id = $data['user_id'] ?? 0;
 
-    mysqli_query($conn, "DELETE FROM alumnidetails WHERE alumni_id = $rid");
+    // archive instead of delete
+    mysqli_query($conn, "
+        UPDATE alumnidetails 
+        SET is_archived = 1 
+        WHERE alumni_id = $rid
+    ");
 
     if ($user_id) {
-        mysqli_query($conn, "DELETE FROM users WHERE id = $user_id");
+        mysqli_query($conn, "
+            UPDATE users 
+            SET status = 'archived'
+            WHERE id = $user_id
+        ");
     }
 
-    header("Location: all_alumni.php?delete=success");
+    header("Location: all_alumni.php?archive=success");
     exit();
 }
 ?>
@@ -304,9 +314,9 @@ if (isset($_GET['id'])) {
                                                                         <i class="bi bi-pencil-fill"></i>
                                                                     </a>
 
-                                                                    <a href="all_alumni.php?delete=1&id=<?= $row['alumni_id'] ?>"
+                                                                    <a href="all_alumni.php?archive_id=<?= $row['alumni_id'] ?>"
                                                                         class="delete"
-                                                                        onclick="return confirm('Delete this record?');">
+                                                                        onclick="return confirm('archive this record?');">
                                                                         <i class="bi bi-trash-fill"></i>
                                                                     </a>
                                                                 </td>
@@ -347,8 +357,8 @@ if (isset($_GET['id'])) {
                             <?php if (isset($_GET['update']) && htmlspecialchars($_GET['update']) == 'success'): ?>
                                 <div class="callout callout-success">Alumnus Details updated successfully!</div>
                             <?php endif; ?>
-                            <?php if (isset($_GET['delete']) && htmlspecialchars($_GET['delete']) == 'success'): ?>
-                                <div class="callout callout-success">Alumnus Details deleted successfully!</div>
+                            <?php if (isset($_GET['archive']) && htmlspecialchars($_GET['archive']) == 'success'): ?>
+                                <div class="callout callout-success">Alumnus Details archived successfully!</div>
                             <?php endif; ?>
                         </div>
                     </div>

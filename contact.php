@@ -1,3 +1,10 @@
+<?php
+session_start();
+include("backend/db.php");
+
+$isLoggedIn = isset($_SESSION['user_id']);
+$uid = $isLoggedIn ? $_SESSION['user_id'] : null;
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -7,17 +14,42 @@
     <title>Contact Us</title>
     <link rel="icon" href="assets/image/alumni_plp_newicon.png">
     <link rel="stylesheet" href="assets/css/contact.css">
+    <link rel="stylesheet" href="assets/css/alumni_homepage.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link
         href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&family=DM+Serif+Display&display=swap"
         rel="stylesheet">
+    <style>
+        .alert {
+            padding: 14px 18px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .alert-success {
+            background: #d1e7dd;
+            color: #0f5132;
+            border: 1px solid #badbcc;
+        }
+
+        .alert-danger {
+            background: #f8d7da;
+            color: #842029;
+            border: 1px solid #f5c2c7;
+        }
+    </style>
 </head>
 
 <body>
     <!-- NAVBAR -->
     <?php
-    include('includes/navbarindex.php');
-    ?>
+    if ($isLoggedIn) {
+        include('includes/navbarhome.php');
+    } else {
+        include('includes/navbarindex.php');
+    } ?>
 
     <!-- MAP -->
     <section class="location">
@@ -36,6 +68,17 @@
                     us directly.</p>
             </div>
             <div class="contact-form-card">
+                <?php if (isset($_GET['success'])) : ?>
+                    <div class="alert alert-success">
+                        Message sent successfully.
+                    </div>
+                <?php endif; ?>
+
+                <?php if (isset($_GET['error'])) : ?>
+                    <div class="alert alert-danger">
+                        Failed to send message.
+                    </div>
+                <?php endif; ?>
                 <h3 class="form-title">Send a Message</h3>
                 <p class="form-sub">We'll respond within 24 hours on business days.</p>
                 <div class="info-cards">
@@ -68,7 +111,7 @@
                         </div>
                     </div>
                 </div>
-                <form action="form-handler.php" method="post" class="contact-form">
+                <form action="submit_ticket.php" method="POST" class="contact-form">
                     <div class="form-row">
                         <div class="form-group">
                             <label for="name">Full Name</label>
@@ -178,6 +221,9 @@
         </div>
     </div>
 
+    <?php include('includes/logoutmodal.php'); ?>
+    
+    <script src="assets/js/alumni_homepage.js"></script>
     <script>
         const members = {
             jonjesse: {
@@ -255,7 +301,10 @@
             const img = document.createElement('img');
             img.src = m.photo;
             img.alt = m.name;
-            img.onerror = () => { avatarEl.innerHTML = ''; avatarEl.textContent = m.initials; };
+            img.onerror = () => {
+                avatarEl.innerHTML = '';
+                avatarEl.textContent = m.initials;
+            };
             avatarEl.appendChild(img);
 
             document.getElementById('modalName').textContent = m.name;
@@ -298,7 +347,7 @@
         });
 
         // Sticky navbar
-        window.addEventListener('scroll', function () {
+        window.addEventListener('scroll', function() {
             const nav = document.getElementById('navbar');
             nav.classList.toggle('sticky', window.scrollY > 50);
         });
