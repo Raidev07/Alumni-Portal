@@ -134,7 +134,29 @@ unset($_SESSION['recovery_msg']);
         <?php include("includes/footer.php"); ?>
 
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <?php if (!empty($error)): ?>
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                let toast = document.createElement("div");
+                toast.innerText = "<?= $error ?>";
 
+                toast.style.position = "fixed";
+                toast.style.top = "20px";
+                toast.style.right = "20px";
+                toast.style.background = "#dc3545";
+                toast.style.color = "white";
+                toast.style.padding = "12px 18px";
+                toast.style.borderRadius = "6px";
+                toast.style.zIndex = "9999";
+                toast.style.fontSize = "14px";
+
+                document.body.appendChild(toast);
+
+                setTimeout(() => toast.remove(), 3000);
+            });
+        </script>
+    <?php endif; ?>
 </body>
 
 </html>

@@ -281,7 +281,75 @@ School Number | First Name | Middle Name | Surname | Suffix | Email | Phone | Ad
 
         <?php include("includes/footer.php"); ?>
 
+
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        function logout(event) {
+            event.preventDefault();
+
+            Swal.fire({
+                title: "Are you sure?",
+                text: "You will be logged out.",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#dc3545",
+                cancelButtonColor: "#6c757d",
+                confirmButtonText: "Yes, log out",
+                cancelButtonText: "Cancel"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = "../logout.php";
+                }
+            });
+        }
+    </script>
+    <?php if (!empty($success)): ?>
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                let toast = document.createElement("div");
+                toast.innerText = "<?= $success ?>";
+
+                toast.style.position = "fixed";
+                toast.style.top = "20px";
+                toast.style.right = "20px";
+                toast.style.background = "#28a745";
+                toast.style.color = "white";
+                toast.style.padding = "12px 18px";
+                toast.style.borderRadius = "6px";
+                toast.style.zIndex = "9999";
+                toast.style.fontSize = "14px";
+
+                document.body.appendChild(toast);
+
+                setTimeout(() => toast.remove(), 3000);
+            });
+        </script>
+    <?php endif; ?>
+
+
+    <?php if (!empty($error)): ?>
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                let toast = document.createElement("div");
+                toast.innerText = "<?= $error ?>";
+
+                toast.style.position = "fixed";
+                toast.style.top = "20px";
+                toast.style.right = "20px";
+                toast.style.background = "#dc3545";
+                toast.style.color = "white";
+                toast.style.padding = "12px 18px";
+                toast.style.borderRadius = "6px";
+                toast.style.zIndex = "9999";
+                toast.style.fontSize = "14px";
+
+                document.body.appendChild(toast);
+
+                setTimeout(() => toast.remove(), 3000);
+            });
+        </script>
+    <?php endif; ?>
 </body>
 
 </html>
