@@ -53,7 +53,7 @@ if (isset($_GET['error'])) {
                         </div>
                     </div>
 
-                    <a href="#" class="login__forgot">Forgot Password?</a>
+                    <a href="forgot-password.php" class="login__forgot">Forgot Password?</a>
 
                     <!-- Login Process -->
                     <?php if ($error): ?>

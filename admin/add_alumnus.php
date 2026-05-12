@@ -164,7 +164,7 @@ if (isset($_POST['add_alumni'])) {
                                     ⚠ Please change your password immediately after login.
                                 </p>
 
-                                <a href='#' style='display:inline-block; margin-top:15px; padding:10px 20px; background:#0d6efd; color:white; text-decoration:none; border-radius:5px;'>
+                                <a href='http://localhost/MAIN-PROJECT/Alumni-Portal/login.php' style='display:inline-block; margin-top:15px; padding:10px 20px; background:#0d6efd; color:white; text-decoration:none; border-radius:5px;'>
                                     Login Now
                                 </a>
                             </div>
@@ -238,7 +238,7 @@ if (isset($_POST['add_alumni'])) {
                                         <!-- ROW 1: STUDENT ID ONLY -->
                                         <div class="row g-3">
                                             <div class="col-md-4">
-                                                <label>School ID <span class="text-danger">*</span></label>
+                                                <label>Student ID <span class="text-danger">*</span></label>
                                                 <input type="text" name="student_number" placeholder="24-00123"
                                                     class="form-control" pattern="\d{2}-\d{5}" required>
                                             </div>

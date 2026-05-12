@@ -15,7 +15,7 @@ if (!isset($_SESSION['user_id'])) {
 $user_id = $_SESSION['user_id'];
 
 /* =====================
-   HANDLE POST REQUESTS FIRST
+   HANDLE POST REQUESTS
 ===================== */
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -40,7 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->execute();
         $dbUser = $stmt->get_result()->fetch_assoc();
 
-        if (!password_verify($current, $dbUser['password'])) {
+        if (!$dbUser || !password_verify($current, $dbUser['password'])) {
             $_SESSION['message'] = "Incorrect current password";
             header("Location: security.php");
             exit();
@@ -58,17 +58,42 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     /* =====================
-       ENABLE 2FA
+       ENABLE 2FA + GENERATE BACKUP CODES (FIXED)
     ===================== */
     if (isset($_POST['enable_2fa'])) {
 
         $secret = $google2fa->generateSecretKey();
 
-        $stmt = $conn->prepare("UPDATE users SET twofa_secret = ? WHERE id = ?");
+        $stmt = $conn->prepare("UPDATE users SET twofa_secret = ?, twofa_enabled = 0 WHERE id = ?");
         $stmt->bind_param("si", $secret, $user_id);
         $stmt->execute();
 
-        $_SESSION['message'] = "2FA enabled. Scan QR code.";
+        // delete old backup codes
+        $stmt = $conn->prepare("DELETE FROM backup_codes WHERE user_id = ?");
+        $stmt->bind_param("i", $user_id);
+        $stmt->execute();
+
+        $generated_codes = [];
+
+        // generate new backup codes
+        for ($i = 0; $i < 5; $i++) {
+
+            $code = strtoupper(bin2hex(random_bytes(4)));
+
+            $stmt = $conn->prepare("
+                INSERT INTO backup_codes (user_id, code, used)
+                VALUES (?, ?, 0)
+            ");
+            $stmt->bind_param("is", $user_id, $code);
+            $stmt->execute();
+
+            $generated_codes[] = $code;
+        }
+
+        // STORE FOR DISPLAY (IMPORTANT FIX)
+        $_SESSION['backup_codes'] = $generated_codes;
+
+        $_SESSION['message'] = "2FA enabled. Scan QR and save backup codes.";
         header("Location: security.php");
         exit();
     }
@@ -85,6 +110,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->execute();
         $user = $stmt->get_result()->fetch_assoc();
 
+        if (!$user || !$user['twofa_secret']) {
+            $_SESSION['message'] = "2FA not initialized";
+            header("Location: security.php");
+            exit();
+        }
+
         $valid = $google2fa->verifyKey($user['twofa_secret'], $otp, 2);
 
         if ($valid) {
@@ -95,7 +126,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             $_SESSION['message'] = "2FA Enabled successfully";
         } else {
-            $_SESSION['message'] = "Invalid OTP. Please try again.";
+            $_SESSION['message'] = "Invalid OTP";
         }
 
         header("Location: security.php");
@@ -107,7 +138,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     ===================== */
     if (isset($_POST['disable_2fa'])) {
 
-        $stmt = $conn->prepare("UPDATE users SET twofa_enabled = 0, twofa_secret = NULL WHERE id = ?");
+        $stmt = $conn->prepare("
+            UPDATE users 
+            SET twofa_enabled = 0, twofa_secret = NULL 
+            WHERE id = ?
+        ");
         $stmt->bind_param("i", $user_id);
         $stmt->execute();
 
@@ -118,7 +153,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 /* =====================
-   LOAD USER FRESH
+   LOAD USER DATA
 ===================== */
 
 $stmt = $conn->prepare("SELECT * FROM users WHERE id = ?");
@@ -128,6 +163,12 @@ $user = $stmt->get_result()->fetch_assoc();
 
 $message = $_SESSION['message'] ?? '';
 unset($_SESSION['message']);
+
+/* =====================
+   GET BACKUP CODES (FIX)
+===================== */
+$backup_codes = $_SESSION['backup_codes'] ?? [];
+unset($_SESSION['backup_codes']);
 ?>
 
 <!DOCTYPE html>
@@ -139,6 +180,7 @@ unset($_SESSION['message']);
     <title>Security Settings | Alumni Portal</title>
     <link rel="icon" href="assets/image/alumni_plp_newicon.png">
     <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/alumni_homepage.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
@@ -252,8 +294,8 @@ unset($_SESSION['message']);
         .security-actions .btn:hover {
             background: #006e14;
             color: #ffffff;
-                transform: translateY(-2px);
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
         }
 
         .security-qr {
@@ -320,28 +362,28 @@ unset($_SESSION['message']);
         }
 
         /* ── PROFILE ICON ─────────────────────────────────────────────── */
-.profile-icon {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 38px;
-    height: 38px;
-    border-radius: 50%;
-    background: #f0f5f2;
-    border: 1.5px solid #a8d5b0;
-    color: #006e14;
-    transition: all 0.25s;
-    flex-shrink: 0;
-    text-decoration: none;
-    font-size: 1rem;
-}
+        .profile-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: #f0f5f2;
+            border: 1.5px solid #a8d5b0;
+            color: #006e14;
+            transition: all 0.25s;
+            flex-shrink: 0;
+            text-decoration: none;
+            font-size: 1rem;
+        }
 
-.profile-icon:hover,
-.profile-icon.active {
-    background: #006e14;
-    border-color: #006e14;
-    color: #fff;
-}
+        .profile-icon:hover,
+        .profile-icon.active {
+            background: #006e14;
+            border-color: #006e14;
+            color: #fff;
+        }
 
         .hamburger-wrapper {
             position: relative;
@@ -572,9 +614,24 @@ unset($_SESSION['message']);
                 </div>
             </div>
 
+            <?php if (!empty($backup_codes)): ?>
+                <div class="security-card">
+                    <div class="security-card-content">
+                        <h3>Your Backup Codes</h3>
+                        <p>Save these codes somewhere safe. Each code can only be used once.</p>
+
+                        <div class="security-qr-key">
+                            <?php foreach ($backup_codes as $code): ?>
+                                <div><?= htmlspecialchars($code) ?></div>
+                            <?php endforeach; ?>
+                        </div>
+                    </div>
+                </div>
+            <?php endif; ?>
         </div>
     </section>
 
+    <?php include('includes/logoutmodal.php'); ?>
     <?php include('includes/footer.php'); ?>
 
     <script src="assets/js/alumni_homepage.js"></script>

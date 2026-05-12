@@ -1,0 +1,126 @@
+<?php
+include("../backend/db_admin.php");
+session_start();
+
+if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
+    header("Location: ../login.php");
+    exit();
+}
+
+$message = $_SESSION['recovery_msg'] ?? "";
+unset($_SESSION['recovery_msg']);
+?>
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Recovery Requests</title>
+    <?php include('includes/global_styles.php'); ?>
+</head>
+
+<body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
+
+    <div class="app-wrapper">
+
+        <?php include('includes/navbar.php'); ?>
+        <?php include('includes/sidebar.php'); ?>
+
+        <main class="app-main">
+
+            <div class="app-content-header">
+                <div class="container-fluid">
+                    <h3>Account Recovery Requests</h3>
+                </div>
+            </div>
+
+            <div class="app-content">
+                <div class="container-fluid">
+
+                    <?php if ($message): ?>
+                        <div class="alert alert-info"><?= htmlspecialchars($message) ?></div>
+                    <?php endif; ?>
+
+                    <div class="card">
+                        <div class="card-body">
+
+                            <?php
+                            $stmt = $conn->prepare("
+    SELECT r.id, r.reason, r.status, r.created_at, u.email
+    FROM recovery_requests r
+    JOIN users u ON u.id = r.user_id
+    ORDER BY r.id DESC
+");
+                            $stmt->execute();
+                            $result = $stmt->get_result();
+                            ?>
+
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Email</th>
+                                        <th>Reason</th>
+                                        <th>Status</th>
+                                        <th>Date</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    <?php while ($row = $result->fetch_assoc()): ?>
+                                        <tr>
+                                            <td><?= htmlspecialchars($row['email']) ?></td>
+                                            <td><?= htmlspecialchars($row['reason']) ?></td>
+
+                                            <td>
+                                                <?php if ($row['status'] === 'pending'): ?>
+                                                    <span style="color:orange;">Pending</span>
+                                                <?php elseif ($row['status'] === 'approved'): ?>
+                                                    <span style="color:green;">Approved</span>
+                                                <?php else: ?>
+                                                    <span style="color:red;">Rejected</span>
+                                                <?php endif; ?>
+                                            </td>
+
+                                            <td><?= $row['created_at'] ?></td>
+
+                                            <td>
+                                                <?php if ($row['status'] === 'pending'): ?>
+
+                                                    <form method="POST" action="recovery_action.php" style="display:inline;">
+                                                        <input type="hidden" name="id" value="<?= $row['id'] ?>">
+                                                        <input type="hidden" name="action" value="approve">
+                                                        <button class="btn btn-success btn-sm">Approve</button>
+                                                    </form>
+
+                                                    <form method="POST" action="recovery_action.php" style="display:inline;">
+                                                        <input type="hidden" name="id" value="<?= $row['id'] ?>">
+                                                        <input type="hidden" name="action" value="reject">
+                                                        <button class="btn btn-danger btn-sm">Reject</button>
+                                                    </form>
+
+                                                <?php else: ?>
+                                                    <small>Done</small>
+                                                <?php endif; ?>
+                                            </td>
+                                        </tr>
+                                    <?php endwhile; ?>
+                                </tbody>
+
+                            </table>
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </main>
+
+        <?php include("includes/footer.php"); ?>
+
+    </div>
+
+</body>
+
+</html>

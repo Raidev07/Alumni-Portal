@@ -51,6 +51,15 @@ if (!password_verify($password, $user['password'])) {
     exit();
 }
 
+if ((int)$user['force_password_change'] === 1) {
+
+    // allow login session but redirect to password change page
+    $_SESSION['temp_user_id'] = $user['id'];
+
+    header("Location: ../change_password.php");
+    exit();
+}
+
 // 6. Success login flow
 session_regenerate_id(true);
 
