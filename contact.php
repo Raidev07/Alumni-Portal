@@ -68,13 +68,13 @@ $uid = $isLoggedIn ? $_SESSION['user_id'] : null;
                     us directly.</p>
             </div>
             <div class="contact-form-card">
-                <?php if (isset($_GET['success'])) : ?>
+                <?php if (isset($_GET['success'])): ?>
                     <div class="alert alert-success">
                         Message sent successfully.
                     </div>
                 <?php endif; ?>
 
-                <?php if (isset($_GET['error'])) : ?>
+                <?php if (isset($_GET['error'])): ?>
                     <div class="alert alert-danger">
                         Failed to send message.
                     </div>
@@ -222,7 +222,7 @@ $uid = $isLoggedIn ? $_SESSION['user_id'] : null;
     </div>
 
     <?php include('includes/logoutmodal.php'); ?>
-    
+
     <script src="assets/js/alumni_homepage.js"></script>
     <script>
         const members = {
@@ -347,7 +347,7 @@ $uid = $isLoggedIn ? $_SESSION['user_id'] : null;
         });
 
         // Sticky navbar
-        window.addEventListener('scroll', function() {
+        window.addEventListener('scroll', function () {
             const nav = document.getElementById('navbar');
             nav.classList.toggle('sticky', window.scrollY > 50);
         });

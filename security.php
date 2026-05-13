@@ -29,6 +29,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $new = $_POST['new_password'];
         $confirm = $_POST['confirm_password'];
 
+        // Password rules
+        $hasUpper = preg_match('/[A-Z]/', $new);
+        $hasLower = preg_match('/[a-z]/', $new);
+        $hasNumber = preg_match('/[0-9]/', $new);
+        $hasSpecial = preg_match('/[!@#$%^&*(),.?":{}|<>]/', $new);
+        $hasNoSpaces = !preg_match('/\s/', $new);
+        $validLength = strlen($new) >= 8 && strlen($new) <= 20;
+
+        // Validate password
+        if (
+            !$validLength ||
+            !$hasUpper ||
+            !$hasLower ||
+            !$hasNumber ||
+            !$hasSpecial ||
+            !$hasNoSpaces
+        ) {
+            $_SESSION['message'] =
+                "Password must be 8-20 characters and include uppercase, lowercase, number, special character, and no spaces.";
+            header("Location: security.php");
+            exit();
+        }
+
+        // Confirm password match
         if ($new !== $confirm) {
             $_SESSION['message'] = "Password confirmation does not match";
             header("Location: security.php");
@@ -42,6 +66,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if (!$dbUser || !password_verify($current, $dbUser['password'])) {
             $_SESSION['message'] = "Incorrect current password";
+            header("Location: security.php");
+            exit();
+        }
+
+        // Prevent using the same password
+        if (password_verify($new, $dbUser['password'])) {
+            $_SESSION['message'] = "New password cannot be the same as your current password";
             header("Location: security.php");
             exit();
         }
@@ -517,6 +548,61 @@ unset($_SESSION['backup_codes']);
                 grid-template-columns: 1fr;
             }
         }
+
+        #requirements,
+        #confirm-requirements {
+            margin-top: 12px;
+            padding-left: 0;
+        }
+
+        #requirements li,
+        #confirm-requirements li {
+            list-style: none;
+            color: #ef4444;
+            font-size: 0.82rem;
+            line-height: 1.5;
+            display: flex;
+            align-items: center;
+            margin-bottom: 6px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        #requirements li.met,
+        #confirm-requirements li.met {
+            color: #16a34a;
+        }
+
+        #requirements li::before,
+        #confirm-requirements li::before {
+            content: "X";
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 16px;
+            height: 16px;
+            margin-right: 10px;
+            font-size: 10px;
+            border-radius: 50%;
+            flex-shrink: 0;
+            background-color: #fee2e2;
+            color: #ef4444;
+            border: 1px solid #fecaca;
+            transition: all 0.3s ease;
+        }
+
+        #requirements li.met::before,
+        #confirm-requirements li.met::before {
+            content: "✓";
+            background-color: #dcfce7;
+            color: #16a34a;
+            border: 1px solid #bbf7d0;
+        }
+
+        .input-error {
+            border: 1px solid #ef4444 !important;
+            background: #fff5f5 !important;
+        }
     </style>
 </head>
 
@@ -529,7 +615,8 @@ unset($_SESSION['backup_codes']);
             <div class="section-header">
                 <span class="subtitle">Account Security</span>
                 <h2>Security Settings</h2>
-                <p>Manage your password and two-factor authentication with the same polished style used across the Alumni Portal.</p>
+                <p>Manage your password and two-factor authentication with the same polished style used across the
+                    Alumni Portal.</p>
             </div>
 
             <?php if ($message): ?>
@@ -543,25 +630,50 @@ unset($_SESSION['backup_codes']);
                         <div class="form-group">
                             <label for="current_password">Current Password</label>
                             <div class="password-box">
-                                <input type="password" id="current_password" name="current_password" placeholder="Current Password" autocomplete="current-password" required>
+                                <input type="password" id="current_password" name="current_password"
+                                    placeholder="Current Password" autocomplete="current-password" required>
                                 <span class="password-toggle" onclick="togglePassword('current_password')">Show</span>
                             </div>
                         </div>
 
                         <div class="form-group">
                             <label for="new_password">New Password</label>
+
                             <div class="password-box">
-                                <input type="password" id="new_password" name="new_password" placeholder="New Password" autocomplete="new-password" required>
-                                <span class="password-toggle" onclick="togglePassword('new_password')">Show</span>
+                                <input type="password" id="new_password" name="new_password" placeholder="New Password"
+                                    autocomplete="new-password" required oninput="validatePassword()">
+
+                                <span class="password-toggle" onclick="togglePassword('new_password')">
+                                    Show
+                                </span>
                             </div>
+
+                            <ul id="requirements">
+                                <li id="req-length">At least 8 and max 20 characters</li>
+                                <li id="req-upper">At least one uppercase letter</li>
+                                <li id="req-lower">At least one lowercase letter</li>
+                                <li id="req-number">At least one number</li>
+                                <li id="req-special">At least one special character (!@#$...)</li>
+                                <li id="req-space">No spaces</li>
+                            </ul>
                         </div>
 
                         <div class="form-group">
                             <label for="confirm_password">Confirm Password</label>
+
                             <div class="password-box">
-                                <input type="password" id="confirm_password" name="confirm_password" placeholder="Confirm Password" autocomplete="new-password" required>
-                                <span class="password-toggle" onclick="togglePassword('confirm_password')">Show</span>
+                                <input type="password" id="confirm_password" name="confirm_password"
+                                    placeholder="Confirm Password" autocomplete="new-password" required
+                                    oninput="validateConfirm()">
+
+                                <span class="password-toggle" onclick="togglePassword('confirm_password')">
+                                    Show
+                                </span>
                             </div>
+
+                            <ul id="confirm-requirements">
+                                <li id="req-match">Passwords must match</li>
+                            </ul>
                         </div>
 
                         <div class="security-actions">
@@ -588,7 +700,8 @@ unset($_SESSION['backup_codes']);
                         );
                         ?>
                         <div class="security-qr">
-                            <img src="https://api.qrserver.com/v1/create-qr-code/?size=240x240&data=<?= urlencode($qr) ?>" alt="2FA QR code">
+                            <img src="https://api.qrserver.com/v1/create-qr-code/?size=240x240&data=<?= urlencode($qr) ?>"
+                                alt="2FA QR code">
                             <div>
                                 <p>Scan this QR code with your authenticator app, or enter the manual key below.</p>
                                 <div class="security-qr-key"><?= htmlspecialchars($user['twofa_secret']) ?></div>
@@ -639,6 +752,53 @@ unset($_SESSION['backup_codes']);
         function togglePassword(id) {
             const input = document.getElementById(id);
             input.type = input.type === 'password' ? 'text' : 'password';
+        }
+
+        function validatePassword() {
+            var pass = document.getElementById("new_password").value;
+
+            var rules = {
+                "req-length": pass.length >= 8 && pass.length <= 20,
+                "req-upper": /[A-Z]/.test(pass),
+                "req-lower": /[a-z]/.test(pass),
+                "req-number": /[0-9]/.test(pass),
+                "req-special": /[!@#$%^&*(),.?":{}|<>]/.test(pass),
+                "req-space": !/\s/.test(pass),
+            };
+
+            for (var key in rules) {
+                var el = document.getElementById(key);
+
+                if (el) {
+                    el.classList.toggle("met", rules[key]);
+                }
+            }
+
+            var allMet = Object.values(rules).every(Boolean);
+
+            document
+                .getElementById("new_password")
+                .classList.toggle("input-error", !allMet && pass.length > 0);
+
+            validateConfirm();
+        }
+
+        function validateConfirm() {
+            var pass = document.getElementById("new_password").value;
+
+            var confirm = document.getElementById("confirm_password").value;
+
+            var match = confirm.length > 0 && pass === confirm;
+
+            var el = document.getElementById("req-match");
+
+            if (el) {
+                el.classList.toggle("met", match);
+            }
+
+            document
+                .getElementById("confirm_password")
+                .classList.toggle("input-error", !match && confirm.length > 0);
         }
     </script>
 </body>
