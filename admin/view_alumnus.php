@@ -2,6 +2,7 @@
     session_start();
     include("../backend/db_admin.php");
 
+    include("includes/flash.php");
     /*
     |-------------------------------------------------
     | SESSION CHECK
@@ -21,6 +22,7 @@
     |-------------------------------------------------
     */
     if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
+        flash("error", "Invalid Request", "Missing or invalid alumni ID.");
         header("Location: all_alumni.php");
         exit();
     }
@@ -72,13 +74,40 @@
     ";
 
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("i", $vid);
-    $stmt->execute();
+    if (!$stmt) {
+        flash("error", "Database Error", "Failed to prepare alumni query.");
+        header("Location: all_alumni.php");
+        exit();
+    }
+
+    if (!$stmt->bind_param("i", $vid)) {
+        flash("error", "Database Error", "Failed to bind parameters.");
+        header("Location: all_alumni.php");
+        exit();
+    }
+
+    if (!$stmt->execute()) {
+        flash("error", "Database Error", "Failed to execute query.");
+        header("Location: all_alumni.php");
+        exit();
+    }
 
     $result = $stmt->get_result();
-    $row = $result->fetch_assoc();
 
+    if (!$result) {
+        flash("error", "Database Error", "Failed to fetch result.");
+        header("Location: all_alumni.php");
+        exit();
+    }
+
+    $row = $result->fetch_assoc();
     $stmt->close();
+
+    if (!$row) {
+        flash("warning", "Not Found", "Alumni record does not exist.");
+        header("Location: all_alumni.php");
+        exit();
+    }
 
     /*
 |-------------------------------------------------
@@ -273,6 +302,7 @@
             <?php include("includes/footer.php"); ?>
 
         </div>
+        <?php include("includes/flash-swal.php"); ?>
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <script>
             function logout(event) {

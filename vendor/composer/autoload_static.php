@@ -7,60 +7,21 @@ namespace Composer\Autoload;
 class ComposerStaticInit5003a2117afcbf320b8eb083135ed3f5
 {
     public static $prefixLengthsPsr4 = array (
-        'Z' =>
-        array (
-            'ZipStream\\' => 10,
-        ),
         'P' =>
         array (
-            'Psr\\SimpleCache\\' => 16,
             'PragmaRX\\Google2FA\\' => 19,
-            'PhpOffice\\PhpSpreadsheet\\' => 25,
             'ParagonIE\\ConstantTime\\' => 23,
-        ),
-        'M' =>
-        array (
-            'Matrix\\' => 7,
-        ),
-        'C' =>
-        array (
-            'Composer\\Pcre\\' => 14,
-            'Complex\\' => 8,
         ),
     );
 
     public static $prefixDirsPsr4 = array (
-        'ZipStream\\' =>
-        array (
-            0 => __DIR__ . '/..' . '/maennchen/zipstream-php/src',
-        ),
-        'Psr\\SimpleCache\\' =>
-        array (
-            0 => __DIR__ . '/..' . '/psr/simple-cache/src',
-        ),
         'PragmaRX\\Google2FA\\' =>
         array (
             0 => __DIR__ . '/..' . '/pragmarx/google2fa/src',
         ),
-        'PhpOffice\\PhpSpreadsheet\\' =>
-        array (
-            0 => __DIR__ . '/..' . '/phpoffice/phpspreadsheet/src/PhpSpreadsheet',
-        ),
         'ParagonIE\\ConstantTime\\' =>
         array (
             0 => __DIR__ . '/..' . '/paragonie/constant_time_encoding/src',
-        ),
-        'Matrix\\' =>
-        array (
-            0 => __DIR__ . '/..' . '/markbaker/matrix/classes/src',
-        ),
-        'Composer\\Pcre\\' =>
-        array (
-            0 => __DIR__ . '/..' . '/composer/pcre/src',
-        ),
-        'Complex\\' =>
-        array (
-            0 => __DIR__ . '/..' . '/markbaker/complex/classes/src',
         ),
     );
 

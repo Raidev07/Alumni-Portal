@@ -2,6 +2,8 @@
 include("../backend/db_admin.php");
 session_start();
 
+include("includes/flash.php");
+
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
     header("Location: ../login.php");
     exit();
@@ -37,7 +39,9 @@ if (isset($_GET['id'])) {
 }
 
 if (!$alumni_user_id) {
-    die("Invalid alumni selected.");
+    flash("error", "Invalid", "Alumni not found or invalid selection.");
+    header("Location: dashboard.php");
+    exit();
 }
 
 /*
@@ -143,7 +147,9 @@ if (isset($_POST['publish_story'])) {
     | INSERT
     */
     if (empty($title) || empty($alumni_name) || empty($year_graduated) || empty($content)) {
-        $error = "Please fill in required fields.";
+        flash("warning", "Missing Fields", "Please fill in all required fields.");
+        header("Location: create_story.php?id=" . $alumni_id);
+        exit();
     } else {
 
         $stmt = $conn->prepare("
@@ -165,10 +171,13 @@ if (isset($_POST['publish_story'])) {
         );
 
         if ($stmt->execute()) {
-            header("Location: dashboard.php?story=success");
+            flash("success", "Published!", "Story published successfully.");
+            header("Location: dashboard.php");
             exit();
         } else {
-            $error = "Failed to publish story.";
+            flash("error", "Error", "Failed to publish story.");
+            header("Location: create_story.php?id=" . $alumni_id);
+            exit();
         }
 
         $stmt->close();
@@ -180,7 +189,7 @@ if (isset($_POST['publish_story'])) {
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Create Story | Alumni Association</title>
 
@@ -229,10 +238,6 @@ if (isset($_POST['publish_story'])) {
                                 <div class="card-header">
                                     <div class="card-title">Write Alumni Achievement Story</div>
                                 </div>
-
-                                <?php if (isset($error)) : ?>
-                                    <div class="alert alert-danger m-3"><?= $error ?></div>
-                                <?php endif; ?>
 
                                 <form method="POST" enctype="multipart/form-data">
 
@@ -306,7 +311,29 @@ if (isset($_POST['publish_story'])) {
 
     </div>
 
+    <?php include("includes/flash-swal.php"); ?>
     <script src="js/write_article.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        function logout(event) {
+            event.preventDefault();
+
+            Swal.fire({
+                title: "Are you sure?",
+                text: "You will be logged out.",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#dc3545",
+                cancelButtonColor: "#6c757d",
+                confirmButtonText: "Yes, log out",
+                cancelButtonText: "Cancel"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = "../logout.php";
+                }
+            });
+        }
+    </script>
 </body>
 
 </html>

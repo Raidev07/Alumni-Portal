@@ -226,6 +226,29 @@ if (!empty($_SESSION['first_name'])) {
 
     </div>
 
+    <!-- ERROR MODAL -->
+    <div class="error-overlay hidden" id="errorOverlay">
+
+        <div class="error-modal">
+
+            <div class="error-icon">
+                <i class="fa-solid fa-circle-exclamation"></i>
+            </div>
+
+            <h2>Error</h2>
+
+            <p id="errorMessage">
+                Something went wrong.
+            </p>
+
+            <button id="closeErrorBtn">
+                OK
+            </button>
+
+        </div>
+
+    </div>
+
     <!-- MAIN PAGE -->
     <div class="page">
         <div class="top-row">
@@ -307,30 +330,6 @@ if (!empty($_SESSION['first_name'])) {
 
     </div>
 
-    <!-- ERROR MODAL -->
-    <div class="overlay hidden" id="errorOverlay">
-
-        <div class="modal delete-modal">
-
-            <div class="modal-header">
-                <h2>Error</h2>
-
-                <p id="errorMessage">
-                    End time must be later than the start time.
-                </p>
-            </div>
-
-            <div class="modal-footer">
-
-                <button class="btn-back" id="closeErrorBtn">
-                    OK
-                </button>
-
-            </div>
-
-        </div>
-
-    </div>
     <?php include('includes/logoutmodal.php'); ?>
 
     <script src="assets/js/alumni_homepage.js"></script>

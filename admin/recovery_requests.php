@@ -2,6 +2,8 @@
 include("../backend/db_admin.php");
 session_start();
 
+include("includes/flash.php");
+
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
     header("Location: ../login.php");
     exit();
@@ -59,17 +61,33 @@ unset($_SESSION['recovery_msg']);
                         <div class="card-body">
 
                             <?php
-                            $stmt = $conn->prepare("
-                                        SELECT r.id, r.reason, r.status, r.created_at, u.email
-                                        FROM recovery_requests r
-                                        JOIN users u ON u.id = r.user_id
-                                        ORDER BY r.id DESC
-                                    ");
-                            $stmt->execute();
-                            $result = $stmt->get_result();
+                            $error = "";
+                            $result = null;
+
+                            $sql = "
+                                    SELECT r.id, r.reason, r.status, r.created_at, u.email
+                                    FROM recovery_requests r
+                                    JOIN users u ON u.id = r.user_id
+                                    ORDER BY r.id DESC
+                                ";
+
+                            $stmt = $conn->prepare($sql);
+
+                            if (!$stmt) {
+                                $error = "Database error: " . $conn->error;
+                            } else {
+
+                                if (!$stmt->execute()) {
+                                    $error = "Failed to execute query.";
+                                } else {
+                                    $result = $stmt->get_result();
+                                }
+
+                                $stmt->close();
+                            }
                             ?>
 
-                            <table class="table table-bordered">
+                            <table class="table table-bordered" id="table-data">
                                 <thead>
                                     <tr>
                                         <th>Email</th>
@@ -81,44 +99,66 @@ unset($_SESSION['recovery_msg']);
                                 </thead>
 
                                 <tbody>
-                                    <?php while ($row = $result->fetch_assoc()): ?>
+
+                                    <?php if (!empty($error)): ?>
+
                                         <tr>
-                                            <td><?= htmlspecialchars($row['email']) ?></td>
-                                            <td><?= htmlspecialchars($row['reason']) ?></td>
-
-                                            <td>
-                                                <?php if ($row['status'] === 'pending'): ?>
-                                                    <span style="color:orange;">Pending</span>
-                                                <?php elseif ($row['status'] === 'approved'): ?>
-                                                    <span style="color:green;">Approved</span>
-                                                <?php else: ?>
-                                                    <span style="color:red;">Rejected</span>
-                                                <?php endif; ?>
-                                            </td>
-
-                                            <td><?= $row['created_at'] ?></td>
-
-                                            <td>
-                                                <?php if ($row['status'] === 'pending'): ?>
-
-                                                    <form method="POST" action="recovery_action.php" style="display:inline;">
-                                                        <input type="hidden" name="id" value="<?= $row['id'] ?>">
-                                                        <input type="hidden" name="action" value="approve">
-                                                        <button class="btn btn-success btn-sm">Approve</button>
-                                                    </form>
-
-                                                    <form method="POST" action="recovery_action.php" style="display:inline;">
-                                                        <input type="hidden" name="id" value="<?= $row['id'] ?>">
-                                                        <input type="hidden" name="action" value="reject">
-                                                        <button class="btn btn-danger btn-sm">Reject</button>
-                                                    </form>
-
-                                                <?php else: ?>
-                                                    <small>Done</small>
-                                                <?php endif; ?>
+                                            <td colspan="5" class="text-center text-danger">
+                                                <?= htmlspecialchars($error) ?>
                                             </td>
                                         </tr>
-                                    <?php endwhile; ?>
+
+                                    <?php elseif ($result && $result->num_rows > 0): ?>
+
+                                        <?php while ($row = $result->fetch_assoc()): ?>
+                                            <tr>
+                                                <td><?= htmlspecialchars($row['email']) ?></td>
+                                                <td><?= htmlspecialchars($row['reason']) ?></td>
+
+                                                <td>
+                                                    <?php if ($row['status'] === 'pending'): ?>
+                                                        <span style="color:orange;">Pending</span>
+                                                    <?php elseif ($row['status'] === 'approved'): ?>
+                                                        <span style="color:green;">Approved</span>
+                                                    <?php else: ?>
+                                                        <span style="color:red;">Rejected</span>
+                                                    <?php endif; ?>
+                                                </td>
+
+                                                <td><?= htmlspecialchars($row['created_at']) ?></td>
+
+                                                <td>
+                                                    <?php if ($row['status'] === 'pending'): ?>
+
+                                                        <form method="POST" action="recovery_action.php" style="display:inline;">
+                                                            <input type="hidden" name="id" value="<?= $row['id'] ?>">
+                                                            <input type="hidden" name="action" value="approve">
+                                                            <button class="btn btn-success btn-sm">Approve</button>
+                                                        </form>
+
+                                                        <form method="POST" action="recovery_action.php" style="display:inline;">
+                                                            <input type="hidden" name="id" value="<?= $row['id'] ?>">
+                                                            <input type="hidden" name="action" value="reject">
+                                                            <button class="btn btn-danger btn-sm">Reject</button>
+                                                        </form>
+
+                                                    <?php else: ?>
+                                                        <small>Done</small>
+                                                    <?php endif; ?>
+                                                </td>
+                                            </tr>
+                                        <?php endwhile; ?>
+
+                                    <?php else: ?>
+
+                                        <tr>
+                                            <td colspan="5" class="text-center text-muted">
+                                                No recovery requests found.
+                                            </td>
+                                        </tr>
+
+                                    <?php endif; ?>
+
                                 </tbody>
 
                             </table>
@@ -134,29 +174,29 @@ unset($_SESSION['recovery_msg']);
         <?php include("includes/footer.php"); ?>
 
     </div>
+
+    <?php include("includes/flash-swal.php"); ?>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <?php if (!empty($error)): ?>
-        <script>
-            document.addEventListener("DOMContentLoaded", function() {
-                let toast = document.createElement("div");
-                toast.innerText = "<?= $error ?>";
+    <script>
+        function logout(event) {
+            event.preventDefault();
 
-                toast.style.position = "fixed";
-                toast.style.top = "20px";
-                toast.style.right = "20px";
-                toast.style.background = "#dc3545";
-                toast.style.color = "white";
-                toast.style.padding = "12px 18px";
-                toast.style.borderRadius = "6px";
-                toast.style.zIndex = "9999";
-                toast.style.fontSize = "14px";
-
-                document.body.appendChild(toast);
-
-                setTimeout(() => toast.remove(), 3000);
+            Swal.fire({
+                title: "Are you sure?",
+                text: "You will be logged out.",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#dc3545",
+                cancelButtonColor: "#6c757d",
+                confirmButtonText: "Yes, log out",
+                cancelButtonText: "Cancel"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = "../logout.php";
+                }
             });
-        </script>
-    <?php endif; ?>
+        }
+    </script>
 </body>
 
 </html>

@@ -2,6 +2,7 @@
 include("../backend/db_admin.php");
 session_start();
 
+include("includes/flash.php");
 /*
 |--------------------------------------------------------------------------
 | ADMIN CHECK
@@ -27,7 +28,12 @@ $baseFile = basename($_SERVER['PHP_SELF']);
 | FILTER SYSTEM
 |--------------------------------------------------------------------------
 */
+$allowedFilters = ['all', 'open', 'in_progress', 'resolved'];
 $filter = $_GET['filter'] ?? 'all';
+
+if (!in_array($filter, $allowedFilters)) {
+    $filter = 'all';
+}
 
 if ($filter === 'resolved') {
 
@@ -63,6 +69,11 @@ if ($filter === 'resolved') {
 }
 
 $ret = mysqli_query($conn, $query);
+
+if (!$ret) {
+    flash("error", "Database Error", "Failed to load tickets. Please try again.");
+    $ret = false;
+}
 ?>
 
 <!DOCTYPE html>
@@ -211,80 +222,89 @@ $ret = mysqli_query($conn, $query);
                         <div class="card-body p-0">
 
                             <div class="table-responsive">
+                                <?php if ($ret === false): ?>
+                                    <div class="p-3 text-danger">
+                                        Unable to load tickets due to a system error.
+                                    </div>
+                                <?php elseif (mysqli_num_rows($ret) === 0): ?>
+                                    <div class="p-3 text-muted text-center">
+                                        No tickets found.
+                                    </div>
+                                <?php else: ?>
 
-                                <table class="table table-striped table-hover">
+                                    <table class="table table-striped table-hover" id="table-data">
 
-                                    <thead>
-                                        <tr>
-                                            <th>ID</th>
-                                            <th>Full Name</th>
-                                            <th>Email</th>
-                                            <th>Subject</th>
-                                            <th>Status</th>
-                                            <th>Date</th>
-                                            <th>Action</th>
-                                        </tr>
-                                    </thead>
+                                        <thead>
+                                            <tr>
+                                                <th>ID</th>
+                                                <th>Full Name</th>
+                                                <th>Email</th>
+                                                <th>Subject</th>
+                                                <th>Status</th>
+                                                <th>Date</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
 
-                                    <tbody>
+                                        <tbody>
 
-                                        <?php if ($ret && mysqli_num_rows($ret) > 0): ?>
+                                            <?php if ($ret && mysqli_num_rows($ret) > 0): ?>
 
-                                            <?php while ($row = mysqli_fetch_assoc($ret)): ?>
+                                                <?php while ($row = mysqli_fetch_assoc($ret)): ?>
+
+                                                    <tr>
+
+                                                        <td>#<?= $row['id'] ?></td>
+
+                                                        <td><?= htmlspecialchars($row['full_name']) ?></td>
+
+                                                        <td><?= htmlspecialchars($row['email']) ?></td>
+
+                                                        <td><?= htmlspecialchars($row['subject']) ?></td>
+
+                                                        <td>
+
+                                                            <?php if ($row['status'] == 'open'): ?>
+                                                                <span class="badge badge-open">Open</span>
+
+                                                            <?php elseif ($row['status'] == 'in_progress'): ?>
+                                                                <span class="badge badge-progress">In Progress</span>
+
+                                                            <?php else: ?>
+                                                                <span class="badge badge-resolved">Resolved</span>
+                                                            <?php endif; ?>
+
+                                                        </td>
+
+                                                        <td>
+                                                            <?= date("M d, Y h:i A", strtotime($row['created_at'])) ?>
+                                                        </td>
+
+                                                        <td>
+                                                            <a href="view_ticket.php?id=<?= $row['id'] ?>"
+                                                                class="btn btn-sm btn-primary">
+                                                                View
+                                                            </a>
+                                                        </td>
+
+                                                    </tr>
+
+                                                <?php endwhile; ?>
+
+                                            <?php else: ?>
 
                                                 <tr>
-
-                                                    <td>#<?= $row['id'] ?></td>
-
-                                                    <td><?= htmlspecialchars($row['full_name']) ?></td>
-
-                                                    <td><?= htmlspecialchars($row['email']) ?></td>
-
-                                                    <td><?= htmlspecialchars($row['subject']) ?></td>
-
-                                                    <td>
-
-                                                        <?php if ($row['status'] == 'open'): ?>
-                                                            <span class="badge badge-open">Open</span>
-
-                                                        <?php elseif ($row['status'] == 'in_progress'): ?>
-                                                            <span class="badge badge-progress">In Progress</span>
-
-                                                        <?php else: ?>
-                                                            <span class="badge badge-resolved">Resolved</span>
-                                                        <?php endif; ?>
-
+                                                    <td colspan="7" class="text-center text-danger">
+                                                        No tickets found.
                                                     </td>
-
-                                                    <td>
-                                                        <?= date("M d, Y h:i A", strtotime($row['created_at'])) ?>
-                                                    </td>
-
-                                                    <td>
-                                                        <a href="view_ticket.php?id=<?= $row['id'] ?>"
-                                                            class="btn btn-sm btn-primary">
-                                                            View
-                                                        </a>
-                                                    </td>
-
                                                 </tr>
 
-                                            <?php endwhile; ?>
+                                            <?php endif; ?>
 
-                                        <?php else: ?>
+                                        </tbody>
 
-                                            <tr>
-                                                <td colspan="7" class="text-center text-danger">
-                                                    No tickets found.
-                                                </td>
-                                            </tr>
-
-                                        <?php endif; ?>
-
-                                    </tbody>
-
-                                </table>
-
+                                    </table>
+                                <?php endif; ?>
                             </div>
 
                         </div>
@@ -300,6 +320,7 @@ $ret = mysqli_query($conn, $query);
 
     </div>
 
+    <?php include("includes/flash-swal.php"); ?>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         function logout(event) {
@@ -321,52 +342,6 @@ $ret = mysqli_query($conn, $query);
             });
         }
     </script>
-    <?php if (!empty($success)): ?>
-        <script>
-            document.addEventListener("DOMContentLoaded", function() {
-                let toast = document.createElement("div");
-                toast.innerText = "<?= $success ?>";
-
-                toast.style.position = "fixed";
-                toast.style.top = "20px";
-                toast.style.right = "20px";
-                toast.style.background = "#28a745";
-                toast.style.color = "white";
-                toast.style.padding = "12px 18px";
-                toast.style.borderRadius = "6px";
-                toast.style.zIndex = "9999";
-                toast.style.fontSize = "14px";
-
-                document.body.appendChild(toast);
-
-                setTimeout(() => toast.remove(), 3000);
-            });
-        </script>
-    <?php endif; ?>
-
-
-    <?php if (!empty($error)): ?>
-        <script>
-            document.addEventListener("DOMContentLoaded", function() {
-                let toast = document.createElement("div");
-                toast.innerText = "<?= $error ?>";
-
-                toast.style.position = "fixed";
-                toast.style.top = "20px";
-                toast.style.right = "20px";
-                toast.style.background = "#dc3545";
-                toast.style.color = "white";
-                toast.style.padding = "12px 18px";
-                toast.style.borderRadius = "6px";
-                toast.style.zIndex = "9999";
-                toast.style.fontSize = "14px";
-
-                document.body.appendChild(toast);
-
-                setTimeout(() => toast.remove(), 3000);
-            });
-        </script>
-    <?php endif; ?>
 </body>
 
 </html>

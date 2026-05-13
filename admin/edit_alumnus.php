@@ -2,6 +2,7 @@
 include("../backend/db_admin.php");
 session_start();
 
+include("includes/flash.php");
 /*
 |--------------------------------------------------------------------------
 | SESSION CHECK
@@ -48,11 +49,9 @@ if (isset($_POST['update_alumni'])) {
     $sex             = trim($_POST['gender']);
     $status          = trim($_POST['status']);
 
-    /*
-    |--------------------------------------------------------------------------
-    | VALIDATION
-    |--------------------------------------------------------------------------
-    */
+    /* =========================
+       VALIDATION
+    ========================= */
     if (
         empty($first_name) ||
         empty($last_name) ||
@@ -62,85 +61,78 @@ if (isset($_POST['update_alumni'])) {
         empty($course_id) ||
         empty($year_graduated)
     ) {
-
-        $error = "Please fill in all required fields.";
-    } else {
-
-        /*
-|--------------------------------------------------------------------------
-| UPDATE QUERY
-|--------------------------------------------------------------------------
-*/
-
-        // admin bypass for trigger
-        mysqli_query($conn, "SET @is_admin = 1");
-
-        $query = "
-    UPDATE users u
-
-    INNER JOIN userprofile up
-        ON u.id = up.user_id
-
-    INNER JOIN alumnidetails ad
-        ON u.id = ad.user_id
-
-    SET
-        up.first_name = ?,
-        up.middle_name = ?,
-        up.last_name = ?,
-        up.contact_number = ?,
-        up.address = ?,
-        up.suffix = ?,
-        up.birthdate = ?,
-        up.gender = ?,
-        u.email = ?,
-        u.status = ?,
-        ad.student_number = ?,
-        ad.course_id = ?,
-        ad.year_graduated = ?
-
-    WHERE ad.alumni_id = ?
-";
-
-        $stmt = $conn->prepare($query);
-
-        $stmt->bind_param(
-            "sssssssssssssi",
-            $first_name,
-            $middle_name,
-            $last_name,
-            $contact_number,
-            $address,
-            $suffix,
-            $birth_date,
-            $sex,
-            $email,
-            $status,
-            $student_number,
-            $course_id,
-            $year_graduated,
-            $alumni_id
-        );
-
-        try {
-            $conn->query("SET @is_admin = 1");
-
-            if ($stmt->execute()) {
-
-                $conn->query("SET @is_admin = 0");
-
-                header("Location: all_alumni.php?update=success");
-                exit();
-            }
-        } catch (mysqli_sql_exception $e) {
-
-            $conn->query("SET @is_admin = 0");
-
-            $error = $e->getMessage();
-        }
-
-        $stmt->close();
+        flash("error", "Validation Error", "Please fill in all required fields.");
+        exit();
     }
+
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        flash("error", "Invalid Email", "Please enter a valid email address.");
+        exit();
+    }
+
+    /* =========================
+       UPDATE QUERY
+    ========================= */
+
+    $conn->query("SET @is_admin = 1");
+
+    $query = "
+        UPDATE users u
+        INNER JOIN userprofile up ON u.id = up.user_id
+        INNER JOIN alumnidetails ad ON u.id = ad.user_id
+        SET
+            up.first_name = ?,
+            up.middle_name = ?,
+            up.last_name = ?,
+            up.contact_number = ?,
+            up.address = ?,
+            up.suffix = ?,
+            up.birthdate = ?,
+            up.gender = ?,
+            u.email = ?,
+            u.status = ?,
+            ad.student_number = ?,
+            ad.course_id = ?,
+            ad.year_graduated = ?
+        WHERE ad.alumni_id = ?
+    ";
+
+    $stmt = $conn->prepare($query);
+
+    if (!$stmt) {
+        flash("error", "Database Error", "Failed to prepare query.");
+        exit();
+    }
+
+    $stmt->bind_param(
+        "sssssssssssssi",
+        $first_name,
+        $middle_name,
+        $last_name,
+        $contact_number,
+        $address,
+        $suffix,
+        $birth_date,
+        $sex,
+        $email,
+        $status,
+        $student_number,
+        $course_id,
+        $year_graduated,
+        $alumni_id
+    );
+
+    if (!$stmt->execute()) {
+        $conn->query("SET @is_admin = 0");
+        flash("error", "Update Failed", "Database error: " . $stmt->error);
+        exit();
+    }
+
+    $conn->query("SET @is_admin = 0");
+
+    flash("success", "Success", "Alumni updated successfully!");
+    header("Location: all_alumni.php");
+    exit();
 }
 
 /*
@@ -243,9 +235,7 @@ if (!$row) {
                                     <div class="card-header">
                                         <div class="card-title">Alumnus details are shown here</div>
                                     </div>
-                                    <?php if (isset($error)) : ?>
-                                        <div class="alert alert-danger m-3"><?php echo $error; ?></div>
-                                    <?php endif; ?>
+
                                     <form method="POST">
                                         <div class="card-body">
 
@@ -410,9 +400,10 @@ if (!$row) {
         <?php include("includes/footer.php"); ?>
 
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="js/regis_script.js"></script>
 
+    <?php include("includes/flash-swal.php"); ?>
+    <script src="js/regis_script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         function logout(event) {
             event.preventDefault();

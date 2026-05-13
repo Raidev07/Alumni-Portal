@@ -2,6 +2,7 @@
 include("../backend/db_admin.php");
 session_start();
 
+include("includes/flash.php");
 /*
 |--------------------------------------------------------------------------
 | ADMIN CHECK
@@ -44,7 +45,9 @@ $stmt->execute();
 $ticket = $stmt->get_result()->fetch_assoc();
 
 if (!$ticket) {
-    die("Ticket not found.");
+    flash("error", "Not Found", "Ticket does not exist.");
+    header("Location: tickets.php");
+    exit();
 }
 
 /*
@@ -88,6 +91,7 @@ if (isset($_POST['send_reply'])) {
             WHERE id='$ticket_id'
         ");
 
+        flash("success", "Reply Sent", "Your response was sent successfully.");
         header("Location: view_ticket.php?id=$ticket_id");
         exit();
     }
@@ -111,6 +115,7 @@ if (isset($_POST['update_status'])) {
     $stmt->bind_param("si", $status, $ticket_id);
     $stmt->execute();
 
+    flash("success", "Updated", "Ticket status updated successfully.");
     header("Location: view_ticket.php?id=$ticket_id");
     exit();
 }
@@ -364,6 +369,7 @@ $replies = mysqli_query($conn, "
 
     </div>
 
+    <?php include("includes/flash-swal.php"); ?>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         function logout(event) {
@@ -385,51 +391,7 @@ $replies = mysqli_query($conn, "
             });
         }
     </script>
-    <?php if (!empty($success)): ?>
-        <script>
-            document.addEventListener("DOMContentLoaded", function() {
-                let toast = document.createElement("div");
-                toast.innerText = "<?= $success ?>";
 
-                toast.style.position = "fixed";
-                toast.style.top = "20px";
-                toast.style.right = "20px";
-                toast.style.background = "#28a745";
-                toast.style.color = "white";
-                toast.style.padding = "12px 18px";
-                toast.style.borderRadius = "6px";
-                toast.style.zIndex = "9999";
-                toast.style.fontSize = "14px";
-
-                document.body.appendChild(toast);
-
-                setTimeout(() => toast.remove(), 3000);
-            });
-        </script>
-    <?php endif; ?>
-
-    <?php if (!empty($error)): ?>
-        <script>
-            document.addEventListener("DOMContentLoaded", function() {
-                let toast = document.createElement("div");
-                toast.innerText = "<?= $error ?>";
-
-                toast.style.position = "fixed";
-                toast.style.top = "20px";
-                toast.style.right = "20px";
-                toast.style.background = "#dc3545";
-                toast.style.color = "white";
-                toast.style.padding = "12px 18px";
-                toast.style.borderRadius = "6px";
-                toast.style.zIndex = "9999";
-                toast.style.fontSize = "14px";
-
-                document.body.appendChild(toast);
-
-                setTimeout(() => toast.remove(), 3000);
-            });
-        </script>
-    <?php endif; ?>
 </body>
 
 </html>

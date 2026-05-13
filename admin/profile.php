@@ -2,6 +2,7 @@
 include("../backend/db_admin.php");
 session_start();
 
+include("includes/flash.php");
 /*
 |-------------------------------------------------
 | SESSION CHECK
@@ -144,6 +145,7 @@ $conn->close();
 
     </div>
 
+    <?php include("includes/flash-swal.php"); ?>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         function logout(event) {

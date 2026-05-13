@@ -179,13 +179,12 @@ if (studentId) {
 // ========================
 // Reset Form
 // ========================
-
 function resetRegistrationForm() {
     const form = document.querySelector("form");
 
     form.reset();
 
-    // Remove readonly
+    // Unlock readonly fields
     const lockFields = ["firstName", "middleName", "lastName", "birthdate"];
 
     lockFields.forEach((id) => {
@@ -193,43 +192,84 @@ function resetRegistrationForm() {
 
         if (field) {
             field.readOnly = false;
-            field.classList.remove("readonly-valid", "input-error");
+            field.value = "";
+
+            field.classList.remove(
+                "readonly-valid",
+                "input-error",
+                "locked-field",
+            );
+
+            field.style.borderColor = "";
+            field.style.boxShadow = "";
+            field.style.backgroundColor = "";
         }
     });
 
-    // Unlock selects
+    // Unlock select fields
     ["course", "suffix", "yearGraduated"].forEach((id) => {
         const field = document.getElementById(id);
 
         if (field) {
             field.style.pointerEvents = "";
-            field.classList.remove("locked-field", "input-error");
+            field.value = "";
+
+            field.classList.remove(
+                "locked-field",
+                "readonly-valid",
+                "input-error",
+            );
+
+            field.style.borderColor = "";
+            field.style.boxShadow = "";
+            field.style.backgroundColor = "";
         }
     });
 
-    // Unlock sex
+    // Unlock sex section
     const sexDetails = document.querySelector(".sex__details");
 
     if (sexDetails) {
         sexDetails.style.pointerEvents = "";
         sexDetails.classList.remove("sex-locked");
+
+        const category = sexDetails.querySelector(".category");
+
+        if (category) {
+            category.classList.remove("sex-error");
+            category.style.borderColor = "";
+            category.style.boxShadow = "";
+            category.style.backgroundColor = "";
+        }
     }
 
-    // Remove sex error
-    document
-        .querySelector(".sex__details .category")
-        .classList.remove("sex-error");
+    // Hide sex warning
+    const sexWarning = document.getElementById("sexWarning");
 
-    document.getElementById("sexWarning").style.display = "none";
+    if (sexWarning) {
+        sexWarning.style.display = "none";
+    }
 
-    // Remove all error styles
-    form.querySelectorAll(".input-error").forEach((el) => {
-        el.classList.remove("input-error");
+    // Reset ALL inputs/selects CSS
+    const allFields = form.querySelectorAll("input, select");
+
+    allFields.forEach((field) => {
+        field.classList.remove("input-error", "readonly-valid", "locked-field");
+
+        field.style.borderColor = "";
+        field.style.boxShadow = "";
+        field.style.backgroundColor = "";
+
+        // Force browser validation refresh
+        field.dispatchEvent(new Event("input", { bubbles: true }));
+        field.dispatchEvent(new Event("change", { bubbles: true }));
     });
 
-    // Clear readonly-valid glow
-    form.querySelectorAll(".readonly-valid").forEach((el) => {
-        el.classList.remove("readonly-valid");
+    // Reset password requirement indicators
+    const requirements = document.querySelectorAll(".requirement");
+
+    requirements.forEach((req) => {
+        req.classList.remove("met");
     });
 }
 // ========================
@@ -317,6 +357,18 @@ document.addEventListener("DOMContentLoaded", function () {
     if (confirmPassword)
         confirmPassword.addEventListener("input", validateConfirm);
 
+    // ========================
+    // Name Validation (No Numbers)
+    // ========================
+    function allowLettersOnly(input) {
+        input.addEventListener("input", function () {
+            this.value = this.value.replace(/[^a-zA-Z\s]/g, "");
+        });
+    }
+
+    allowLettersOnly(document.getElementById("firstName"));
+    allowLettersOnly(document.getElementById("middleName"));
+    allowLettersOnly(document.getElementById("lastName"));
     // ========================
     // Remove error on focus
     // ========================
@@ -421,8 +473,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 if (data.success) {
                     showRegModal(
                         "✅",
-                        "Registration Successful!",
-                        "Your account has been created. You can now log in.",
+                        "Success!",
+                        "Your account has been created.<br><br>Your registration is being processed. Access will be granted within 2-3 business days.",
                         function () {
                             window.location.href = "login.php?registered=1";
                         },

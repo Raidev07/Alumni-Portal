@@ -15,6 +15,7 @@
                             </ul>
                         </li>
                         <li class="nav-item"> <a href="recovery_requests.php" class="nav-link <?= ($activePage == 'recovery_requests') ? 'active':''; ?>"> <i class="nav-icon bi bi-key"></i><p>View Recovery Requests</p></a></li>
+                        <li class="nav-item"> <a href="audit_logs.php" class="nav-link <?= ($activePage == 'audit_logs') ? 'active':''; ?>"> <i class="nav-icon bi bi-file-earmark-text"></i><p>Audit logs</p></a></li>
                         <li class="nav-item"> <a href="import_alumni.php" class="nav-link <?= ($activePage == 'import_alumni') ? 'active':''; ?>"> <i class="bi bi-box-arrow-in-down"></i><p>Import Alumni</p></a></li>
                         <li class="nav-item"> <a href="tickets.php" class="nav-link <?= ($activePage == 'tickets') ? 'active':''; ?>"> <i class="bi bi-ticket-perforated"></i><p>Support</p></a></li>
                         <li class="nav-item"> <a href="profile.php" class="nav-link <?= ($activePage == 'profile') ? 'active':''; ?>"> <i class="nav-icon bi bi-person"></i><p>Profile</p></a></li>

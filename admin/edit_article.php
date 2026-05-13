@@ -2,6 +2,7 @@
 include("../backend/db_admin.php");
 session_start();
 
+include("includes/flash.php");
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
     header("Location: ../login.php");
     exit();
@@ -30,13 +31,23 @@ $stmt = $conn->prepare("
     LIMIT 1
 ");
 
+if (!$stmt) {
+    flash("error", "Database Error", $conn->error);
+    exit();
+}
+
 $stmt->bind_param("i", $story_id);
-$stmt->execute();
+
+if (!$stmt->execute()) {
+    flash("error", "Database Error", $stmt->error);
+    exit();
+}
 
 $result = $stmt->get_result();
 
-if ($result->num_rows === 0) {
-    die("Story not found.");
+if (!$result || $result->num_rows === 0) {
+    flash("error", "Not Found", "Story does not exist.");
+    exit();
 }
 
 $story = $result->fetch_assoc();
@@ -49,12 +60,17 @@ $stmt->close();
 */
 if (isset($_POST['update_story'])) {
 
-    $title           = trim($_POST['title']);
-    $alumni_name     = trim($_POST['alumniName']);
-    $year_graduated  = trim($_POST['gradYear']);
-    $category        = trim($_POST['category']);
-    $excerpt         = trim($_POST['excerpt']);
-    $content         = trim($_POST['content']);
+    $title          = trim($_POST['title']);
+    $alumni_name    = trim($_POST['alumniName']);
+    $year_graduated = trim($_POST['gradYear']);
+    $category       = trim($_POST['category']);
+    $excerpt        = trim($_POST['excerpt']);
+    $content        = trim($_POST['content']);
+
+    if (empty($title) || empty($alumni_name) || empty($year_graduated) || empty($content)) {
+        flash("error", "Validation Error", "Required fields cannot be empty.");
+        return;
+    }
 
     $allowedCategories = [
         "Science & Research",
@@ -72,52 +88,56 @@ if (isset($_POST['update_story'])) {
         $category = "Other";
     }
 
-    /*
-    | KEEP OLD IMAGE
-    */
     $cover_image = $story['cover_image'];
 
     /*
-    | NEW IMAGE UPLOAD
+    | IMAGE UPLOAD ERROR HANDLING
     */
-    if (!empty($_FILES['coverImage']['name']) && $_FILES['coverImage']['error'] === 0) {
+    if (!empty($_FILES['coverImage']['name'])) {
 
-        $uploadDir = "../uploads/stories/";
+        if ($_FILES['coverImage']['error'] !== 0) {
+            flash("error", "Upload Error", "Image upload failed.");
+        } else {
 
-        if (!is_dir($uploadDir)) {
-            mkdir($uploadDir, 0777, true);
-        }
+            $uploadDir = "../uploads/stories/";
 
-        $fileName = uniqid() . "_" . basename($_FILES["coverImage"]["name"]);
-        $targetFile = $uploadDir . $fileName;
-
-        $allowedExt = ["jpg", "jpeg", "png", "webp"];
-        $ext = strtolower(pathinfo($_FILES["coverImage"]["name"], PATHINFO_EXTENSION));
-
-        if (in_array($ext, $allowedExt)) {
-
-            if (move_uploaded_file($_FILES["coverImage"]["tmp_name"], $targetFile)) {
-
-                $cover_image = "uploads/stories/" . $fileName;
+            if (!is_dir($uploadDir)) {
+                mkdir($uploadDir, 0777, true);
             }
+
+            $ext = strtolower(pathinfo($_FILES["coverImage"]["name"], PATHINFO_EXTENSION));
+            $allowedExt = ["jpg", "jpeg", "png", "webp"];
+
+            if (!in_array($ext, $allowedExt)) {
+                flash("error", "Invalid File", "Only JPG, PNG, WEBP allowed.");
+                return;
+            }
+
+            $fileName = uniqid() . "_" . basename($_FILES["coverImage"]["name"]);
+            $targetFile = $uploadDir . $fileName;
+
+            if (!move_uploaded_file($_FILES["coverImage"]["tmp_name"], $targetFile)) {
+                flash("error", "Upload Failed", "Could not save image.");
+                return;
+            }
+
+            $cover_image = "uploads/stories/" . $fileName;
         }
     }
 
     /*
-    | UPDATE DATABASE
+    | DATABASE UPDATE
     */
     $stmt = $conn->prepare("
         UPDATE alumnifeatured
-        SET
-            title = ?,
-            alumni_name = ?,
-            year_graduated = ?,
-            category = ?,
-            cover_image = ?,
-            excerpt = ?,
-            content = ?
+        SET title = ?, alumni_name = ?, year_graduated = ?, category = ?, cover_image = ?, excerpt = ?, content = ?
         WHERE id = ?
     ");
+
+    if (!$stmt) {
+        flash("error", "Database Error", $conn->error);
+        return;
+    }
 
     $stmt->bind_param(
         "sssssssi",
@@ -131,16 +151,16 @@ if (isset($_POST['update_story'])) {
         $story_id
     );
 
-    if ($stmt->execute()) {
-
-        header("Location: dashboard.php?update=success");
-        exit();
-    } else {
-
-        $error = "Failed to update story.";
+    if (!$stmt->execute()) {
+        flash("error", "Update Failed", $stmt->error);
+        return;
     }
 
     $stmt->close();
+
+    flash("success", "Updated", "Story updated successfully!");
+    header("Location: dashboard.php");
+    exit();
 }
 ?>
 
@@ -205,12 +225,6 @@ if (isset($_POST['update_story'])) {
                                         Edit Alumni Achievement Story
                                     </div>
                                 </div>
-
-                                <?php if (isset($error)) : ?>
-                                    <div class="alert alert-danger m-3">
-                                        <?= $error ?>
-                                    </div>
-                                <?php endif; ?>
 
                                 <form method="POST" enctype="multipart/form-data">
 
@@ -310,8 +324,8 @@ if (isset($_POST['update_story'])) {
                                                         Gaming
                                                     </option>
 
-                                                    <option value="Food and Hospitality"<?= $story['category'] == 'Food and Hospitality' ? 'selected' : '' ?>>Food and Hospitality</option>
-                                                    <option value="Other"<?= $story['category'] == 'Other' ? 'selected' : '' ?>>Other</option>
+                                                    <option value="Food and Hospitality" <?= $story['category'] == 'Food and Hospitality' ? 'selected' : '' ?>>Food and Hospitality</option>
+                                                    <option value="Other" <?= $story['category'] == 'Other' ? 'selected' : '' ?>>Other</option>
                                                 </select>
                                             </div>
 
@@ -357,6 +371,29 @@ if (isset($_POST['update_story'])) {
 
     </div>
 
+    <?php include("includes/flash-swal.php"); ?>
+    <script src="js/write_article.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        function logout(event) {
+            event.preventDefault();
+
+            Swal.fire({
+                title: "Are you sure?",
+                text: "You will be logged out.",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#dc3545",
+                cancelButtonColor: "#6c757d",
+                confirmButtonText: "Yes, log out",
+                cancelButtonText: "Cancel"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = "../logout.php";
+                }
+            });
+        }
+    </script>
 </body>
 
 </html>

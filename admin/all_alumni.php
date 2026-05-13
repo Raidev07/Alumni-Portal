@@ -2,6 +2,7 @@
 include("../backend/db_admin.php");
 session_start();
 
+include("includes/flash.php");
 /*
 |--------------------------------------------------------------------------
 | SESSION CHECK (USING role FROM DATABASE)
@@ -370,12 +371,15 @@ if (isset($_GET['archive_id'])) {
 
     </div>
 
+    <?php include("includes/flash-swal.php"); ?>
+
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         function autoFilter() {
             document.getElementById('filterForm').submit();
         }
     </script>
+
     <script>
         function logout(event) {
             event.preventDefault();

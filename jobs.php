@@ -57,7 +57,7 @@
         const SESSION_LOGGED_IN = <?= $isLoggedIn ? 'true' : 'false' ?>;
         const SESSION_USER_ID = <?= $userId ?>;
         const SESSION_USER_NAME =
-    <?= json_encode($userName) ?>;
+            <?= json_encode($userName) ?>;
     </script>
 
 
@@ -91,8 +91,23 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="f-salary">Salary Range</label>
-                    <input id="f-salary" type="text" placeholder="e.g. 30,000 – 50,000">
+                    <label>Salary Range</label>
+
+                    <div class="salary-inline">
+
+                        <div class="salary-field">
+                            <input id="f-salary-min" type="text" placeholder="Min Salary">
+                            <small class="field-error" id="f-salary-min-error"></small>
+                        </div>
+
+                        <span class="salary-separator">-</span>
+
+                        <div class="salary-field">
+                            <input id="f-salary-max" type="text" placeholder="Max Salary">
+                            <small class="field-error" id="f-salary-max-error"></small>
+                        </div>
+
+                    </div>
                 </div>
                 <div class="form-group">
                     <label for="f-modality">Modality</label>
@@ -238,8 +253,23 @@
                 </div>
 
                 <div class="form-group">
-                    <label>Salary</label>
-                    <input id="e-salary" type="text">
+                    <label>Salary Range</label>
+
+                    <div class="salary-inline">
+
+                        <div class="salary-field">
+                            <input id="e-salary-min" type="text" placeholder="Min Salary">
+                            <small class="field-error" id="e-salary-min-error"></small>
+                        </div>
+
+                        <span class="salary-separator">-</span>
+
+                        <div class="salary-field">
+                            <input id="e-salary-max" type="text" placeholder="Max Salary">
+                            <small class="field-error" id="e-salary-max-error"></small>
+                        </div>
+
+                    </div>
                 </div>
 
                 <div class="form-group">
@@ -297,6 +327,30 @@
             </div>
         </div>
     </div>
+
+    <!-- ERROR MODAL -->
+    <div class="error-overlay hidden" id="errorOverlay">
+
+        <div class="error-modal">
+
+            <div class="error-icon">
+                <i class="fa-solid fa-circle-exclamation"></i>
+            </div>
+
+            <h2>Error</h2>
+
+            <p id="errorMessage">
+                Something went wrong.
+            </p>
+
+            <button id="closeErrorBtn">
+                OK
+            </button>
+
+        </div>
+
+    </div>
+
     <!------------ MAIN PAGE ------------->
     <div class="page">
         <div class="top-row">
