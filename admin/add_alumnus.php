@@ -227,7 +227,7 @@ if (isset($_POST['add_alumni'])) {
                                         <!-- ROW 1: STUDENT ID ONLY -->
                                         <div class="row g-3">
                                             <div class="col-md-4">
-                                                <label>Student ID <span class="text-danger">*</span></label>
+                                                <label>Student Number<span class="text-danger">*</span></label>
                                                 <input type="text" name="student_number" placeholder="24-00123"
                                                     class="form-control" pattern="\d{2}-\d{5}" required>
                                             </div>
@@ -300,7 +300,7 @@ if (isset($_POST['add_alumni'])) {
                                             <div class="col-md-6">
                                                 <label>Program <span class="text-danger">*</span></label>
                                                 <select name="course_id" class="form-select" required>
-                                                    <option value="">Select Course</option>
+                                                    <option value="">Select Program</option>
                                                     <?php
                                                     $q = mysqli_query($conn, "SELECT * FROM courses");
                                                     while ($c = mysqli_fetch_assoc($q)) {

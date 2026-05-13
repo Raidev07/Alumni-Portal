@@ -188,7 +188,7 @@ if (!$result) {
                             <div class="card mb-4">
                                 <div class="card-header">
                                     <h3 class="card-title">
-                                        Comparison of Alumni Courses
+                                        Comparison of Alumni Programs
                                     </h3>
                                 </div>
                                 <div class="card-body">
