@@ -1,5 +1,3 @@
-/**************** EVENT PAGE - RESPONSIVE *****************/
-
 * {
     margin: 0;
     padding: 0;
@@ -10,15 +8,15 @@
 body {
     background: #f0f5f2;
     color: #0f172a;
+    
 }
-html {
-    overflow-y: scroll;
-    scrollbar-gutter: stable;
-}
-body.no-scroll {
+
+html, body {
+    height: 100%;
     overflow: hidden;
 }
-/* ─── HEADER ─────────────────────────────────────────────────────────────────── */
+
+/* header */
 .header {
     min-height: 95vh;
     width: 100%;
@@ -29,7 +27,7 @@ body.no-scroll {
     overflow: hidden;
 }
 
-/* ─── NAVBAR ─────────────────────────────────────────────────────────────────── */
+/* nav */
 .navbar {
     width: 100%;
     padding: 0.8rem 5%;
@@ -159,14 +157,18 @@ body.no-scroll {
     color: #fff;
 }
 
-/* ─── PAGE WRAPPER ───────────────────────────────────────────────────────────── */
+/* page wrapper */
 .page {
     max-width: min(1000px, 95vw);
     margin: 30px auto 0;
-    padding: 28px 20px 60px;
+    padding: 28px 20px 1px;
+    height: calc(100vh - 100px);
+    display: flex;
+    flex-direction: column;
+    margin-top: 10px;
 }
 
-/* ─── TOP ROW ─────────────────────────────────────────────────────────────────── */
+/* top row */
 .top-row {
     display: flex;
     justify-content: space-between;
@@ -201,10 +203,7 @@ h1 {
     display: flex;
     align-items: center;
     gap: 8px;
-    transition:
-        background 0.2s,
-        transform 0.2s,
-        box-shadow 0.2s;
+    transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
     white-space: nowrap;
     flex-shrink: 0;
 }
@@ -219,14 +218,16 @@ h1 {
     transform: translateY(0);
 }
 
-/* ─── LAYOUT ─────────────────────────────────────────────────────────────────── */
+/* layout */
 .layout {
     display: flex;
-    gap: 18px;
+    gap: 14px;
     align-items: flex-start;
+    flex: 1;
+    overflow: hidden;
 }
 
-/* ─── SIDEBAR ────────────────────────────────────────────────────────────────── */
+/* sidebar */
 .sidebar {
     width: clamp(120px, 15vw, 160px);
     background: #fff;
@@ -258,10 +259,7 @@ h1 {
     font-size: clamp(11px, 1vw, 14px);
     color: #333;
     margin-bottom: 8px;
-    transition:
-        background 0.25s ease,
-        color 0.25s ease,
-        box-shadow 0.2s ease;
+    transition: background 0.25s ease, color 0.25s ease, box-shadow 0.2s ease;
 }
 
 .filter-item:hover {
@@ -284,10 +282,14 @@ h1 {
     box-shadow: 0 3px 8px rgba(26, 107, 58, 0.15);
 }
 
-/* ─── MAIN CONTENT ───────────────────────────────────────────────────────────── */
+/* main */
 .main {
     flex: 1;
-    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    gap: 5px;
+    overflow: hidden;
 }
 
 .search-row {
@@ -332,10 +334,7 @@ h1 {
     font-weight: 700;
     cursor: pointer;
     font-family: "Roboto", sans-serif;
-    transition:
-        background 0.3s ease,
-        transform 0.2s ease,
-        box-shadow 0.2s ease;
+    transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
     white-space: nowrap;
 }
 
@@ -350,7 +349,7 @@ h1 {
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
-/* ─── JOB / EVENT CARDS ──────────────────────────────────────────────────────── */
+/* event card */
 .job-card {
     background: #fff;
     border: 1px solid #c8e6c9;
@@ -361,9 +360,7 @@ h1 {
     justify-content: space-between;
     align-items: flex-start;
     gap: 12px;
-    transition:
-        box-shadow 0.3s ease,
-        transform 0.2s ease;
+    transition: box-shadow 0.3s ease, transform 0.2s ease;
     flex-wrap: wrap;
 }
 
@@ -476,7 +473,7 @@ h1 {
     transform: translateY(-1px);
 }
 
-/* ─── EMPTY STATE ─────────────────────────────────────────────────────────────── */
+/* empty state */
 .empty-state {
     text-align: center;
     padding: 48px;
@@ -488,7 +485,7 @@ h1 {
     display: block;
 }
 
-/* ─── OVERLAYS ───────────────────────────────────────────────────────────────── */
+/* overlay */
 .overlay {
     position: fixed;
     top: 65px;
@@ -522,7 +519,7 @@ h1 {
     display: none;
 }
 
-/* ─── POST JOB / CREATE MODAL ────────────────────────────────────────────────── */
+/* post job modal */
 .modal {
     background: #fff;
     border-radius: 12px;
@@ -643,7 +640,7 @@ h1 {
     transform: translateY(-1px);
 }
 
-/* ─── DETAIL MODAL ───────────────────────────────────────────────────────────── */
+/* detail modal */
 .detail-modal {
     background: #fff;
     border-radius: 12px;
@@ -691,7 +688,7 @@ h1 {
     padding: clamp(16px, 2vw, 26px) clamp(16px, 2.5vw, 30px);
 }
 
-/* ─── DETAIL META ROW — always single row, 7 equal columns ──────────────────── */
+
 .detail-meta-row {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
@@ -704,7 +701,7 @@ h1 {
     border: 1px solid #c8e6c9;
     border-radius: 8px;
     padding: 10px 10px;
-    min-width: 0; /* allow cards to shrink below content width */
+    min-width: 0;
 }
 
 .dmc-label {
@@ -784,9 +781,7 @@ h1 {
     font-family: "Roboto", sans-serif;
     text-decoration: none;
     display: inline-block;
-    transition:
-        background 0.2s,
-        transform 0.2s;
+    transition: background 0.2s, transform 0.2s;
 }
 
 .btn-apply:hover {
@@ -835,7 +830,7 @@ h1 {
     font-size: 12px;
 }
 
-/* ─── EVENT TYPE BADGES ──────────────────────────────────────────────────────── */
+/* event type badge */
 .text-networking {
     background: #e8f4fd;
     color: #1565c0;
@@ -853,7 +848,7 @@ h1 {
     color: #1a6b3a;
 }
 
-/* ─── RESPONSIVE BREAKPOINTS ─────────────────────────────────────────────────── */
+/* respnsive breakpoints */
 
 @media (max-width: 1100px) {
     .page {
@@ -907,7 +902,6 @@ h1 {
         display: none;
     }
 
-    /* On smaller screens, allow wrapping into 2 rows */
     .detail-meta-row {
         grid-template-columns: repeat(4, 1fr);
     }
@@ -1009,7 +1003,7 @@ h1 {
     vertical-align: middle;
 }
 
-/* ─── ONGOING TAG ───────────────────────── */
+/* ongogin tag */
 
 .ongoing-tag {
     display: inline-flex;
@@ -1046,7 +1040,7 @@ h1 {
     margin: 14px 0;
 }
 
-/* ─── EVENT STATUS TAGS ───────────────────────── */
+/* event status */
 
 .event-status-tag {
     display: inline-block;
@@ -1133,7 +1127,7 @@ body.modal-open {
     overscroll-behavior: contain;
 }
 
-/* ─── ERROR MODAL ───────────────────────── */
+/* error modal */
 
 .error-overlay {
     position: fixed;
@@ -1220,8 +1214,6 @@ body.modal-open {
     margin: 14px 0;
 }
 
-/* ─── ARCHIVE BUTTON ───────────────────────── */
-
 .btn-delete {
     border: 1px solid #dc2626;
     color: #dc2626;
@@ -1232,7 +1224,6 @@ body.modal-open {
     color: #fff;
 }
 
-/* ─── RESTORE BUTTON ───────────────────────── */
 
 #d-restore {
     background: #15803d;
@@ -1241,4 +1232,11 @@ body.modal-open {
 
 #d-restore:hover {
     background: #166534;
+}
+
+#jobsList {
+    flex: 1;
+    overflow-y: auto;
+    padding-right: 10px;
+    padding: 10px 14px 20px 14px;
 }

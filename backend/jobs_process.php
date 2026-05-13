@@ -1,14 +1,13 @@
 <?php
-
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
 session_start();
 header('Content-Type: application/json');
 
-require_once __DIR__ . '/db.php'; // Alumni-Portal/backend/db.php
+require_once __DIR__ . '/db.php';
 
-// ─── GET: fetch jobs ───────────────────────────────────────────────
+//  fetch jobs
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
     $type = $_GET['type'] ?? 'all';
@@ -96,7 +95,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     echo json_encode($jobs);
     exit;
 }
-// ─── POST: insert a new job posting ──────────────────────────────────────────
+// insert a new job posting
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (empty($_SESSION['user_id'])) {
@@ -129,16 +128,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $req = $conn->real_escape_string(trim($data['req'] ?? ''));
     $benefits = $conn->real_escape_string(trim($data['benefits'] ?? ''));
 
-    $sql = "INSERT INTO JOBPOSTINGS
-                (user_id, job_title, company_name, location, job_type, modality,
-                 category, salary_range, contact_email,
-                 job_description, requirements_qualifications, benefits,
-                 status, posted_at)
-            VALUES
-                ($user_id, '$title_s', '$company_s', '$location', '$job_type', '$modality',
-                 '$category', '$salary', '$email',
-                 '$desc', '$req', '$benefits',
-                 'active', NOW())";
+    $sql = "INSERT INTO JOBPOSTINGS (user_id, job_title, company_name, location, job_type, modality,
+                category, salary_range, contact_email, job_description, requirements_qualifications, benefits,
+                status, posted_at) VALUES
+                ($user_id, '$title_s', '$company_s', '$location', '$job_type', '$modality', '$category', '$salary', '$email',
+                '$desc', '$req', '$benefits', 'active', NOW())";
 
     if ($conn->query($sql)) {
         echo json_encode(['success' => true, 'job_id' => $conn->insert_id]);
@@ -149,7 +143,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     exit;
 }
 
-// ─── PUT: UPDATE JOB ─────────────────────────────────────────
+// UPDATE JOB
 if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
 
     if (empty($_SESSION['user_id'])) {
@@ -215,7 +209,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
 }
 
 
-// ─── RESTORE JOB ──────────────────────────────────────────────
+// RESTORE JOB
 if ($_SERVER['REQUEST_METHOD'] === 'PATCH') {
 
     if (empty($_SESSION['user_id'])) {
@@ -249,7 +243,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'PATCH') {
 
     exit;
 }
-// ─── DELETE JOB ──────────────────────────────────────────────
+// DELETE JOB
 if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
 
     if (empty($_SESSION['user_id'])) {
@@ -276,7 +270,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
         http_response_code(500);
         echo json_encode(['error' => $conn->error]);
     }
-
     exit;
 }
 http_response_code(405);

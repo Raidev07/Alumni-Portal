@@ -70,23 +70,16 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 </head>
 
 <body style="font-family:Arial;background:#f4f6f9;padding:40px;">
-
     <div style="max-width:400px;margin:auto;background:#fff;padding:20px;border-radius:10px;">
-
         <h2>Reset Password</h2>
-
         <?php if ($message): ?>
             <p><?= htmlspecialchars($message) ?></p>
         <?php endif; ?>
-
         <form method="POST">
             <input type="password" name="new_password" placeholder="New Password" required><br><br>
             <input type="password" name="confirm_password" placeholder="Confirm Password" required><br><br>
             <button type="submit">Change Password</button>
         </form>
-
     </div>
-
 </body>
-
 </html>

@@ -7,7 +7,7 @@ if ($_SERVER["REQUEST_METHOD"] !== "POST") {
     exit();
 }
 
-// 1. Get and sanitize input
+//Get and sanitize input
 $email = $_POST['email'] ?? '';
 $password = $_POST['password'] ?? '';
 
@@ -16,7 +16,7 @@ if (empty($email) || empty($password)) {
     exit();
 }
 
-// 2. Get user (WITH 2FA FIELD)
+//Get user (WITH 2FA FIELD)
 $stmt = $conn->prepare("
     SELECT id, email, password, role, status, twofa_enabled
     FROM users
@@ -26,7 +26,7 @@ $stmt->bind_param("s", $email);
 $stmt->execute();
 $result = $stmt->get_result();
 
-// 3. Check user exists
+//Check user exists
 if ($result->num_rows !== 1) {
     header("Location: ../login.php?error=user_not_found");
     exit();
@@ -34,7 +34,7 @@ if ($result->num_rows !== 1) {
 
 $user = $result->fetch_assoc();
 
-// 4. Check account status
+//Check account status
 if ($user['status'] === 'pending') {
     header("Location: ../login.php?error=pending");
     exit();
@@ -45,7 +45,7 @@ if ($user['status'] === 'inactive') {
     exit();
 }
 
-// 5. Verify password
+//Verify password
 if (!password_verify($password, $user['password'])) {
     header("Location: ../login.php?error=wrong_password");
     exit();
@@ -60,7 +60,7 @@ if ((int)$user['force_password_change'] === 1) {
     exit();
 }
 
-// 6. Success login flow
+//Success login flow
 session_regenerate_id(true);
 
 // CHECK 2FA
@@ -73,12 +73,12 @@ if ((int)$user['twofa_enabled'] === 1) {
     exit();
 }
 
-// 7. NO 2FA → FULL LOGIN
+//NO 2FA to FULL LOGIN
 $_SESSION['user_id'] = $user['id'];
 $_SESSION['user_email'] = $user['email'];
 $_SESSION['role'] = $user['role'];
 
-// 8. Role redirect
+//Role redirect
 if ($user['role'] === 'admin') {
     header("Location: ../admin/dashboard.php");
 } else {

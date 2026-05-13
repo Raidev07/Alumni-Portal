@@ -14,7 +14,7 @@ if (!isset($_FILES['avatar'])) {
 
 $file = $_FILES['avatar'];
 
-/* ================= GET OLD IMAGE ================= */
+//  GET OLD IMAGE
 $stmt = $conn->prepare("SELECT profile_picture FROM userprofile WHERE user_id = ?");
 $stmt->bind_param("i", $uid);
 $stmt->execute();
@@ -22,7 +22,7 @@ $result = $stmt->get_result()->fetch_assoc();
 
 $oldFile = $result['profile_picture'] ?? null;
 
-/* ================= DELETE OLD FILE ================= */
+// DELETE OLD FILE
 if ($oldFile) {
     $oldPath = __DIR__ . "/../../uploads/profile/" . $oldFile;
 
@@ -31,7 +31,7 @@ if ($oldFile) {
     }
 }
 
-/* ================= UPLOAD NEW FILE ================= */
+// UPLOAD NEW FILE
 $ext = pathinfo($file['name'], PATHINFO_EXTENSION);
 $filename = "avatar_" . $uid . "_" . time() . "." . $ext;
 

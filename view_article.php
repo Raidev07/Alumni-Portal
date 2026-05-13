@@ -2,14 +2,12 @@
 session_start();
 include("backend/db.php");
 
-// get article ID from URL
 $id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 
 if ($id == 0) {
     die("Invalid article ID");
 }
 
-// fetch single article
 $stmt = $conn->prepare("
     SELECT 
             af.*, 
@@ -86,10 +84,8 @@ while ($edu = $eduResult->fetch_assoc()) {
     <?php include('includes/navbarhome.php'); ?>
 
     <div class="page-wrap">
-
         <!-- MAIN ARTICLE -->
         <main class="article-main">
-
             <div class="cover-image-wrap">
                 <?php if (!empty($article['cover_image'])): ?>
                     <img src="<?php echo htmlspecialchars($article['cover_image']); ?>" alt="Cover Image">
@@ -100,15 +96,13 @@ while ($edu = $eduResult->fetch_assoc()) {
 
             <header class="article-header">
                 <span class="category-badge">
-                    <span class="category-badge-dot"></span>
-                    <?php echo htmlspecialchars($article['category']); ?>
-                </span>
+                    <span class="category-badge-dot"></span><?php echo htmlspecialchars($article['category']); ?></span>
                 <h1 class="article-title"><?php echo htmlspecialchars($article['title']); ?></h1>
                 <div class="article-meta">
                     <?php
-                    $image = $article['profile_picture'] ?? null;
-                    $parts = explode(" ", trim($article['alumni_name']));
-                    $initials = strtoupper($parts[0][0] . ($parts[1][0] ?? ""));
+                        $image = $article['profile_picture'] ?? null;
+                        $parts = explode(" ", trim($article['alumni_name']));
+                        $initials = strtoupper($parts[0][0] . ($parts[1][0] ?? ""));
                     ?>
                     <div class="alumni-avatar" aria-hidden="true">
                         <?php if (!empty($image)): ?>
@@ -126,32 +120,21 @@ while ($edu = $eduResult->fetch_assoc()) {
                     </div>
                 </div>
             </header>
-
-            <blockquote class="article-excerpt">
-                <?php echo htmlspecialchars($article['excerpt']); ?>
-            </blockquote>
-
-            <article class="article-body">
-                <?php echo nl2br(htmlspecialchars($article['content'])); ?>
-            </article>
-
+            <blockquote class="article-excerpt"><?php echo htmlspecialchars($article['excerpt']); ?></blockquote>
+            <article class="article-body"><?php echo nl2br(htmlspecialchars($article['content'])); ?></article>
             <div style="height: 2rem;"></div>
         </main>
 
         <!-- SIDEBAR -->
         <aside class="sidebar">
-
             <div class="sidebar-card">
                 <p class="sidebar-card-title">About the Alumni</p>
-
                 <div class="author-inner">
-
                     <?php
-                    $image = $article['profile_picture'] ?? null;
-                    $parts = explode(" ", trim($article['alumni_name']));
-                    $initials = strtoupper($parts[0][0] . ($parts[1][0] ?? ""));
+                        $image = $article['profile_picture'] ?? null;
+                        $parts = explode(" ", trim($article['alumni_name']));
+                        $initials = strtoupper($parts[0][0] . ($parts[1][0] ?? ""));
                     ?>
-
                     <div class="author-avatar-lg" aria-hidden="true">
                         <?php if (!empty($image)): ?>
                             <img src="uploads/profile/<?= htmlspecialchars($image) ?>">
@@ -161,12 +144,10 @@ while ($edu = $eduResult->fetch_assoc()) {
                             </div>
                         <?php endif; ?>
                     </div>
-
                     <div class="author-name-lg"><?= htmlspecialchars($article['alumni_name']); ?></div>
                     <div class="author-degree"><?= $educationText ?: "No education record available."; ?></div>
                     <span class="year-chip">Class of <?= htmlspecialchars($article['year_graduated']); ?></span>
-                    <p class="author-bio">
-                        <?= htmlspecialchars($article['about'] ?? 'No bio available.'); ?></p>
+                    <p class="author-bio"><?= htmlspecialchars($article['about'] ?? 'No bio available.'); ?></p>
                 </div>
             </div>
             <div class="sidebar-card">
@@ -217,9 +198,7 @@ while ($edu = $eduResult->fetch_assoc()) {
     </div>
 
     <?php include('includes/logoutmodal.php'); ?>
-
     <script src="assets/js/view_article.js"></script>
     <script src="assets/js/alumni_homepage.js"></script>
 </body>
-
 </html>

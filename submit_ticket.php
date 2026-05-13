@@ -40,12 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         $ticket_id = $stmt->insert_id;
 
-        /*
-        |-----------------------------------
-        | FIRST MESSAGE SAVE
-        |-----------------------------------
-        */
-
+    // first msg save
         $sender = "user";
 
         $reply = $conn->prepare("

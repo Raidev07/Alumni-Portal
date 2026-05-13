@@ -1,6 +1,4 @@
-// ========================
 // School ID Format
-// ========================
 const studentId = document.querySelector('input[name="studentId"]');
 
 if (studentId) {
@@ -22,10 +20,7 @@ if (studentId) {
     });
 }
 
-// ========================
 // Auto Fetch Graduate Info
-// ========================
-
 if (studentId) {
     studentId.addEventListener("input", function () {
         const studentNumber = this.value.trim();
@@ -272,9 +267,7 @@ function resetRegistrationForm() {
         req.classList.remove("met");
     });
 }
-// ========================
-// DOM Ready
-// ========================
+//  DOM Ready
 document.addEventListener("DOMContentLoaded", function () {
     var form = document.querySelector("form");
 
@@ -283,9 +276,7 @@ document.addEventListener("DOMContentLoaded", function () {
     if (resetBtn) {
         resetBtn.addEventListener("click", resetRegistrationForm);
     }
-    // ========================
-    // Show / Hide Password
-    // ========================
+// Show / Hide Password
     var toggleButtons = document.querySelectorAll(".toggle-password");
 
     for (var i = 0; i < toggleButtons.length; i++) {
@@ -308,9 +299,7 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    // ========================
-    // Year Dropdown
-    // ========================
+// Year Dropdown
     var yearSelect = document.querySelector('select[name="yearGraduated"]');
 
     if (yearSelect) {
@@ -325,9 +314,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-    // ========================
-    // Birthdate restriction (last 10 years)
-    // ========================
+// Birthdate restriction (last 10 years)
     var birthdateInput = document.querySelector('input[name="birthdate"]');
 
     if (birthdateInput) {
@@ -343,9 +330,7 @@ document.addEventListener("DOMContentLoaded", function () {
         birthdateInput.max = format(maxDate); // latest selectable date = 10 years ago
         // no min set — allows any older birthdate
     }
-    // ========================
-    // Live Validation Events
-    // ========================
+// Live Validation Events
     var email = document.getElementById("email");
     var phone = document.getElementById("contactNum");
     var password = document.getElementById("password");
@@ -357,9 +342,7 @@ document.addEventListener("DOMContentLoaded", function () {
     if (confirmPassword)
         confirmPassword.addEventListener("input", validateConfirm);
 
-    // ========================
-    // Name Validation (No Numbers)
-    // ========================
+// Name Validation (No Numbers)
     function allowLettersOnly(input) {
         input.addEventListener("input", function () {
             this.value = this.value.replace(/[^a-zA-Z\s]/g, "");
@@ -369,9 +352,8 @@ document.addEventListener("DOMContentLoaded", function () {
     allowLettersOnly(document.getElementById("firstName"));
     allowLettersOnly(document.getElementById("middleName"));
     allowLettersOnly(document.getElementById("lastName"));
-    // ========================
-    // Remove error on focus
-    // ========================
+    
+    //  Remove error on focus
     var allInputs = form.querySelectorAll("input, select");
 
     for (var i = 0; i < allInputs.length; i++) {
@@ -380,9 +362,7 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    // ========================
-    // Sex warning remove
-    // ========================
+//    Sex warning remove
     var sexRadios = document.querySelectorAll('input[name="sex"]');
 
     for (var s = 0; s < sexRadios.length; s++) {
@@ -394,10 +374,7 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    // ========================
     // FORM SUBMIT (AJAX)
-    // ========================
-
     form.addEventListener("submit", function (e) {
         e.preventDefault(); // Always stop default — we use fetch instead
 
@@ -455,7 +432,7 @@ document.addEventListener("DOMContentLoaded", function () {
             return;
         }
 
-        // ── AJAX Submit ──────────────────────────────────────────────────────
+        // AJAX Submit
         var submitBtn = form.querySelector('input[type="submit"]');
         submitBtn.disabled = true;
         submitBtn.value = "Registering...";
@@ -497,9 +474,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
-// ========================
 // MODAL HELPERS
-// ========================
 var regModalCallback = null;
 
 function showRegModal(icon, title, body, callback) {
@@ -515,9 +490,7 @@ function closeRegModal() {
     if (regModalCallback) regModalCallback();
 }
 
-// ========================
 // VALIDATION FUNCTIONS
-// ========================
 function validateEmail() {
     var email = document.getElementById("email");
     var valid = /^[^\s@]+@[^\s@]+\.com$/i.test(email.value);
@@ -578,9 +551,7 @@ function validateConfirm() {
         .classList.toggle("input-error", !match && confirm.length > 0);
 }
 
-// ========================
 // TOAST
-// ========================
 function showToast(message) {
     var old = document.getElementById("toast");
     if (old) old.remove();

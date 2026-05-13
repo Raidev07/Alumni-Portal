@@ -73,9 +73,7 @@ $result = $conn->query($sql);
             <!-- CONTENT -->
             <div class="app-content">
                 <div class="container-fluid">
-
                     <div class="card">
-
                         <div class="card-header">
                             <h3 class="card-title">
                                 System Audit Trail
@@ -83,9 +81,7 @@ $result = $conn->query($sql);
                         </div>
 
                         <div class="card-body table-responsive">
-
                             <table class="table table-bordered table-hover" id="table-data">
-
                                 <thead class="table-dark">
                                     <tr>
                                         <th>#</th>
@@ -98,25 +94,13 @@ $result = $conn->query($sql);
                                 </thead>
 
                                 <tbody>
-
                                     <?php if ($result && $result->num_rows > 0): ?>
-
                                         <?php while ($row = $result->fetch_assoc()): ?>
-
                                             <tr>
-
                                                 <td><?= $row['log_id']; ?></td>
-
+                                                <td><?= htmlspecialchars($row['table_name']); ?></td>
+                                                <td><?= $row['record_id']; ?></td>
                                                 <td>
-                                                    <?= htmlspecialchars($row['table_name']); ?>
-                                                </td>
-
-                                                <td>
-                                                    <?= $row['record_id']; ?>
-                                                </td>
-
-                                                <td>
-
                                                     <?php
                                                     $badge = 'secondary';
 
@@ -132,55 +116,27 @@ $result = $conn->query($sql);
                                                         $badge = 'danger';
                                                     }
                                                     ?>
-
-                                                    <span class="badge bg-<?= $badge; ?>">
-                                                        <?= $row['action_type']; ?>
-                                                    </span>
-
+                                                    <span class="badge bg-<?= $badge; ?>"><?= $row['action_type']; ?></span>
                                                 </td>
 
-                                                <td>
-                                                    <?= htmlspecialchars($row['email'] ?? 'Unknown'); ?>
-                                                </td>
+                                                <td><?= htmlspecialchars($row['email'] ?? 'Unknown'); ?></td>
 
-                                                <td>
-                                                    <?= date(
-                                                        "M d, Y h:i A",
-                                                        strtotime($row['action_timestamp'])
-                                                    ); ?>
-                                                </td>
-
+                                                <td><?= date("M d, Y h:i A", strtotime($row['action_timestamp'])); ?></td>
                                             </tr>
-
                                         <?php endwhile; ?>
-
                                     <?php else: ?>
-
                                         <tr>
-                                            <td colspan="6" class="text-center">
-                                                No audit logs found.
-                                            </td>
+                                            <td colspan="6" class="text-center">No audit logs found.</td>
                                         </tr>
-
                                     <?php endif; ?>
-
                                 </tbody>
-
                             </table>
-
                         </div>
-
                     </div>
-
                 </div>
             </div>
-
         </main>
-
         <?php include("includes/footer.php"); ?>
-
     </div>
-
 </body>
-
 </html>

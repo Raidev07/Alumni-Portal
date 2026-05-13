@@ -2,39 +2,22 @@
 include("../backend/db_admin.php");
 session_start();
 
-/*
-|--------------------------------------------------------------------------
-| SESSION CHECK (ADMIN ONLY)
-|--------------------------------------------------------------------------
-*/
+// SESSION CHECK (ADMIN ONLY)
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
     header("Location: ../login.php");
     exit();
 }
 
-/*
-|--------------------------------------------------------------------------
-| LIBRARIES
-|--------------------------------------------------------------------------
-*/
+// LIBRARIES
 require '../vendor/autoload.php';
 
 use PhpOffice\PhpSpreadsheet\IOFactory;
 
-/*
-|--------------------------------------------------------------------------
-| MESSAGE
-|--------------------------------------------------------------------------
-*/
-
+// MESSAGE
 $success = "";
 $error = "";
 
-/*
-|--------------------------------------------------------------------------
-| IMPORT PROCESS
-|--------------------------------------------------------------------------
-*/
+// IMPORT PROCESS
 if (isset($_POST['import'])) {
 
     if (!isset($_FILES['file']['tmp_name'])) {
@@ -93,11 +76,7 @@ if (isset($_POST['import'])) {
                     continue;
                 }
 
-                /*
-                |--------------------------------------------------------------------------
-                | CHECK DUPLICATE EMAIL
-                |--------------------------------------------------------------------------
-                */
+                // CHECK DUPLICATE EMAIL
                 $check = $conn->prepare("SELECT id FROM users WHERE email = ?");
                 $check->bind_param("s", $email);
                 $check->execute();
@@ -107,11 +86,7 @@ if (isset($_POST['import'])) {
                     continue;
                 }
 
-                /*
-                |--------------------------------------------------------------------------
-                | GET DEPARTMENT
-                |--------------------------------------------------------------------------
-                */
+                // GET DEPARTMENT
                 $stmt = $conn->prepare("SELECT department_id FROM departments WHERE department_name = ?");
                 $stmt->bind_param("s", $department);
                 $stmt->execute();
@@ -122,11 +97,7 @@ if (isset($_POST['import'])) {
                     continue;
                 }
 
-                /*
-                |--------------------------------------------------------------------------
-                | GET COURSE
-                |--------------------------------------------------------------------------
-                */
+                // GET COURSE
                 $stmt = $conn->prepare("
                     SELECT course_id 
                     FROM courses 
@@ -142,19 +113,11 @@ if (isset($_POST['import'])) {
                     continue;
                 }
 
-                /*
-                |--------------------------------------------------------------------------
-                | AUTO PASSWORD
-                |--------------------------------------------------------------------------
-                */
+                // AUTO PASSWORD
                 $plainPassword = $student_number . "_" . strtolower($last_name);
                 $hashedPassword = password_hash($plainPassword, PASSWORD_DEFAULT);
 
-                /*
-                |--------------------------------------------------------------------------
-                | INSERT USER
-                |--------------------------------------------------------------------------
-                */
+                // INSERT USER
                 $stmt = $conn->prepare("
                     INSERT INTO users (email, password, role, status)
                     VALUES (?, ?, 'alumni', 'active')
@@ -164,11 +127,7 @@ if (isset($_POST['import'])) {
 
                 $user_id = $stmt->insert_id;
 
-                /*
-                |--------------------------------------------------------------------------
-                | INSERT PROFILE
-                |--------------------------------------------------------------------------
-                */
+                // INSERT PROFILE
                 $stmt = $conn->prepare("
                     INSERT INTO userprofile
                     (user_id, first_name, middle_name, last_name, suffix, contact_number, address, birthdate, gender)
@@ -188,11 +147,7 @@ if (isset($_POST['import'])) {
                 );
                 $stmt->execute();
 
-                /*
-                |--------------------------------------------------------------------------
-                | INSERT ALUMNI DETAILS
-                |--------------------------------------------------------------------------
-                */
+                // INSERT ALUMNI DETAILS
                 $stmt = $conn->prepare("
                     INSERT INTO alumnidetails
                     (user_id, student_number, course_id, year_graduated)
@@ -255,14 +210,12 @@ if (isset($_POST['import'])) {
             </div>
 
             <div class="container mt-4">
-
                 <div class="card card-primary card-outline">
                     <div class="card-header">
                         <h4>Import Alumni (Excel)</h4>
                     </div>
 
                     <div class="card-body">
-
                         <?php if ($success): ?>
                             <div class="alert alert-success"><?= $success ?></div>
                         <?php endif; ?>
@@ -272,31 +225,18 @@ if (isset($_POST['import'])) {
                         <?php endif; ?>
 
                         <form method="POST" enctype="multipart/form-data">
-
                             <input type="file" name="file" class="form-control mb-3" required>
-
-                            <button class="btn btn-primary" name="import">
-                                Import
-                            </button>
-
+                            <button class="btn btn-primary" name="import">Import</button>
                         </form>
-
                         <hr>
-
                         <h5>Excel Format Required:</h5>
-                        <pre>
-School Number | First Name | Middle Name | Surname | Suffix | Email | Phone | Address | Birthdate | Sex | Department | Course Code | Year Graduated
-</pre>
-
+                        <pre>School Number | First Name | Middle Name | Surname | Suffix | Email | Phone | Address | Birthdate | Sex | Department | Course Code | Year Graduated</pre>
                     </div>
                 </div>
-
             </div>
-
         </main>
 
         <?php include("includes/footer.php"); ?>
-
 
     </div>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -320,52 +260,6 @@ School Number | First Name | Middle Name | Surname | Suffix | Email | Phone | Ad
             });
         }
     </script>
-    <?php if (!empty($success)): ?>
-        <script>
-            document.addEventListener("DOMContentLoaded", function() {
-                let toast = document.createElement("div");
-                toast.innerText = "<?= $success ?>";
-
-                toast.style.position = "fixed";
-                toast.style.top = "20px";
-                toast.style.right = "20px";
-                toast.style.background = "#28a745";
-                toast.style.color = "white";
-                toast.style.padding = "12px 18px";
-                toast.style.borderRadius = "6px";
-                toast.style.zIndex = "9999";
-                toast.style.fontSize = "14px";
-
-                document.body.appendChild(toast);
-
-                setTimeout(() => toast.remove(), 3000);
-            });
-        </script>
-    <?php endif; ?>
-
-
-    <?php if (!empty($error)): ?>
-        <script>
-            document.addEventListener("DOMContentLoaded", function() {
-                let toast = document.createElement("div");
-                toast.innerText = "<?= $error ?>";
-
-                toast.style.position = "fixed";
-                toast.style.top = "20px";
-                toast.style.right = "20px";
-                toast.style.background = "#dc3545";
-                toast.style.color = "white";
-                toast.style.padding = "12px 18px";
-                toast.style.borderRadius = "6px";
-                toast.style.zIndex = "9999";
-                toast.style.fontSize = "14px";
-
-                document.body.appendChild(toast);
-
-                setTimeout(() => toast.remove(), 3000);
-            });
-        </script>
-    <?php endif; ?>
 </body>
 
 </html>

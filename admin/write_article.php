@@ -9,11 +9,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
     exit();
 }
 
-/*
-|-------------------------------------------------------
-| GET ALUMNI ID (FROM URL)
-|-------------------------------------------------------
-*/
+// GET ALUMNI ID (FROM URL)
 $alumni_user_id = null;
 $alumni_id = null;
 
@@ -44,11 +40,7 @@ if (!$alumni_user_id) {
     exit();
 }
 
-/*
-|-------------------------------------------------------
-| PREFILL DATA
-|-------------------------------------------------------
-*/
+// PREFILL DATA
 $prefill_name = "";
 $prefill_year = "";
 
@@ -87,11 +79,7 @@ if ($alumni_id) {
     $stmt->close();
 }
 
-/*
-|-------------------------------------------------------
-| INSERT STORY
-|-------------------------------------------------------
-*/
+// INSERT STORY
 if (isset($_POST['publish_story'])) {
 
     $title           = trim($_POST['title']);
@@ -117,9 +105,7 @@ if (isset($_POST['publish_story'])) {
         $category = "Other";
     }
 
-    /*
-    | IMAGE UPLOAD
-    */
+// INSERT STORY
     $cover_image = null;
 
     if (!empty($_FILES['coverImage']['name']) && $_FILES['coverImage']['error'] === 0) {
@@ -143,9 +129,7 @@ if (isset($_POST['publish_story'])) {
         }
     }
 
-    /*
-    | INSERT
-    */
+    // INSERT
     if (empty($title) || empty($alumni_name) || empty($year_graduated) || empty($content)) {
         flash("warning", "Missing Fields", "Please fill in all required fields.");
         header("Location: create_story.php?id=" . $alumni_id);
@@ -229,31 +213,24 @@ if (isset($_POST['publish_story'])) {
             <!-- CONTENT -->
             <div class="app-content">
                 <div class="container-fluid">
-
                     <div class="row">
                         <div class="col-md-12">
-
                             <div class="card card-primary card-outline">
-
                                 <div class="card-header">
                                     <div class="card-title">Write Alumni Achievement Story</div>
                                 </div>
-
                                 <form method="POST" enctype="multipart/form-data">
-
                                     <div class="card-body">
-
                                         <div class="mb-3">
                                             <label class="form-label">Title <span class="text-danger">*</span></label>
                                             <input type="text" name="title" class="form-control" required>
                                         </div>
-
+                                        
                                         <div class="row">
                                             <div class="col-md-6 mb-3">
                                                 <label class="form-label">Alumni Name <span class="text-danger">*</span></label>
                                                 <input type="text" name="alumniName" class="form-control" value="<?= htmlspecialchars($prefill_name) ?>" required>
                                             </div>
-
                                             <div class="col-md-6 mb-3">
                                                 <label class="form-label">Graduation Year <span class="text-danger">*</span></label>
                                                 <input type="number" name="gradYear" class="form-control" value="<?= htmlspecialchars($prefill_year) ?>" required>

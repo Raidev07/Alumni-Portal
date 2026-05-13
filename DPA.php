@@ -213,27 +213,22 @@
     </dialog>
 
     <script>
-        /* ── STICKY NAV ─────────────────────────────────────────── */
+        // sticky nav
         window.addEventListener('scroll', () => {
             document.getElementById('navbar').classList.toggle('sticky', window.scrollY > 10);
         });
-
-        /* ── TAB SWITCHING ──────────────────────────────────────── */
         let activeTab = 'dpa';
 
         function switchTab(tab, btn) {
             activeTab = tab;
-
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
-
             document.querySelectorAll('.scroll-panel').forEach(p => p.classList.remove('active'));
             document.getElementById('panel-' + tab).classList.add('active');
-
             updateScrollState();
         }
 
-        /* ── SCROLL TRACKING ────────────────────────────────────── */
+        // scroll
         function updateScrollState() {
             const panel = document.querySelector('.scroll-panel.active');
             const fade = document.getElementById('scrollFade');
@@ -254,7 +249,7 @@
         // init
         updateScrollState();
 
-        /* ── CHECKBOX LOGIC ─────────────────────────────────────── */
+        // check box logic
         function styleLabel(checkbox) {
             const label = checkbox.closest('.check-label');
             label.classList.toggle('checked', checkbox.checked);
@@ -267,7 +262,6 @@
             document.getElementById('nextBtn').disabled = !allChecked;
         }
 
-        /* ── BUTTON ACTIONS ─────────────────────────────────────── */
         function handleCancel() {
             if (confirm('Are you sure you want to cancel? Your progress will be lost.')) {
                 window.location.href = 'index.php';
@@ -275,10 +269,8 @@
         }
 
         function handleNext() {
-            // Replace with your actual next step URL or action
             window.location.href = 'alumni_form.php';
         }
     </script>
 </body>
-
 </html>

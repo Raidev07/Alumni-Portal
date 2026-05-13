@@ -1,5 +1,5 @@
 <?php
-include "backend/db_admin.php"; // FIX THIS PATH FIRST
+include "backend/db_admin.php";
 
 $email = "admin@plpasig.com";
 $password = password_hash("admin123", PASSWORD_DEFAULT);

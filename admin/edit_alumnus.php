@@ -3,11 +3,8 @@ include("../backend/db_admin.php");
 session_start();
 
 include("includes/flash.php");
-/*
-|--------------------------------------------------------------------------
-| SESSION CHECK
-|--------------------------------------------------------------------------
-*/
+
+// SESSION CHECK
 if (
     !isset($_SESSION['user_id']) ||
     $_SESSION['role'] !== 'admin'
@@ -16,11 +13,7 @@ if (
     exit();
 }
 
-/*
-|--------------------------------------------------------------------------
-| GET ALUMNI ID
-|--------------------------------------------------------------------------
-*/
+// GET ALUMNI ID
 if (!isset($_GET['id'])) {
     header("Location: all_alumni.php");
     exit();
@@ -28,11 +21,7 @@ if (!isset($_GET['id'])) {
 
 $alumni_id = intval($_GET['id']);
 
-/*
-|--------------------------------------------------------------------------
-| UPDATE ALUMNI
-|--------------------------------------------------------------------------
-*/
+// UPDATE ALUMNI
 if (isset($_POST['update_alumni'])) {
 
     $first_name      = trim($_POST['first_name']);
@@ -49,9 +38,7 @@ if (isset($_POST['update_alumni'])) {
     $sex             = trim($_POST['gender']);
     $status          = trim($_POST['status']);
 
-    /* =========================
-       VALIDATION
-    ========================= */
+// VALIDATION
     if (
         empty($first_name) ||
         empty($last_name) ||
@@ -70,10 +57,7 @@ if (isset($_POST['update_alumni'])) {
         exit();
     }
 
-    /* =========================
-       UPDATE QUERY
-    ========================= */
-
+// UPDATE QUERY
     $conn->query("SET @is_admin = 1");
 
     $query = "
@@ -135,11 +119,7 @@ if (isset($_POST['update_alumni'])) {
     exit();
 }
 
-/*
-|--------------------------------------------------------------------------
-| FETCH ALUMNI DETAILS
-|--------------------------------------------------------------------------
-*/
+// FETCH ALUMNI DETAILS
 $query = "
     SELECT
 

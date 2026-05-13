@@ -13,7 +13,6 @@ if (!isset($_SESSION['user_id'])) {
 }
 
 $user_id = $_SESSION['user_id'];
-
 $title = trim($_POST['title'] ?? '');
 $company = trim($_POST['company'] ?? '');
 $location = trim($_POST['location'] ?? '');
