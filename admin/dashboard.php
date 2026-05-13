@@ -337,7 +337,5 @@ if (!$result) {
 
         programmeChart.render();
     </script>
-
 </body>
-
 </html>

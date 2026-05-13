@@ -4,30 +4,22 @@ include("backend/db.php");
 
 $message = "";
 
-/* =========================
-   RESET SESSION (BACK TO LOGIN)
-========================= */
+// back to login
 if (isset($_POST['reset_all'])) {
     session_destroy();
     header("Location: login.php");
     exit();
 }
 
-/* =========================
-   STEP CONTROL
-========================= */
+// step control
 $step = $_SESSION['step'] ?? "email";
 
-/* =========================
-   HANDLE REQUEST
-========================= */
+// handle req
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     $action = $_POST['action'] ?? '';
 
-    /* =========================
-       STEP 1: EMAIL CHECK
-    ========================= */
+// step 1check email
     if ($action === 'email') {
 
         $email = trim($_POST['email']);
@@ -62,9 +54,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         }
     }
 
-    /* =========================
-       STEP 2: BACKUP CODE
-    ========================= */
+// step 2 backup code
     if ($action === 'verify_backup') {
 
         $user_id = $_SESSION['user_id'] ?? 0;
@@ -105,9 +95,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         }
     }
 
-    /* =========================
-       STEP 3: ADMIN REQUEST
-    ========================= */
+// step 3 admin req
     if ($action === 'admin_request') {
 
         $user_id = $_SESSION['user_id'] ?? 0;
@@ -151,10 +139,13 @@ $step = $_SESSION['step'] ?? "email";
 ?>
 
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Account Recovery</title>
+    <link rel="icon" href="assets/image/alumni_plp_newicon.png">
 
     <style>
         body {
@@ -202,27 +193,20 @@ $step = $_SESSION['step'] ?? "email";
 <body>
 
     <div class="box">
-
         <h2>Account Recovery</h2>
 
-        <?php if ($message): ?>
-            <div class="message"><?= htmlspecialchars($message) ?></div>
-        <?php endif; ?>
+        <?php if ($message): ?><div class="message"><?= htmlspecialchars($message) ?></div><?php endif; ?>
 
         <!-- EMAIL STEP -->
         <?php if ($step === "email"): ?>
-
             <form method="POST">
                 <input type="hidden" name="action" value="email">
                 <input type="email" name="email" placeholder="Enter email" required>
                 <button>Continue</button>
             </form>
-
         <?php endif; ?>
-
         <!-- CHOOSE STEP -->
         <?php if ($step === "choose"): ?>
-
             <p>Choose recovery method:</p>
 
             <form method="POST">
@@ -235,26 +219,19 @@ $step = $_SESSION['step'] ?? "email";
                 <input type="hidden" name="action" value="admin_request">
                 <button class="danger">Request Admin Reset</button>
             </form>
-
         <?php endif; ?>
 
         <!-- LOCKED STEP -->
         <?php if ($step === "locked"): ?>
-
             <p class="message">
                 You already have a pending recovery request.<br>
                 Please wait for admin approval.
             </p>
-
             <form method="POST">
                 <input type="hidden" name="reset_all" value="1">
                 <button>Back to Login</button>
             </form>
-
         <?php endif; ?>
-
     </div>
-
 </body>
-
 </html>

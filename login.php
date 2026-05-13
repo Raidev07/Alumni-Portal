@@ -96,9 +96,7 @@ if (isset($_GET['error'])) {
 
             togglePassword.addEventListener("click", () => {
                 const isPassword = passwordInput.type === "password";
-
                 passwordInput.type = isPassword ? "text" : "password";
-
                 icon.classList.toggle("ri-eye-line");
                 icon.classList.toggle("ri-eye-off-line");
             });

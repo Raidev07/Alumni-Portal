@@ -3,11 +3,7 @@
     include("../backend/db_admin.php");
 
     include("includes/flash.php");
-    /*
-    |-------------------------------------------------
-    | SESSION CHECK
-    |-------------------------------------------------
-    */
+    // SESSION CHECK
     if (
         !isset($_SESSION['user_id']) ||
         $_SESSION['role'] !== 'admin'
@@ -16,11 +12,7 @@
         exit();
     }
 
-    /*
-    |-------------------------------------------------
-    | VALIDATE ID
-    |-------------------------------------------------
-    */
+    // VALIDATE ID
     if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
         flash("error", "Invalid Request", "Missing or invalid alumni ID.");
         header("Location: all_alumni.php");
@@ -29,11 +21,7 @@
 
     $vid = (int) $_GET['id'];
 
-    /*
-    |-------------------------------------------------
-    | FETCH ALUMNI DETAILS (SAFE)
-    |-------------------------------------------------
-    */
+    // FETCH ALUMNI DETAILS (SAFE)
     $sql = "
     SELECT
         a.alumni_id, 
@@ -109,11 +97,7 @@
         exit();
     }
 
-    /*
-|-------------------------------------------------
-| FETCH ARTICLE ID
-|-------------------------------------------------
-*/
+// FETCH ARTICLE ID
     $article = null;
 
     if ($row) {

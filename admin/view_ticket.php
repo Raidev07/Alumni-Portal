@@ -3,11 +3,8 @@ include("../backend/db_admin.php");
 session_start();
 
 include("includes/flash.php");
-/*
-|--------------------------------------------------------------------------
-| ADMIN CHECK
-|--------------------------------------------------------------------------
-*/
+
+// ADMIN CHECK
 if (
     !isset($_SESSION['user_id']) ||
     $_SESSION['role'] !== 'admin'
@@ -16,11 +13,7 @@ if (
     exit();
 }
 
-/*
-|--------------------------------------------------------------------------
-| VALIDATE ID
-|--------------------------------------------------------------------------
-*/
+// VALIDATE ID
 if (!isset($_GET['id'])) {
     header("Location: tickets.php");
     exit();
@@ -28,11 +21,7 @@ if (!isset($_GET['id'])) {
 
 $ticket_id = intval($_GET['id']);
 
-/*
-|--------------------------------------------------------------------------
-| GET TICKET
-|--------------------------------------------------------------------------
-*/
+// GET TICKET
 $stmt = $conn->prepare("
     SELECT *
     FROM tickets
@@ -50,11 +39,7 @@ if (!$ticket) {
     exit();
 }
 
-/*
-|--------------------------------------------------------------------------
-| SEND REPLY
-|--------------------------------------------------------------------------
-*/
+// SEND REPLY
 if (isset($_POST['send_reply'])) {
 
     $message = trim($_POST['message']);
@@ -80,11 +65,7 @@ if (isset($_POST['send_reply'])) {
 
         $stmt->execute();
 
-        /*
-        |--------------------------------------------------------------------------
-        | UPDATE STATUS
-        |--------------------------------------------------------------------------
-        */
+        // UPDATE STATUS
         mysqli_query($conn, "
             UPDATE tickets
             SET status='in_progress'
@@ -97,11 +78,7 @@ if (isset($_POST['send_reply'])) {
     }
 }
 
-/*
-|--------------------------------------------------------------------------
-| UPDATE STATUS
-|--------------------------------------------------------------------------
-*/
+// UPDATE STATUS
 if (isset($_POST['update_status'])) {
 
     $status = $_POST['status'];
@@ -120,11 +97,7 @@ if (isset($_POST['update_status'])) {
     exit();
 }
 
-/*
-|--------------------------------------------------------------------------
-| FETCH REPLIES
-|--------------------------------------------------------------------------
-*/
+// FETCH REPLIES
 $replies = mysqli_query($conn, "
     SELECT *
     FROM ticket_replies
@@ -149,7 +122,6 @@ $replies = mysqli_query($conn, "
             overflow-y: auto;
             padding: 20px;
             border-radius: 10px;
-
             background: var(--bs-body-bg);
             color: var(--bs-body-color);
         }
@@ -175,7 +147,6 @@ $replies = mysqli_query($conn, "
             padding: 12px 16px;
             border-radius: 12px;
             max-width: 70%;
-
             color: var(--bs-body-color);
         }
 
@@ -233,35 +204,18 @@ $replies = mysqli_query($conn, "
 
             <div class="app-content">
                 <div class="container-fluid">
-
                     <div class="card card-primary card-outline">
-
                         <div class="card-header">
-
-                            <h5>
-                                <?= htmlspecialchars($ticket['subject']) ?>
-                            </h5>
-
-                            <small>
-                                <?= htmlspecialchars($ticket['full_name']) ?>
-                                —
-                                <?= htmlspecialchars($ticket['email']) ?>
+                            <h5><?= htmlspecialchars($ticket['subject']) ?></h5>
+                            <small><?= htmlspecialchars($ticket['full_name']) ?>—<?= htmlspecialchars($ticket['email']) ?>
                             </small>
-
                         </div>
-
                         <div class="card-body">
-
                             <!-- STATUS -->
-
                             <form method="POST" class="mb-4">
-
                                 <div class="row">
-
                                     <div class="col-md-4">
-
                                         <select name="status" class="form-select">
-
                                             <option value="open"
                                                 <?= $ticket['status'] == 'open' ? 'selected' : '' ?>>
                                                 Open
@@ -276,52 +230,26 @@ $replies = mysqli_query($conn, "
                                                 <?= $ticket['status'] == 'resolved' ? 'selected' : '' ?>>
                                                 Resolved
                                             </option>
-
                                         </select>
-
                                     </div>
-
                                     <div class="col-md-2">
-
-                                        <button class="btn btn-success"
-                                            name="update_status">
-
-                                            Update
-
-                                        </button>
-
+                                        <button class="btn btn-success" name="update_status">Update</button>
                                     </div>
-
                                 </div>
-
                             </form>
 
                             <!-- CHAT -->
-
                             <div class="chat-box">
-
                                 <?php while ($reply = mysqli_fetch_assoc($replies)): ?>
-
                                     <div class="message <?= $reply['sender_type'] ?>">
-
                                         <div class="bubble">
-
                                             <?= nl2br(htmlspecialchars($reply['message'])) ?>
-
-                                            <div class="time">
-                                                <?= date("M d, Y h:i A", strtotime($reply['created_at'])) ?>
-                                            </div>
-
+                                            <div class="time"><?= date("M d, Y h:i A", strtotime($reply['created_at'])) ?></div>
                                         </div>
-
                                     </div>
-
                                 <?php endwhile; ?>
-
                             </div>
-
                             <?php if ($ticket['status'] === 'resolved'): ?>
-
                                 <div style="
                                         padding:15px;
                                         border-radius:10px;
@@ -333,40 +261,27 @@ $replies = mysqli_query($conn, "
                                 </div>
                             <?php else: ?>
                                 <!-- REPLY -->
-
                                 <form method="POST" class="mt-4">
-
                                     <div class="mb-3">
-
                                         <textarea
                                             name="message"
                                             class="form-control"
                                             rows="4"
                                             placeholder="Type your reply..."
                                             required></textarea>
-
                                     </div>
-
                                     <button class="btn btn-primary"
                                         name="send_reply">
-
                                         Send Reply
-
                                     </button>
-
                                 </form>
                             <?php endif; ?>
                         </div>
-
                     </div>
-
                 </div>
             </div>
-
         </main>
-
         <?php include("includes/footer.php"); ?>
-
     </div>
 
     <?php include("includes/flash-swal.php"); ?>

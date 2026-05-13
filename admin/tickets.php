@@ -3,11 +3,8 @@ include("../backend/db_admin.php");
 session_start();
 
 include("includes/flash.php");
-/*
-|--------------------------------------------------------------------------
-| ADMIN CHECK
-|--------------------------------------------------------------------------
-*/
+
+// ADMIN CHECK
 if (
     !isset($_SESSION['user_id']) ||
     $_SESSION['role'] !== 'admin'
@@ -16,18 +13,10 @@ if (
     exit();
 }
 
-/*
-|--------------------------------------------------------------------------
-| BASE FILE (IMPORTANT FIX - PREVENT "NOT FOUND")
-|--------------------------------------------------------------------------
-*/
+// BASE FILE (IMPORTANT FIX - PREVENT "NOT FOUND")
 $baseFile = basename($_SERVER['PHP_SELF']);
 
-/*
-|--------------------------------------------------------------------------
-| FILTER SYSTEM
-|--------------------------------------------------------------------------
-*/
+// FILTER SYSTEM
 $allowedFilters = ['all', 'open', 'in_progress', 'resolved'];
 $filter = $_GET['filter'] ?? 'all';
 
@@ -187,16 +176,12 @@ if (!$ret) {
             <!-- CONTENT -->
             <div class="app-content">
                 <div class="container-fluid">
-
                     <div class="card card-primary card-outline">
-
                         <div class="card-header">
                             <div class="card-title">All Tickets</div>
                         </div>
-
                         <!-- FILTER BUTTONS (FIXED LINKS) -->
                         <div class="filter-bar">
-
                             <a href="<?= $baseFile ?>?filter=all"
                                 class="btn-all <?= $filter == 'all' ? 'active-filter' : '' ?>">
                                 All
@@ -216,24 +201,16 @@ if (!$ret) {
                                 class="btn-archived <?= $filter == 'resolved' ? 'active-filter' : '' ?>">
                                 Archived/Resolved
                             </a>
-
                         </div>
-
                         <div class="card-body p-0">
-
                             <div class="table-responsive">
                                 <?php if ($ret === false): ?>
-                                    <div class="p-3 text-danger">
-                                        Unable to load tickets due to a system error.
-                                    </div>
+                                    <div class="p-3 text-danger">Unable to load tickets due to a system error.</div>
                                 <?php elseif (mysqli_num_rows($ret) === 0): ?>
-                                    <div class="p-3 text-muted text-center">
-                                        No tickets found.
-                                    </div>
+                                    <div class="p-3 text-muted text-center">No tickets found.</div>
                                 <?php else: ?>
 
                                     <table class="table table-striped table-hover" id="table-data">
-
                                         <thead>
                                             <tr>
                                                 <th>ID</th>
@@ -245,79 +222,46 @@ if (!$ret) {
                                                 <th>Action</th>
                                             </tr>
                                         </thead>
-
                                         <tbody>
-
                                             <?php if ($ret && mysqli_num_rows($ret) > 0): ?>
-
                                                 <?php while ($row = mysqli_fetch_assoc($ret)): ?>
-
                                                     <tr>
-
                                                         <td>#<?= $row['id'] ?></td>
-
                                                         <td><?= htmlspecialchars($row['full_name']) ?></td>
-
                                                         <td><?= htmlspecialchars($row['email']) ?></td>
-
                                                         <td><?= htmlspecialchars($row['subject']) ?></td>
-
                                                         <td>
-
                                                             <?php if ($row['status'] == 'open'): ?>
                                                                 <span class="badge badge-open">Open</span>
-
                                                             <?php elseif ($row['status'] == 'in_progress'): ?>
                                                                 <span class="badge badge-progress">In Progress</span>
-
                                                             <?php else: ?>
                                                                 <span class="badge badge-resolved">Resolved</span>
                                                             <?php endif; ?>
-
                                                         </td>
+                                                        <td><?= date("M d, Y h:i A", strtotime($row['created_at'])) ?></td>
 
                                                         <td>
-                                                            <?= date("M d, Y h:i A", strtotime($row['created_at'])) ?>
+                                                            <a href="view_ticket.php?id=<?= $row['id'] ?>"class="btn btn-sm btn-primary">View</a>
                                                         </td>
-
-                                                        <td>
-                                                            <a href="view_ticket.php?id=<?= $row['id'] ?>"
-                                                                class="btn btn-sm btn-primary">
-                                                                View
-                                                            </a>
-                                                        </td>
-
                                                     </tr>
-
                                                 <?php endwhile; ?>
-
                                             <?php else: ?>
 
                                                 <tr>
-                                                    <td colspan="7" class="text-center text-danger">
-                                                        No tickets found.
-                                                    </td>
+                                                    <td colspan="7" class="text-center text-danger">No tickets found.</td>
                                                 </tr>
-
                                             <?php endif; ?>
-
                                         </tbody>
-
                                     </table>
                                 <?php endif; ?>
                             </div>
-
                         </div>
-
                     </div>
-
                 </div>
             </div>
-
         </main>
-
         <?php include("includes/footer.php"); ?>
-
     </div>
 
     <?php include("includes/flash-swal.php"); ?>

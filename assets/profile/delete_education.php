@@ -1,7 +1,6 @@
 <?php
 session_start();
 require_once "../../backend/db.php";
-
 header('Content-Type: application/json');
 
 if (!isset($_SESSION['user_id'])) {
@@ -12,7 +11,6 @@ if (!isset($_SESSION['user_id'])) {
 }
 
 $user_id = $_SESSION['user_id'];
-
 $id = $_POST['id'] ?? 0;
 
 $stmt = $conn->prepare("
@@ -23,13 +21,11 @@ $stmt = $conn->prepare("
 $stmt->bind_param("ii", $id, $user_id);
 
 if ($stmt->execute()) {
-
     echo json_encode([
         "status" => "success"
     ]);
 
 } else {
-
     echo json_encode([
         "status" => "error",
         "message" => $stmt->error

@@ -29,7 +29,7 @@ if (!preg_match('/^\d{6}$/', $otp)) {
     exit();
 }
 
-/* 🔥 FIX: TIME WINDOW TOLERANCE ADDED */
+/* FIX: TIME WINDOW TOLERANCE ADDED */
 $valid = $google2fa->verifyKey(
     $user['twofa_secret'],
     $otp,

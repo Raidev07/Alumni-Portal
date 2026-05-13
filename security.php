@@ -14,15 +14,10 @@ if (!isset($_SESSION['user_id'])) {
 
 $user_id = $_SESSION['user_id'];
 
-/* =====================
-   HANDLE POST REQUESTS
-===================== */
-
+// handle post request
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-    /* =====================
-       CHANGE PASSWORD
-    ===================== */
+// changepassword
     if (isset($_POST['change_password'])) {
 
         $current = $_POST['current_password'];
@@ -57,9 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit();
     }
 
-    /* =====================
-       ENABLE 2FA + GENERATE BACKUP CODES (FIXED)
-    ===================== */
+// enable 2fa + genearte backup code
     if (isset($_POST['enable_2fa'])) {
 
         $secret = $google2fa->generateSecretKey();
@@ -90,7 +83,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $generated_codes[] = $code;
         }
 
-        // STORE FOR DISPLAY (IMPORTANT FIX)
+        // store for display
         $_SESSION['backup_codes'] = $generated_codes;
 
         $_SESSION['message'] = "2FA enabled. Scan QR and save backup codes.";
@@ -98,9 +91,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit();
     }
 
-    /* =====================
-       CONFIRM 2FA
-    ===================== */
+// confirm 2fa
     if (isset($_POST['confirm_2fa'])) {
 
         $otp = $_POST['otp'];
@@ -133,9 +124,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit();
     }
 
-    /* =====================
-       DISABLE 2FA
-    ===================== */
+// disable 2fa
     if (isset($_POST['disable_2fa'])) {
 
         $stmt = $conn->prepare("
@@ -152,10 +141,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-/* =====================
-   LOAD USER DATA
-===================== */
-
+// load user data
 $stmt = $conn->prepare("SELECT * FROM users WHERE id = ?");
 $stmt->bind_param("i", $user_id);
 $stmt->execute();
@@ -164,9 +150,7 @@ $user = $stmt->get_result()->fetch_assoc();
 $message = $_SESSION['message'] ?? '';
 unset($_SESSION['message']);
 
-/* =====================
-   GET BACKUP CODES (FIX)
-===================== */
+// get backup code
 $backup_codes = $_SESSION['backup_codes'] ?? [];
 unset($_SESSION['backup_codes']);
 ?>
@@ -361,7 +345,6 @@ unset($_SESSION['backup_codes']);
             line-height: 1.8;
         }
 
-        /* ── PROFILE ICON ─────────────────────────────────────────────── */
         .profile-icon {
             display: flex;
             align-items: center;

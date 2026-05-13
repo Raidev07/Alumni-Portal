@@ -9,7 +9,7 @@ require_once "backend/db.php";
 $isLoggedIn = isset($_SESSION['user_id']);
 $uid = $isLoggedIn ? $_SESSION['user_id'] : null;
 
-/* ================= TOTAL ALUMNI ================= */
+// total alumni
 $query = "
     SELECT COUNT(*) AS total_alumni
     FROM users
@@ -26,7 +26,7 @@ if ($result) {
 }
 
 
-/* ================= TOTAL EVENTS ================= */
+// total event
 $events_query = "
     SELECT COUNT(*) AS total_events
     FROM events
@@ -42,7 +42,7 @@ if ($events_result) {
 }
 
 
-/* ================= TOTAL JOBS ================= */
+// total job
 $query_jobs = "SELECT COUNT(*) AS total_jobs FROM jobpostings";
 $result_jobs = mysqli_query($conn, $query_jobs);
 
@@ -242,42 +242,22 @@ if ($isLoggedIn) {
 
                             <div class="card-image">
                                 <img src="<?= $coverImage ?>" alt="Article Cover">
-
-                                <div class="card-tag">
-                                    <?= htmlspecialchars($featured['category']) ?>
-                                </div>
+                                <div class="card-tag"><?= htmlspecialchars($featured['category']) ?></div>
                             </div>
 
                             <div class="card-content">
-
-                                <h3 class="card-title">
-                                    <?= htmlspecialchars($featured['title']) ?>
-                                </h3>
-
-                                <p class="card-text">
-                                    <?= htmlspecialchars($featured['excerpt']) ?>
-                                </p>
-
+                                <h3 class="card-title"><?= htmlspecialchars($featured['title']) ?></h3>
+                                <p class="card-text"><?= htmlspecialchars($featured['excerpt']) ?></p>
                                 <div class="card-footer">
-
                                     <div class="card-profile">
-
                                         <?php if (!empty($featured['profile_picture'])): ?>
-
                                             <img src="<?= $profilePic ?>" alt="Profile Picture">
-
                                         <?php else: ?>
-
-                                            <div class="profile-placeholder">
-                                                <?= $initials ?>
-                                            </div>
-
+                                            <div class="profile-placeholder"><?= $initials ?></div>
                                         <?php endif; ?>
 
                                         <div class="card-profile-info">
-                                            <span class="card-profile-name">
-                                                <?= htmlspecialchars($featured['alumni_name']) ?>
-                                            </span>
+                                            <span class="card-profile-name"><?= htmlspecialchars($featured['alumni_name']) ?></span>
 
                                             <span class="card-profile-role">
                                                 <?= !empty($featured['course_name'])
@@ -285,19 +265,12 @@ if ($isLoggedIn) {
                                                     : 'Alumni' ?>
                                             </span>
                                         </div>
-
                                     </div>
-
-                                    <a href="<?= $isLoggedIn ? 'view_article.php?id=' . $featured['id'] : 'DPA.php' ?>" class="card-button">
-                                        Read More
-                                    </a>
-
+                                    <a href="<?= $isLoggedIn ? 'view_article.php?id=' . $featured['id'] : 'DPA.php' ?>" class="card-button">Read More</a>
                                 </div>
                             </div>
                         </div>
-
                     <?php endwhile; ?>
-
                 </div>
 
                 <!-- Pagination -->
@@ -317,5 +290,4 @@ if ($isLoggedIn) {
     <script src="assets/js/script.js"></script>
     <script src="assets/js/alumni_homepage.js"></script>
 </body>
-
 </html>

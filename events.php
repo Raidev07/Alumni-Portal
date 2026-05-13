@@ -114,26 +114,11 @@ if (!empty($_SESSION['first_name'])) {
                     <p id="d-desc"></p>
                 </div>
                 <div class="detail-actions">
-                    <button class="btn-apply" id="d-register">
-                        Register Now
-                    </button>
-
-                    <button class="btn-edit hidden" id="d-edit">
-                        Edit
-                    </button>
-
-                    <button class="btn-delete hidden" id="d-delete">
-                        Archive
-                    </button>
-
-                    <button class="btn-post hidden" id="d-restore">
-                        Restore
-                    </button>
-
-                    <button class="btn-back" id="closeDetail">
-                        Close
-                    </button>
-
+                    <button class="btn-apply" id="d-register">Register Now</button>
+                    <button class="btn-edit hidden" id="d-edit">Edit</button>
+                    <button class="btn-delete hidden" id="d-delete">Archive</button>
+                    <button class="btn-post hidden" id="d-restore">Restore</button>
+                    <button class="btn-back" id="closeDetail">Close</button>
                 </div>
             </div>
         </div>
@@ -143,14 +128,12 @@ if (!empty($_SESSION['first_name'])) {
     <div class="overlay hidden" id="editOverlay">
 
         <div class="modal">
-
             <div class="modal-header">
                 <h2>Edit Event</h2>
                 <p>Update the information below</p>
             </div>
 
             <input type="hidden" id="e-id">
-
             <div class="form-grid">
 
                 <div class="form-group form-full">
@@ -207,46 +190,23 @@ if (!empty($_SESSION['first_name'])) {
                     <label>Description</label>
                     <textarea id="e-desc" rows="4"></textarea>
                 </div>
-
             </div>
 
             <div class="modal-footer">
-
-                <button class="btn-cancel" id="cancelEditBtn">
-                    Cancel
-                </button>
-
-                <button class="btn-post" id="saveEditBtn">
-                    Save Changes
-                </button>
-
+                <button class="btn-cancel" id="cancelEditBtn">Cancel</button>
+                <button class="btn-post" id="saveEditBtn">Save Changes</button>
             </div>
-
         </div>
-
     </div>
 
     <!-- ERROR MODAL -->
     <div class="error-overlay hidden" id="errorOverlay">
-
         <div class="error-modal">
-
-            <div class="error-icon">
-                <i class="fa-solid fa-circle-exclamation"></i>
-            </div>
-
+            <div class="error-icon"><i class="fa-solid fa-circle-exclamation"></i></div>
             <h2>Error</h2>
-
-            <p id="errorMessage">
-                Something went wrong.
-            </p>
-
-            <button id="closeErrorBtn">
-                OK
-            </button>
-
+            <p id="errorMessage">Something went wrong.</p>
+            <button id="closeErrorBtn">OK</button>
         </div>
-
     </div>
 
     <!-- MAIN PAGE -->
@@ -301,39 +261,25 @@ if (!empty($_SESSION['first_name'])) {
 
     <!-- DELETE MODAL -->
     <div class="overlay hidden" id="deleteOverlay">
-
         <div class="modal delete-modal">
-
             <div class="modal-header">
                 <h2>Archive Event</h2>
                 <p>
                     Are you sure you want to archive this event?
-
                     You can restore it again anytime from
                     <strong>My Archived Events</strong>.
                 </p>
             </div>
 
             <div class="modal-footer">
-
-                <button class="btn-back" id="cancelDeleteBtn">
-                    Cancel
-                </button>
-
-                <button class="btn-delete" id="confirmDeleteBtn">
-                    Send to Archive
-                </button>
-
+                <button class="btn-back" id="cancelDeleteBtn">Cancel</button>
+                <button class="btn-delete" id="confirmDeleteBtn">Send to Archive</button>
             </div>
-
         </div>
-
     </div>
 
     <?php include('includes/logoutmodal.php'); ?>
-
     <script src="assets/js/alumni_homepage.js"></script>
     <script src="assets/js/eventscript.js"></script>
 </body>
-
 </html>

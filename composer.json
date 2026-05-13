@@ -1,5 +1,6 @@
 {
     "require": {
-        "pragmarx/google2fa": "^9.0"
+        "pragmarx/google2fa": "^9.0",
+        "phpoffice/phpspreadsheet": "^5.7"
     }
 }

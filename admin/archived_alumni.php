@@ -3,21 +3,14 @@ include("../backend/db_admin.php");
 session_start();
 
 include("includes/flash.php");
-/*
-|--------------------------------------------------------------------------
-| ADMIN CHECK
-|--------------------------------------------------------------------------
-*/
+
+// ADMIN CHECK
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
     header("Location: ../login.php");
     exit();
 }
 
-/*
-|--------------------------------------------------------------------------
-| RESTORE ALUMNI (FIXED)
-|--------------------------------------------------------------------------
-*/
+// RESTORE ALUMNI (FIXED)
 if (isset($_GET['restore_id'])) {
 
     $rid = intval($_GET['restore_id']);
@@ -67,11 +60,7 @@ if (isset($_GET['restore_id'])) {
     exit();
 }
 
-/*
-|--------------------------------------------------------------------------
-| FETCH ARCHIVED DATA
-|--------------------------------------------------------------------------
-*/
+// FETCH ARCHIVED DATA
 $query = "
 SELECT
 ad.alumni_id,
@@ -182,21 +171,15 @@ $ret = mysqli_query($conn, $query);
             <!-- CONTENT -->
             <div class="app-content">
                 <div class="container-fluid">
-
                     <div class="card card-outline card-secondary">
-
                         <div class="card-header">
                             <div class="card-title">
                                 Archived Alumni
                             </div>
                         </div>
-
                         <div class="card-body p-0">
-
                             <div class="table-responsive">
-
                                 <table class="table table-striped table-hover" id="table-data">
-
                                     <thead>
                                         <tr>
                                             <th>#</th>
@@ -209,14 +192,10 @@ $ret = mysqli_query($conn, $query);
                                             <th>Action</th>
                                         </tr>
                                     </thead>
-
                                     <tbody>
-
                                         <?php if ($ret && mysqli_num_rows($ret) > 0): ?>
-
                                             <?php $i = 1;
                                             while ($row = mysqli_fetch_assoc($ret)): ?>
-
                                                 <tr>
                                                     <td><?= $i++ ?></td>
                                                     <td><?= htmlspecialchars($row['full_name']) ?></td>
@@ -224,10 +203,7 @@ $ret = mysqli_query($conn, $query);
                                                     <td><?= $row['Academic_year'] ?></td>
                                                     <td><?= $row['Email'] ?></td>
                                                     <td><?= $row['Phone'] ?></td>
-
-                                                    <td>
-                                                        <span class="badge badge-archived">Archived</span>
-                                                    </td>
+                                                    <td><span class="badge badge-archived">Archived</span></td>
 
                                                     <td>
                                                         <a href="archived_alumni.php?restore_id=<?= $row['alumni_id'] ?>"
@@ -237,34 +213,21 @@ $ret = mysqli_query($conn, $query);
                                                         </a>
                                                     </td>
                                                 </tr>
-
                                             <?php endwhile; ?>
-
                                         <?php else: ?>
 
                                             <tr>
-                                                <td colspan="8" class="text-center text-danger">
-                                                    No archived records found.
-                                                </td>
+                                                <td colspan="8" class="text-center text-danger">No archived records found.</td>
                                             </tr>
-
                                         <?php endif; ?>
-
                                     </tbody>
-
                                 </table>
-
                             </div>
-
                         </div>
-
                     </div>
-
                 </div>
             </div>
-
         </main>
-
         <?php include("includes/footer.php"); ?>
 
     </div>

@@ -201,7 +201,6 @@ function closeModal() {
 }
 
 // Profile Edit
-// Profile Edit
 function openEditProfile() {
     document.getElementById("mFirstName").value = profile.firstName ?? "";
     document.getElementById("mMiddleName").value = profile.middleName ?? "";
@@ -672,24 +671,6 @@ document.getElementById("confirmAvatarBtn").addEventListener("click", () => {
 
     document.getElementById("avatarDialog").classList.remove("active");
 });
-
-// document.getElementById("removeAvatarBtn").addEventListener("click", () => {
-//     if (!confirm("Remove profile picture?")) return;
-
-//     fetch("assets/profile/remove_avatar.php", {
-//         method: "POST",
-//     })
-//     .then(res => res.text())
-//     .then(res => {
-//         console.log(res);
-
-//         if (res.trim() === "success") {
-//             location.reload();
-//         } else {
-//             alert("Failed to remove photo");
-//         }
-//     });
-// });
 
 let deleteCallback = null;
 

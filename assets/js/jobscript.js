@@ -1,9 +1,9 @@
-// ─── STATE ────────────────────────────────────────────────────────────────────
+// STATE
 let activeType = "all";
 let jobsCache = [];
 let deleteJobId = null;
 
-// ─── ERROR MODAL ──────────────────────────────────────────────────────────────
+// ERROR MODAL
 function showErrorModal(message) {
     document.getElementById("errorMessage").textContent =
         message || "Something went wrong.";
@@ -19,8 +19,7 @@ function closeErrorModal() {
     document.body.classList.remove("modal-open");
 }
 
-// ─── VALIDATION HELPERS ─────────────────────────────────────
-
+// VALIDATION HELPERS
 function setFieldError(inputId, errorId, message) {
     const input = document.getElementById(inputId);
     const error = document.getElementById(errorId);
@@ -62,8 +61,7 @@ function formatSalaryInput(input) {
     });
 }
 
-// ─── LIVE ERROR RESET ─────────────────────────
-
+// LIVE ERROR RESET
 [
     ["f-salary-min", "f-salary-min-error"],
     ["f-salary-max", "f-salary-max-error"],
@@ -131,7 +129,7 @@ document.getElementById("errorOverlay")?.addEventListener("click", (e) => {
     }
 });
 
-// ─── FETCH & RENDER JOBS FROM DB ──────────────────────────────────────────────
+// FETCH & RENDER JOBS FROM DB
 async function renderJobs() {
     const list = document.getElementById("jobsList");
     const empty = document.getElementById("emptyState");
@@ -273,7 +271,7 @@ async function renderJobs() {
     }
 }
 
-// ─── OPEN DETAIL MODAL ────────────────────────────────────────────────────────
+// OPEN DETAIL MODAL
 function openDetail(id) {
     const j = jobsCache.find((x) => x.id === id);
 
@@ -326,8 +324,7 @@ function openDetail(id) {
     document.getElementById("d-req").textContent = j.req;
     document.getElementById("d-ben").textContent = j.benefits;
 
-    // ─── DYNAMIC ACTION BUTTONS ─────────────────────────────────
-
+// DYNAMIC ACTION BUTTONS
     const actions = document.querySelector(".detail-actions");
 
     if (isArchived) {
@@ -381,16 +378,14 @@ function openDetail(id) {
         `;
     }
 
-    // ─── GET NEW BUTTON REFERENCES ─────────────────────────────
-
+// GET NEW BUTTON REFERENCES
     const restoreBtn = document.getElementById("d-restore");
     const editBtn = document.getElementById("d-edit");
     const deleteBtn = document.getElementById("d-delete");
     const closeBtn = document.getElementById("closeDetail");
     const applyLink = document.getElementById("d-link");
 
-    // ─── APPLY LINK ─────────────────────────────────────────────
-
+// APPLY LINK
     if (applyLink) {
         if (isOwner) {
             applyLink.classList.add("hidden");
@@ -436,8 +431,7 @@ function openDetail(id) {
             };
         }
     }
-    // ─── BUTTON EVENTS ──────────────────────────────────────────
-
+// BUTTON EVENTS
     if (restoreBtn && isArchived) {
         restoreBtn.onclick = () => restoreJob(j.id);
     }
@@ -463,7 +457,7 @@ function openDetail(id) {
     document.body.classList.add("modal-open");
 }
 
-// ─── OPEN EDIT MODAL ──────────────────────────────────────────────────────────
+// OPEN EDIT MODAL
 function openEdit(j) {
     document.getElementById("detailOverlay").classList.add("hidden");
 
@@ -505,7 +499,7 @@ function setSelectValue(id, value) {
     });
 }
 
-// ─── SAVE EDIT ────────────────────────────────────────────────────────────────
+// SAVE EDIT
 document.getElementById("saveEditBtn")?.addEventListener("click", async () => {
     const id = document.getElementById("e-id").value;
 
@@ -533,7 +527,7 @@ document.getElementById("saveEditBtn")?.addEventListener("click", async () => {
     clearFieldError("e-salary-min", "e-salary-min-error");
     clearFieldError("e-salary-max", "e-salary-max-error");
 
-    // ─── REQUIRED FIELD CHECK ─────────────────────────
+    // REQUIRED FIELD CHECK
 
     if (!title) {
         showErrorModal("Job title is required.");
@@ -570,7 +564,7 @@ document.getElementById("saveEditBtn")?.addEventListener("click", async () => {
         return;
     }
 
-    // ─── EMAIL VALIDATION ─────────────────────────────
+    // EMAIL VALIDATION
 
     if (!isValidEmail(email)) {
         showErrorModal("Please enter a valid email address.");
@@ -578,8 +572,7 @@ document.getElementById("saveEditBtn")?.addEventListener("click", async () => {
         return;
     }
 
-    // ─── SALARY VALIDATION ────────────────────────────
-
+    // SALARY VALIDATION
     if (!minSalaryRaw || isNaN(minSalary) || minSalary <= 0) {
         setFieldError(
             "e-salary-min",
@@ -670,7 +663,7 @@ document.getElementById("saveEditBtn")?.addEventListener("click", async () => {
         showErrorModal("Something went wrong while updating the job.");
     }
 });
-// ─── CANCEL EDIT ──────────────────────────────────────────────────────────────
+// CANCEL EDIT
 document.getElementById("cancelBtn")?.addEventListener("click", () => {
     document.getElementById("postOverlay").classList.add("hidden");
 
@@ -714,7 +707,7 @@ document.getElementById("cancelBtn")?.addEventListener("click", () => {
     });
 });
 
-// ─── CANCEL EDIT MODAL ─────────────────────────────────────
+//CANCEL EDIT MODAL
 document.getElementById("cancelEditBtn")?.addEventListener("click", () => {
     document.getElementById("editOverlay").classList.add("hidden");
 
@@ -747,7 +740,7 @@ document.getElementById("cancelEditBtn")?.addEventListener("click", () => {
     });
 });
 
-// ─── DELETE JOB ───────────────────────────────────────────────────────────────
+//DELETE JOB 
 function deleteJob(id) {
     deleteJobId = id;
 
@@ -758,7 +751,7 @@ function deleteJob(id) {
     document.body.classList.add("modal-open");
 }
 
-// ─── RESTORE JOB ───────────────────────────────────────────────────────────────
+// RESTORE JOB
 async function restoreJob(id) {
     try {
         const res = await fetch("backend/jobs_process.php", {

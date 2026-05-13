@@ -31,32 +31,14 @@
 
             <div class="hamburger-dropdown" id="hamburgerDropdown">
                 <ul>
-                    <li>
-                        <a href="contact.php">
-                            <i class="fas fa-envelope"></i> Contact Us
-                        </a>
-                    </li>
-                    <li>
-                        <a href="security.php" id="securityTrigger">
-                            <i class="fas fa-shield-alt"></i> Security Settings
-                        </a>
-                    </li>
-                    <li>
-                        <a href="my_tickets.php" id="securityTrigger">
-                            <i class="fas fa-ticket-alt"></i> My Tickets
-                        </a>
-                    </li>
-                    <li class="dropdown-divider-top">
-                        <a href="#" id="logoutTrigger">
-                            <i class="fas fa-sign-out-alt"></i> Logout
-                        </a>
-                    </li>
+                    <li><a href="contact.php"><i class="fas fa-envelope"></i> Contact Us</a></li>
+                    <li><a href="security.php" id="securityTrigger"><i class="fas fa-shield-alt"></i> Security Settings</a></li>
+                    <li><a href="my_tickets.php" id="securityTrigger"><i class="fas fa-ticket-alt"></i> My Tickets</a></li>
+                    <li class="dropdown-divider-top"><a href="#" id="logoutTrigger"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
                 </ul>
             </div>
         </div>
 
-        <a href="#" class="logo-link2">
-            <img src="assets/image/plplogo.png" alt="PLP Logo">
-        </a>
+        <a href="#" class="logo-link2"><img src="assets/image/plplogo.png" alt="PLP Logo"></a>
     </div>
 </nav>

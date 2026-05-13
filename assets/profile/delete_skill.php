@@ -23,7 +23,6 @@ $stmt = $conn->prepare("
 $stmt->bind_param("ii", $id, $user_id);
 
 if ($stmt->execute()) {
-
     echo json_encode([
         "status" => "success"
     ]);

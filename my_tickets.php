@@ -9,11 +9,7 @@ if (!isset($_SESSION['user_id'])) {
 
 $user_id = $_SESSION['user_id'];
 
-/*
-|----------------------------------------------------------------------
-| TAB SYSTEM (MY TICKETS / ARCHIVE)
-|----------------------------------------------------------------------
-*/
+// filter 
 $tab = $_GET['tab'] ?? 'open';
 
 if ($tab === 'archive') {
@@ -147,29 +143,20 @@ $tickets = $stmt->get_result();
             </div>
 
             <div class="contact-form-card">
-
                 <h3 class="form-title">Ticket Center</h3>
-
                 <div class="ticket-layout">
-
                     <!-- SIDEBAR -->
                     <div class="ticket-sidebar">
-
-                        <a href="my_tickets.php?tab=open"
-                            class="<?= $tab === 'open' ? 'active' : '' ?>">
+                        <a href="my_tickets.php?tab=open" class="<?= $tab === 'open' ? 'active' : '' ?>">
                             <i class="fas fa-inbox"></i> My Tickets
                         </a>
-
-                        <a href="my_tickets.php?tab=archive"
-                            class="<?= $tab === 'archive' ? 'active' : '' ?>">
+                        <a href="my_tickets.php?tab=archive" class="<?= $tab === 'archive' ? 'active' : '' ?>">
                             <i class="fas fa-archive"></i> Archive
                         </a>
-
                     </div>
 
                     <!-- TABLE -->
                     <div class="ticket-table">
-
                         <table>
                             <thead>
                                 <tr>
@@ -180,12 +167,9 @@ $tickets = $stmt->get_result();
                                     <th>Action</th>
                                 </tr>
                             </thead>
-
                             <tbody>
-
                                 <?php if ($tickets->num_rows > 0): ?>
                                     <?php while ($ticket = $tickets->fetch_assoc()): ?>
-
                                         <tr>
                                             <td>#<?= $ticket['id'] ?></td>
                                             <td><?= htmlspecialchars($ticket['subject']) ?></td>
@@ -207,11 +191,7 @@ $tickets = $stmt->get_result();
                                             </td>
 
                                             <td>
-                                                <a href="view_ticket.php?id=<?= $ticket['id'] ?>"
-                                                    class="submit-btn"
-                                                    style="padding:6px 10px;">
-                                                    View
-                                                </a>
+                                                <a href="view_ticket.php?id=<?= $ticket['id'] ?>" class="submit-btn" style="padding:6px 10px;"> View</a>
                                             </td>
                                         </tr>
 
@@ -223,23 +203,16 @@ $tickets = $stmt->get_result();
                                             No tickets found.
                                         </td>
                                     </tr>
-
                                 <?php endif; ?>
-
                             </tbody>
                         </table>
-
                     </div>
-
                 </div>
-
             </div>
         </div>
     </section>
 
     <?php include('includes/logoutmodal.php'); ?>
     <script src="assets/js/alumni_homepage.js"></script>
-
 </body>
-
 </html>

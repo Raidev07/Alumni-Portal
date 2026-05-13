@@ -21,9 +21,7 @@ unset($_SESSION['reg_errors'], $_SESSION['reg_old']);
 </head>
 
 <body>
-    <?php
-    include('includes/navbarindex.php');
-    ?>
+    <?php include('includes/navbarindex.php');?>
 
     <div class="form_container">
         <div class="title">Alumni Registration</div>
@@ -31,9 +29,7 @@ unset($_SESSION['reg_errors'], $_SESSION['reg_old']);
         <?php if (!empty($errors)): ?>
             <div class="error-box">
                 <?php foreach ($errors as $err): ?>
-                    <p class="error-msg">⚠
-                        <?= htmlspecialchars($err) ?>
-                    </p>
+                    <p class="error-msg">⚠<?= htmlspecialchars($err) ?></p>
                 <?php endforeach; ?>
             </div>
         <?php endif; ?>
@@ -191,14 +187,8 @@ unset($_SESSION['reg_errors'], $_SESSION['reg_old']);
             </div>
 
             <div class="button">
-                <button type="button" class="btn" id="resetBtn">
-                    Reset
-                </button>
-
-                <button type="button" class="btn" onclick="window.location.href = 'index.php'">
-                    Cancel
-                </button>
-
+                <button type="button" class="btn" id="resetBtn">Reset</button>
+                <button type="button" class="btn" onclick="window.location.href = 'index.php'">Cancel</button>
                 <input type="submit" value="Register" />
             </div>
         </form>
@@ -210,8 +200,7 @@ unset($_SESSION['reg_errors'], $_SESSION['reg_old']);
         <div
             style="background:#fff; border-radius:16px; padding:36px 32px; max-width:420px; width:90%; box-shadow:0 12px 40px rgba(0,0,0,0.2); text-align:center;">
             <div id="regModalIcon" style="font-size:2.5rem; margin-bottom:12px;"></div>
-            <div id="regModalTitle" style="font-size:1.25rem; font-weight:700; color:#0f172a; margin-bottom:10px;">
-            </div>
+            <div id="regModalTitle" style="font-size:1.25rem; font-weight:700; color:#0f172a; margin-bottom:10px;"></div>
             <div id="regModalBody" style="font-size:0.92rem; color:#475569; line-height:1.6;"></div>
             <button onclick="closeRegModal()"
                 style="margin-top:24px; padding:10px 32px; background:#15803d; color:#fff; border:none; border-radius:8px; font-weight:600; font-size:0.95rem; cursor:pointer;">OK</button>

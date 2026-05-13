@@ -3,11 +3,8 @@ include("../backend/db_admin.php");
 session_start();
 
 include("includes/flash.php");
-/*
-|-------------------------------------------------
-| SESSION CHECK
-|-------------------------------------------------
-*/
+
+// SESSION CHECK
 if (
     !isset($_SESSION['user_id']) ||
     $_SESSION['role'] !== 'admin'
@@ -18,11 +15,7 @@ if (
 
 $user_email = $_SESSION['user_email'];
 
-/*
-|-------------------------------------------------
-| FETCH USER DATA
-|-------------------------------------------------
-*/
+// FETCH USER DATA
 $sql = " SELECT id, email FROM users WHERE email = ? ";
 
 $stmt = $conn->prepare($sql);

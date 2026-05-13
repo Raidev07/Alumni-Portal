@@ -60,7 +60,6 @@
             <?= json_encode($userName) ?>;
     </script>
 
-
     <!-- POST JOB MODAL OVERLAY -->
     <div class="overlay hidden" id="postOverlay">
         <div class="modal">
@@ -90,25 +89,22 @@
                         <option>Internship</option>
                     </select>
                 </div>
+
                 <div class="form-group">
                     <label>Salary Range</label>
-
                     <div class="salary-inline">
-
                         <div class="salary-field">
                             <input id="f-salary-min" type="text" placeholder="Min Salary">
                             <small class="field-error" id="f-salary-min-error"></small>
                         </div>
-
                         <span class="salary-separator">-</span>
-
                         <div class="salary-field">
                             <input id="f-salary-max" type="text" placeholder="Max Salary">
                             <small class="field-error" id="f-salary-max-error"></small>
                         </div>
-
                     </div>
                 </div>
+
                 <div class="form-group">
                     <label for="f-modality">Modality</label>
                     <select id="f-modality">
@@ -117,6 +113,7 @@
                         <option>Remote</option>
                     </select>
                 </div>
+
                 <div class="form-group">
                     <label for="f-category">Category</label>
                     <select id="f-category">
@@ -132,26 +129,31 @@
                         <option>Other</option>
                     </select>
                 </div>
+
                 <div class="form-group">
                     <label for="f-email">Contact Email</label>
                     <input id="f-email" type="email" placeholder="hr@company.com">
                 </div>
+
                 <div class="form-group form-full">
                     <label for="f-desc">Job Description</label>
                     <textarea id="f-desc" rows="4"
                         placeholder="Describe the role, responsibilities, and day-to-day tasks..."></textarea>
                 </div>
+
                 <div class="form-group form-full">
                     <label for="f-req">Requirements &amp; Qualifications</label>
                     <textarea id="f-req" rows="3"
                         placeholder="List required skills, education, years of experience..."></textarea>
                 </div>
+
                 <div class="form-group form-full">
                     <label for="f-benefits">Benefits</label>
                     <textarea id="f-benefits" rows="2"
                         placeholder="Health insurance, performance bonuses, flexible hours..."></textarea>
                 </div>
             </div>
+
             <div class="modal-footer">
                 <button class="btn-cancel" id="cancelBtn">Cancel</button>
                 <button class="btn-post" id="postBtn">Post Job</button>
@@ -182,33 +184,16 @@
                     <p id="d-ben"></p>
                 </div>
                 <div class="detail-actions">
-
                     <?php if (isset($_SESSION['user_id'])): ?>
-                        <a class="btn-apply" id="d-link" href="#">
-                            Apply Now
-                        </a>
+                        <a class="btn-apply" id="d-link" href="#">Apply Now</a>
                     <?php else: ?>
-                        <a class="btn-apply" href="login.php">
-                            Login to Apply
-                        </a>
+                        <a class="btn-apply" href="login.php">Login to Apply</a>
                     <?php endif; ?>
 
-                    <button class="btn-edit hidden" id="d-edit">
-                        Edit
-                    </button>
-
-                    <button class="btn-post hidden" id="d-restore">
-                        Restore
-                    </button>
-
-                    <button class="btn-back" id="closeDetail">
-                        Close
-                    </button>
-
-                    <button class="btn-delete hidden" id="d-delete">
-                        Delete
-                    </button>
-
+                    <button class="btn-edit hidden" id="d-edit">Edit</button>
+                    <button class="btn-post hidden" id="d-restore"> Restore </button>
+                    <button class="btn-back" id="closeDetail">Close</button>
+                    <button class="btn-delete hidden" id="d-delete">Delete</button>
                 </div>
             </div>
         </div>
@@ -222,11 +207,8 @@
                 <h2>Edit Job Posting</h2>
                 <p>Update the information below</p>
             </div>
-
             <input type="hidden" id="e-id">
-
             <div class="form-grid">
-
                 <div class="form-group">
                     <label>Job Title</label>
                     <input id="e-title" type="text">
@@ -317,38 +299,20 @@
             </div>
 
             <div class="modal-footer">
-                <button class="btn-cancel" id="cancelEditBtn">
-                    Cancel
-                </button>
-
-                <button class="btn-post" id="saveEditBtn">
-                    Save Changes
-                </button>
+                <button class="btn-cancel" id="cancelEditBtn">Cancel</button>
+                <button class="btn-post" id="saveEditBtn">Save Changes</button>
             </div>
         </div>
     </div>
 
     <!-- ERROR MODAL -->
     <div class="error-overlay hidden" id="errorOverlay">
-
         <div class="error-modal">
-
-            <div class="error-icon">
-                <i class="fa-solid fa-circle-exclamation"></i>
-            </div>
-
+            <div class="error-icon"><i class="fa-solid fa-circle-exclamation"></i></div>
             <h2>Error</h2>
-
-            <p id="errorMessage">
-                Something went wrong.
-            </p>
-
-            <button id="closeErrorBtn">
-                OK
-            </button>
-
+            <p id="errorMessage">Something went wrong.</p>
+            <button id="closeErrorBtn">OK</button>
         </div>
-
     </div>
 
     <!------------ MAIN PAGE ------------->
@@ -360,13 +324,9 @@
             </div>
             <!-- Only show "Post a Job" button if logged in -->
             <?php if (isset($_SESSION['user_id'])): ?>
-                <button class="create-btn" id="openPostBtn">
-                    <i class="fa-solid fa-plus"></i> Post a Job
-                </button>
+                <button class="create-btn" id="openPostBtn"><i class="fa-solid fa-plus"></i> Post a Job</button>
             <?php else: ?>
-                <button class="create-btn" onclick="window.location.href='login.php'">
-                    <i class="fa-solid fa-plus"></i> Login to Post
-                </button>
+                <button class="create-btn" onclick="window.location.href='login.php'"><i class="fa-solid fa-plus"></i> Login to Post</button>
             <?php endif; ?>
         </div>
 
@@ -407,22 +367,15 @@
                 <h2>Archive Job Post</h2>
                 <p>
                     Are you sure you want to archive this job posting?
-
                     You can restore it again anytime from
                     <strong>My Archived Jobs</strong>.
                 </p>
             </div>
 
             <div class="modal-footer">
-                <button class="btn-back" id="cancelDeleteBtn">
-                    Cancel
-                </button>
-
-                <button class="btn-delete" id="confirmDeleteBtn">
-                    Send to Archive
-                </button>
+                <button class="btn-back" id="cancelDeleteBtn">Cancel</button>
+                <button class="btn-delete" id="confirmDeleteBtn">Send to Archive</button>
             </div>
-
         </div>
     </div>
 
