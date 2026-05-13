@@ -1046,3 +1046,128 @@ body.modal-open {
 .restore-btn:hover {
     background: #166534 !important;
 }
+
+/* ─── ERROR MODAL ───────────────────────── */
+
+.error-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 5000;
+    padding: 20px;
+}
+
+.error-overlay.hidden {
+    display: none;
+}
+
+.error-modal {
+    width: 100%;
+    max-width: 400px;
+    background: #fff;
+    border-radius: 14px;
+    padding: 28px 24px;
+    text-align: center;
+    animation: popupFade 0.2s ease;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.error-icon {
+    width: 70px;
+    height: 70px;
+    margin: 0 auto 16px;
+    border-radius: 50%;
+    background: #ffe5e5;
+    color: #d93025;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 34px;
+}
+
+.error-modal h2 {
+    font-size: 24px;
+    margin-bottom: 10px;
+    color: #111;
+}
+
+.error-modal p {
+    font-size: 15px;
+    color: #555;
+    line-height: 1.5;
+    margin-bottom: 24px;
+}
+
+.error-modal button {
+    background: #1a6b3a;
+    color: white;
+    border: none;
+    padding: 10px 26px;
+    border-radius: 8px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.error-modal button:hover {
+    background: #15552e;
+}
+
+@keyframes popupFade {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* ─── FORM VALIDATION ───────────────────────── */
+
+.field-error {
+    display: block;
+    color: #dc2626;
+    font-size: 12px;
+    margin-top: 5px;
+    min-height: 16px;
+    font-weight: 500;
+}
+
+.input-error {
+    border: 1px solid #dc2626 !important;
+    background: #fff5f5 !important;
+}
+
+.salary-inline {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+}
+
+.salary-field {
+    flex: 1;
+}
+
+.salary-separator {
+    font-size: 22px;
+    font-weight: 700;
+    color: #555;
+    margin-top: 8px;
+}
+
+@media (max-width: 600px) {
+    .salary-inline {
+        flex-direction: column;
+        gap: 6px;
+    }
+
+    .salary-separator {
+        display: none;
+    }
+}

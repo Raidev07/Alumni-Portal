@@ -3,6 +3,134 @@ let activeType = "all";
 let jobsCache = [];
 let deleteJobId = null;
 
+// ─── ERROR MODAL ──────────────────────────────────────────────────────────────
+function showErrorModal(message) {
+    document.getElementById("errorMessage").textContent =
+        message || "Something went wrong.";
+
+    document.getElementById("errorOverlay").classList.remove("hidden");
+
+    document.body.classList.add("modal-open");
+}
+
+function closeErrorModal() {
+    document.getElementById("errorOverlay").classList.add("hidden");
+
+    document.body.classList.remove("modal-open");
+}
+
+// ─── VALIDATION HELPERS ─────────────────────────────────────
+
+function setFieldError(inputId, errorId, message) {
+    const input = document.getElementById(inputId);
+    const error = document.getElementById(errorId);
+
+    if (input) {
+        input.classList.add("input-error");
+    }
+
+    if (error) {
+        error.textContent = message;
+    }
+}
+
+function clearFieldError(inputId, errorId) {
+    const input = document.getElementById(inputId);
+    const error = document.getElementById(errorId);
+
+    if (input) {
+        input.classList.remove("input-error");
+    }
+
+    if (error) {
+        error.textContent = "";
+    }
+}
+
+function formatSalaryInput(input) {
+    if (!input) return;
+
+    input.addEventListener("input", () => {
+        let value = input.value.replace(/[^\d]/g, "");
+
+        if (value === "") {
+            input.value = "";
+            return;
+        }
+
+        input.value = Number(value).toLocaleString("en-US");
+    });
+}
+
+// ─── LIVE ERROR RESET ─────────────────────────
+
+[
+    ["f-salary-min", "f-salary-min-error"],
+    ["f-salary-max", "f-salary-max-error"],
+    ["e-salary-min", "e-salary-min-error"],
+    ["e-salary-max", "e-salary-max-error"],
+].forEach(([inputId, errorId]) => {
+    const input = document.getElementById(inputId);
+
+    if (!input) return;
+
+    input.addEventListener("input", () => {
+        clearFieldError(inputId, errorId);
+
+        const minInput = inputId.startsWith("f")
+            ? "f-salary-min"
+            : "e-salary-min";
+
+        const maxInput = inputId.startsWith("f")
+            ? "f-salary-max"
+            : "e-salary-max";
+
+        const min = parseInt(
+            document.getElementById(minInput).value.replace(/,/g, ""),
+            10,
+        );
+
+        const max = parseInt(
+            document.getElementById(maxInput).value.replace(/,/g, ""),
+            10,
+        );
+
+        if (!isNaN(min) && !isNaN(max) && max <= min) {
+            clearFieldError(maxInput, `${maxInput}-error`);
+
+            setFieldError(
+                maxInput,
+                `${maxInput}-error`,
+                "Maximum salary must be greater than minimum.",
+            );
+        }
+    });
+});
+
+function isValidEmail(email) {
+    return /^[^\s@]+@[^\s@]+\.com$/.test(email);
+}
+
+["f-salary-min", "f-salary-max", "e-salary-min", "e-salary-max"].forEach(
+    (id) => {
+        const el = document.getElementById(id);
+
+        if (el) {
+            formatSalaryInput(el);
+        }
+    },
+);
+
+document
+    .getElementById("closeErrorBtn")
+    ?.addEventListener("click", closeErrorModal);
+
+document.getElementById("errorOverlay")?.addEventListener("click", (e) => {
+    if (e.target.id === "errorOverlay") {
+        closeErrorModal();
+    }
+});
+
 // ─── FETCH & RENDER JOBS FROM DB ──────────────────────────────────────────────
 async function renderJobs() {
     const list = document.getElementById("jobsList");
@@ -303,7 +431,7 @@ function openDetail(id) {
                         "_blank",
                     );
                 } else {
-                    alert("No contact email provided.");
+                    showErrorModal("No contact email provided.");
                 }
             };
         }
@@ -343,7 +471,16 @@ function openEdit(j) {
     document.getElementById("e-title").value = j.title;
     document.getElementById("e-company").value = j.company;
     document.getElementById("e-location").value = j.location;
-    document.getElementById("e-salary").value = j.salary;
+    const salaryParts = j.salary.split("-");
+
+    document.getElementById("e-salary-min").value = salaryParts[0]
+        ?.replace(/[^\d]/g, "")
+        .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+
+    document.getElementById("e-salary-max").value = salaryParts[1]
+        ?.replace(/[^\d]/g, "")
+        .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+
     document.getElementById("e-desc").value = j.desc;
     document.getElementById("e-req").value = j.req;
     document.getElementById("e-benefits").value = j.benefits;
@@ -372,19 +509,116 @@ function setSelectValue(id, value) {
 document.getElementById("saveEditBtn")?.addEventListener("click", async () => {
     const id = document.getElementById("e-id").value;
 
+    let hasError = false;
+
+    const title = document.getElementById("e-title").value.trim();
+    const company = document.getElementById("e-company").value.trim();
+    const location = document.getElementById("e-location").value.trim();
+    const email = document.getElementById("e-email").value.trim();
+    const desc = document.getElementById("e-desc").value.trim();
+    const req = document.getElementById("e-req").value.trim();
+    const benefits = document.getElementById("e-benefits").value.trim();
+
+    const minSalaryRaw = document
+        .getElementById("e-salary-min")
+        .value.replace(/,/g, "");
+
+    const maxSalaryRaw = document
+        .getElementById("e-salary-max")
+        .value.replace(/,/g, "");
+
+    const minSalary = parseInt(minSalaryRaw, 10);
+    const maxSalary = parseInt(maxSalaryRaw, 10);
+
+    clearFieldError("e-salary-min", "e-salary-min-error");
+    clearFieldError("e-salary-max", "e-salary-max-error");
+
+    // ─── REQUIRED FIELD CHECK ─────────────────────────
+
+    if (
+        !title ||
+        !company ||
+        !location ||
+        !email ||
+        !desc ||
+        !req ||
+        !benefits
+    ) {
+        showErrorModal("All fields are required.");
+
+        return;
+    }
+
+    // ─── EMAIL VALIDATION ─────────────────────────────
+
+    if (!isValidEmail(email)) {
+        showErrorModal("Please enter a valid email address.");
+
+        return;
+    }
+
+    // ─── SALARY VALIDATION ────────────────────────────
+
+    if (!minSalaryRaw || isNaN(minSalary) || minSalary <= 0) {
+        setFieldError(
+            "e-salary-min",
+            "e-salary-min-error",
+            "Minimum salary must be greater than 0.",
+        );
+
+        hasError = true;
+    }
+
+    if (!maxSalaryRaw || isNaN(maxSalary)) {
+        setFieldError(
+            "e-salary-max",
+            "e-salary-max-error",
+            "Maximum salary is required.",
+        );
+
+        hasError = true;
+    }
+
+    if (!isNaN(minSalary) && !isNaN(maxSalary) && maxSalary <= minSalary) {
+        setFieldError(
+            "e-salary-max",
+            "e-salary-max-error",
+            "Maximum salary must be greater than minimum.",
+        );
+
+        hasError = true;
+    }
+
+    if (hasError) {
+        showErrorModal("Please fix the salary errors.");
+
+        return;
+    }
+
     const payload = {
         id: parseInt(id),
-        title: document.getElementById("e-title").value.trim(),
-        company: document.getElementById("e-company").value.trim(),
+
+        title: title,
+
+        company: company,
+
         type: document.getElementById("e-type").value,
-        location: document.getElementById("e-location").value.trim(),
-        salary: document.getElementById("e-salary").value.trim(),
-        desc: document.getElementById("e-desc").value.trim(),
+
+        location: location,
+
+        salary: `${minSalary.toLocaleString()} - ${maxSalary.toLocaleString()}`,
+
+        desc: desc,
+
         modality: document.getElementById("e-modality").value,
+
         category: document.getElementById("e-category").value,
-        req: document.getElementById("e-req").value.trim(),
-        benefits: document.getElementById("e-benefits").value.trim(),
-        email: document.getElementById("e-email").value.trim(),
+
+        req: req,
+
+        benefits: benefits,
+
+        email: email,
     };
 
     try {
@@ -399,7 +633,8 @@ document.getElementById("saveEditBtn")?.addEventListener("click", async () => {
         const data = await res.json();
 
         if (!res.ok) {
-            alert(data.error ?? "Failed to update.");
+            showErrorModal(data.error ?? "Failed to update.");
+
             return;
         }
 
@@ -410,14 +645,85 @@ document.getElementById("saveEditBtn")?.addEventListener("click", async () => {
         renderJobs();
     } catch (err) {
         console.error(err);
+
+        showErrorModal("Something went wrong while updating the job.");
     }
 });
-
 // ─── CANCEL EDIT ──────────────────────────────────────────────────────────────
+document.getElementById("cancelBtn")?.addEventListener("click", () => {
+    document.getElementById("postOverlay").classList.add("hidden");
+
+    document.body.classList.remove("modal-open");
+
+    [
+        "f-title",
+        "f-company",
+        "f-location",
+        "f-salary-min",
+        "f-salary-max",
+        "f-email",
+        "f-desc",
+        "f-req",
+        "f-benefits",
+    ].forEach((id) => {
+        const el = document.getElementById(id);
+
+        if (el) {
+            el.value = "";
+            el.classList.remove("input-error");
+        }
+    });
+
+    [
+        "f-title-error",
+        "f-company-error",
+        "f-location-error",
+        "f-salary-min-error",
+        "f-salary-max-error",
+        "f-email-error",
+        "f-desc-error",
+        "f-req-error",
+        "f-benefits-error",
+    ].forEach((id) => {
+        const el = document.getElementById(id);
+
+        if (el) {
+            el.textContent = "";
+        }
+    });
+});
+
+// ─── CANCEL EDIT MODAL ─────────────────────────────────────
 document.getElementById("cancelEditBtn")?.addEventListener("click", () => {
     document.getElementById("editOverlay").classList.add("hidden");
 
     document.body.classList.remove("modal-open");
+
+    [
+        "e-title",
+        "e-company",
+        "e-location",
+        "e-salary-min",
+        "e-salary-max",
+        "e-email",
+        "e-desc",
+        "e-req",
+        "e-benefits",
+    ].forEach((id) => {
+        const el = document.getElementById(id);
+
+        if (el) {
+            el.classList.remove("input-error");
+        }
+    });
+
+    ["e-salary-min-error", "e-salary-max-error"].forEach((id) => {
+        const el = document.getElementById(id);
+
+        if (el) {
+            el.textContent = "";
+        }
+    });
 });
 
 // ─── DELETE JOB ───────────────────────────────────────────────────────────────
@@ -447,7 +753,7 @@ async function restoreJob(id) {
         const data = await res.json();
 
         if (!res.ok) {
-            alert(data.error ?? "Failed to restore.");
+            showErrorModal(data.error ?? "Failed to update.");
             return;
         }
 
@@ -481,7 +787,7 @@ document
             const data = await res.json();
 
             if (!res.ok) {
-                alert(data.error ?? "Failed to delete.");
+                showErrorModal(data.error ?? "Failed to delete.");
                 return;
             }
 
@@ -510,18 +816,114 @@ document.getElementById("cancelDeleteBtn")?.addEventListener("click", () => {
 
 // ─── POST JOB ─────────────────────────────────────────────────────────────────
 document.getElementById("postBtn")?.addEventListener("click", async () => {
+    let hasError = false;
+
+    const title = document.getElementById("f-title").value.trim();
+    const company = document.getElementById("f-company").value.trim();
+    const location = document.getElementById("f-location").value.trim();
+    const email = document.getElementById("f-email").value.trim();
+    const desc = document.getElementById("f-desc").value.trim();
+    const req = document.getElementById("f-req").value.trim();
+    const benefits = document.getElementById("f-benefits").value.trim();
+
+    const minSalaryRaw = document
+        .getElementById("f-salary-min")
+        .value.replace(/,/g, "");
+
+    const maxSalaryRaw = document
+        .getElementById("f-salary-max")
+        .value.replace(/,/g, "");
+
+    const minSalary = parseInt(minSalaryRaw, 10);
+    const maxSalary = parseInt(maxSalaryRaw, 10);
+
+    clearFieldError("f-salary-min", "f-salary-min-error");
+    clearFieldError("f-salary-max", "f-salary-max-error");
+
+    // ─── REQUIRED FIELD CHECK ─────────────────────────
+
+    if (
+        !title ||
+        !company ||
+        !location ||
+        !email ||
+        !desc ||
+        !req ||
+        !benefits
+    ) {
+        showErrorModal("All fields are required.");
+
+        return;
+    }
+
+    // ─── EMAIL VALIDATION ─────────────────────────────
+
+    if (!isValidEmail(email)) {
+        showErrorModal("Please enter a valid email address.");
+
+        return;
+    }
+
+    // ─── SALARY VALIDATION ────────────────────────────
+
+    if (!minSalaryRaw || isNaN(minSalary) || minSalary <= 0) {
+        setFieldError(
+            "f-salary-min",
+            "f-salary-min-error",
+            "Minimum salary must be greater than 0.",
+        );
+
+        hasError = true;
+    }
+
+    if (!maxSalaryRaw || isNaN(maxSalary)) {
+        setFieldError(
+            "f-salary-max",
+            "f-salary-max-error",
+            "Maximum salary is required.",
+        );
+
+        hasError = true;
+    }
+
+    if (!isNaN(minSalary) && !isNaN(maxSalary) && maxSalary <= minSalary) {
+        setFieldError(
+            "f-salary-max",
+            "f-salary-max-error",
+            "Maximum salary must be greater than minimum.",
+        );
+
+        hasError = true;
+    }
+
+    if (hasError) {
+        showErrorModal("Please fix the salary errors.");
+
+        return;
+    }
+
     const payload = {
-        title: document.getElementById("f-title").value.trim(),
-        company: document.getElementById("f-company").value.trim(),
+        title: title,
+
+        company: company,
+
         type: document.getElementById("f-type").value,
-        location: document.getElementById("f-location").value.trim(),
-        salary: document.getElementById("f-salary").value.trim(),
-        desc: document.getElementById("f-desc").value.trim(),
+
+        location: location,
+
+        salary: `${minSalary.toLocaleString()} - ${maxSalary.toLocaleString()}`,
+
+        desc: desc,
+
         modality: document.getElementById("f-modality").value,
+
         category: document.getElementById("f-category").value,
-        req: document.getElementById("f-req").value.trim(),
-        benefits: document.getElementById("f-benefits").value.trim(),
-        email: document.getElementById("f-email").value.trim(),
+
+        req: req,
+
+        benefits: benefits,
+
+        email: email,
     };
 
     try {
@@ -536,7 +938,8 @@ document.getElementById("postBtn")?.addEventListener("click", async () => {
         const data = await res.json();
 
         if (!res.ok) {
-            alert(data.error ?? "Failed to post.");
+            showErrorModal(data.error ?? "Failed to post.");
+
             return;
         }
 
@@ -547,9 +950,10 @@ document.getElementById("postBtn")?.addEventListener("click", async () => {
         renderJobs();
     } catch (err) {
         console.error(err);
+
+        showErrorModal("Something went wrong while posting the job.");
     }
 });
-
 // ─── HELPERS ──────────────────────────────────────────────────────────────────
 function badgeClass(type) {
     if (type === "Full-time") return "badge-ft";
@@ -583,12 +987,6 @@ document.getElementById("openPostBtn")?.addEventListener("click", () => {
     document.getElementById("postOverlay").classList.remove("hidden");
 
     document.body.classList.add("modal-open");
-});
-
-document.getElementById("cancelBtn")?.addEventListener("click", () => {
-    document.getElementById("postOverlay").classList.add("hidden");
-
-    document.body.classList.remove("modal-open");
 });
 
 document.querySelectorAll(".filter-item").forEach((el) => {
