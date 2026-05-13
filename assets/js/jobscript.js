@@ -535,17 +535,38 @@ document.getElementById("saveEditBtn")?.addEventListener("click", async () => {
 
     // ─── REQUIRED FIELD CHECK ─────────────────────────
 
-    if (
-        !title ||
-        !company ||
-        !location ||
-        !email ||
-        !desc ||
-        !req ||
-        !benefits
-    ) {
-        showErrorModal("All fields are required.");
+    if (!title) {
+        showErrorModal("Job title is required.");
+        return;
+    }
 
+    if (!company) {
+        showErrorModal("Company name is required.");
+        return;
+    }
+
+    if (!location) {
+        showErrorModal("Location is required.");
+        return;
+    }
+
+    if (!email) {
+        showErrorModal("Contact email is required.");
+        return;
+    }
+
+    if (!desc) {
+        showErrorModal("Job description is required.");
+        return;
+    }
+
+    if (!req) {
+        showErrorModal("Requirements and qualifications are required.");
+        return;
+    }
+
+    if (!benefits) {
+        showErrorModal("Benefits field is required.");
         return;
     }
 
@@ -842,17 +863,38 @@ document.getElementById("postBtn")?.addEventListener("click", async () => {
 
     // ─── REQUIRED FIELD CHECK ─────────────────────────
 
-    if (
-        !title ||
-        !company ||
-        !location ||
-        !email ||
-        !desc ||
-        !req ||
-        !benefits
-    ) {
-        showErrorModal("All fields are required.");
+    if (!title) {
+        showErrorModal("Job title is required.");
+        return;
+    }
 
+    if (!company) {
+        showErrorModal("Company name is required.");
+        return;
+    }
+
+    if (!location) {
+        showErrorModal("Location is required.");
+        return;
+    }
+
+    if (!email) {
+        showErrorModal("Contact email is required.");
+        return;
+    }
+
+    if (!desc) {
+        showErrorModal("Job description is required.");
+        return;
+    }
+
+    if (!req) {
+        showErrorModal("Requirements and qualifications are required.");
+        return;
+    }
+
+    if (!benefits) {
+        showErrorModal("Benefits field is required.");
         return;
     }
 
