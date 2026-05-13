@@ -474,6 +474,65 @@ function openEdit(e) {
 // ── SAVE EDIT ─────────────────────────────────────────────────────────────────
 
 document.getElementById("saveEditBtn")?.addEventListener("click", async () => {
+    const requiredFields = [
+        { id: "e-title", label: "Event title" },
+        { id: "e-date", label: "Event date" },
+        { id: "e-type", label: "Event type" },
+        { id: "e-time-start", label: "Start time" },
+        { id: "e-time-end", label: "End time" },
+        { id: "e-location", label: "Location" },
+        { id: "e-max", label: "Max attendees" },
+        { id: "e-deadline", label: "Deadline" },
+        { id: "e-email", label: "Contact email" },
+        { id: "e-desc", label: "Description" },
+    ];
+
+    for (const field of requiredFields) {
+        const element = document.getElementById(field.id);
+
+        if (!element.value.trim()) {
+            showErrorModal(field.label + " is required.");
+            element.focus();
+            return;
+        }
+    }
+
+    const eventDate = document.getElementById("e-date").value;
+
+    const deadline = document.getElementById("e-deadline").value;
+
+    const today = new Date().toISOString().split("T")[0];
+
+    if (deadline < today) {
+        showErrorModal("Registration deadline cannot be in the past.");
+
+        return;
+    }
+
+    if (eventDate < today) {
+        showErrorModal("Event date cannot be in the past.");
+
+        return;
+    }
+
+    if (deadline > eventDate) {
+        showErrorModal(
+            "Registration deadline must be earlier than the event date.",
+        );
+
+        return;
+    }
+
+    const email = document.getElementById("e-email").value.trim();
+
+    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.com$/;
+
+    if (!emailPattern.test(email)) {
+        showErrorModal("Please enter a valid email address.");
+
+        return;
+    }
+
     const startTime = document.getElementById("e-time-start").value;
 
     const endTime = document.getElementById("e-time-end").value;
@@ -672,10 +731,64 @@ document.getElementById("cancelBtn")?.addEventListener("click", () => {
 // ── POST EVENT ────────────────────────────────────────────────────────────────
 
 document.getElementById("postBtn")?.addEventListener("click", async () => {
+    const requiredFields = [
+        { id: "f-title", label: "Event title" },
+        { id: "f-date", label: "Event date" },
+        { id: "f-type", label: "Event type" },
+        { id: "f-time-start", label: "Start time" },
+        { id: "f-time-end", label: "End time" },
+        { id: "f-location", label: "Location" },
+        { id: "f-max", label: "Max attendees" },
+        { id: "f-deadline", label: "Registration deadline" },
+        { id: "f-email", label: "Contact email" },
+        { id: "f-desc", label: "Event description" },
+    ];
+
+    for (const field of requiredFields) {
+        const element = document.getElementById(field.id);
+
+        if (!element.value.trim()) {
+            showErrorModal(field.label + " is required.");
+            element.focus();
+            return;
+        }
+    }
+
     const title = document.getElementById("f-title").value.trim();
 
-    if (!title) {
-        showErrorModal("Event title is required.");
+    const email = document.getElementById("f-email").value.trim();
+
+    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.com$/;
+
+    if (!emailPattern.test(email)) {
+        showErrorModal("Please enter a valid email address.");
+
+        return;
+    }
+
+    const eventDate = document.getElementById("f-date").value;
+
+    const deadline = document.getElementById("f-deadline").value;
+
+    const today = new Date().toISOString().split("T")[0];
+
+    if (deadline < today) {
+        showErrorModal("Registration deadline cannot be in the past.");
+
+        return;
+    }
+
+    if (eventDate < today) {
+        showErrorModal("Event date cannot be in the past.");
+
+        return;
+    }
+
+    if (deadline > eventDate) {
+        showErrorModal(
+            "Registration deadline must be earlier than the event date.",
+        );
+
         return;
     }
 
