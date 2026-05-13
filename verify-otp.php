@@ -8,10 +8,13 @@ if (!isset($_SESSION['temp_user_id'])) {
 ?>
 
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>2FA Verification</title>
+    <link rel="icon" href="assets/image/alumni_plp_newicon.png">
 
     <style>
         body {
@@ -76,7 +79,6 @@ if (!isset($_SESSION['temp_user_id'])) {
 <body>
 
     <div class="box">
-
         <h2>2FA Verification</h2>
 
         <?php if (isset($_GET['error'])): ?>
@@ -84,17 +86,11 @@ if (!isset($_SESSION['temp_user_id'])) {
         <?php endif; ?>
 
         <form method="POST" action="backend/otp_process.php">
-
             <input type="text" name="otp" placeholder="Enter 6-digit code" maxlength="6" required>
-
             <br>
-
             <button type="submit">Verify</button>
-
         </form>
-
     </div>
 
 </body>
-
 </html>

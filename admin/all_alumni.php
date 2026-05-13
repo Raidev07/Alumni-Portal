@@ -3,11 +3,8 @@ include("../backend/db_admin.php");
 session_start();
 
 include("includes/flash.php");
-/*
-|--------------------------------------------------------------------------
-| SESSION CHECK (USING role FROM DATABASE)
-|--------------------------------------------------------------------------
-*/
+
+// SESSION CHECK (USING role FROM DATABASE)
 if (
     !isset($_SESSION['user_id']) ||
     $_SESSION['role'] !== 'admin'
@@ -16,22 +13,15 @@ if (
     exit();
 }
 
-/*
-|--------------------------------------------------------------------------
-| PAGINATION
-|--------------------------------------------------------------------------
-*/
+// PAGINATION
 $limit = 8;
 $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 $offset = ($page - 1) * $limit;
 
 $selected_course = $_GET['course'] ?? 'All';
 $selected_year = $_GET['year'] ?? 'All';
-/*
-|--------------------------------------------------------------------------
-| FETCH ALUMNI DATA (BASED SA REAL DB MO)
-|--------------------------------------------------------------------------
-*/
+
+// FETCH ALUMNI DATA
 $query = "
 SELECT
 ad.alumni_id,
@@ -64,11 +54,7 @@ LIMIT $limit OFFSET $offset
 
 $ret = mysqli_query($conn, $query);
 
-/*
-|--------------------------------------------------------------------------
-| TOTAL RECORDS
-|--------------------------------------------------------------------------
-*/
+// TOTAL RECORDS
 $total_q = "
 SELECT COUNT(*) AS total
 FROM alumnidetails ad
@@ -84,11 +70,7 @@ $total_row = mysqli_fetch_assoc($total_res);
 $total_records = $total_row['total'];
 $total_pages = ceil($total_records / $limit);
 
-/*
-|--------------------------------------------------------------------------
-| archived
-|--------------------------------------------------------------------------
-*/
+// archived
 if (isset($_GET['archive_id'])) {
 
     $rid = intval($_GET['archive_id']);
@@ -219,19 +201,15 @@ if (isset($_GET['archive_id'])) {
                                                             <div class="dropdown d-inline">
                                                                 <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown" style="text-decoration:none;">
                                                                 </a>
-
                                                                 <ul class="dropdown-menu">
-
                                                                     <li>
                                                                         <a class="dropdown-item <?= ($selected_course == 'All') ? 'active' : '' ?>"
                                                                             href="?course=All&year=<?= $selected_year ?>">
                                                                             All
                                                                         </a>
                                                                     </li>
-
                                                                     <?php
                                                                     $courses = mysqli_query($conn, "SELECT course_code FROM courses ORDER BY course_code ASC");
-
                                                                     while ($c = mysqli_fetch_assoc($courses)) {
                                                                         $code = $c['course_code'];
                                                                     ?>
@@ -242,7 +220,6 @@ if (isset($_GET['archive_id'])) {
                                                                             </a>
                                                                         </li>
                                                                     <?php } ?>
-
                                                                 </ul>
                                                             </div>
                                                         </th>
@@ -251,7 +228,6 @@ if (isset($_GET['archive_id'])) {
                                                             <div class="dropdown d-inline">
                                                                 <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown" style="text-decoration:none;">
                                                                 </a>
-
                                                                 <ul class="dropdown-menu">
                                                                     <li>
                                                                         <a class="dropdown-item <?= ($selected_year == 'All') ? 'active' : '' ?>"
@@ -259,7 +235,6 @@ if (isset($_GET['archive_id'])) {
                                                                             All
                                                                         </a>
                                                                     </li>
-
                                                                     <?php
                                                                     $years = mysqli_query($conn, "SELECT DISTINCT year_graduated FROM alumnidetails ORDER BY year_graduated DESC");
                                                                     while ($y = mysqli_fetch_assoc($years)) {
@@ -297,24 +272,19 @@ if (isset($_GET['archive_id'])) {
                                                                 <td>
                                                                     <?php if ($row['Status'] == 'active') : ?>
                                                                         <span class="badge text-bg-success">Active</span>
-
                                                                     <?php elseif ($row['Status'] == 'pending') : ?>
                                                                         <span class="badge text-bg-warning">Pending</span>
-
                                                                     <?php else : ?>
                                                                         <span class="badge text-bg-danger">Inactive</span>
                                                                     <?php endif; ?>
                                                                 </td>
-
                                                                 <td>
                                                                     <a href="view_alumnus.php?id=<?= $row['alumni_id'] ?>" class="view">
                                                                         <i class="bi bi-eye-fill"></i>
                                                                     </a>
-
                                                                     <a href="edit_alumnus.php?id=<?= $row['alumni_id'] ?>" class="edit">
                                                                         <i class="bi bi-pencil-fill"></i>
                                                                     </a>
-
                                                                     <a href="all_alumni.php?archive_id=<?= $row['alumni_id'] ?>"
                                                                         class="delete"
                                                                         onclick="return confirm('archive this record?');">

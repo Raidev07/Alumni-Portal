@@ -1,5 +1,3 @@
-/**************** JOB PAGE*****************/
-
 * {
     margin: 0;
     padding: 0;
@@ -11,13 +9,10 @@
 body {
     background: #f0f5f2;
     color: #0f172a;
-    padding-bottom: 200px;
 }
-html {
-    overflow-y: scroll;
-    scrollbar-gutter: stable;
-}
-body.no-scroll {
+
+html, body {
+    height: 100%;
     overflow: hidden;
 }
 
@@ -160,14 +155,18 @@ body.no-scroll {
     color: #fff;
 }
 
-/* ─── PAGE WRAPPER ───────────────────────────────────────────────────────────── */
+/* PAGE WRAPPER */
 .page {
     max-width: min(1000px, 95vw);
     margin: 30px auto 0;
-    padding: 28px 20px 60px;
+    padding: 28px 20px 1px;
+    height: calc(100vh - 100px);
+    display: flex;
+    flex-direction: column;
+    margin-top: 10px;
 }
 
-/* ─── TOP ROW ────────────────────────────────────────────────────────────────── */
+/* top-row */
 .top-row {
     display: flex;
     justify-content: space-between;
@@ -202,10 +201,7 @@ h1 {
     display: flex;
     align-items: center;
     gap: 8px;
-    transition:
-        background 0.2s,
-        transform 0.2s,
-        box-shadow 0.2s;
+    transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
     white-space: nowrap;
     flex-shrink: 0;
 }
@@ -220,14 +216,17 @@ h1 {
     transform: translateY(0);
 }
 
-/* ─── LAYOUT ─────────────────────────────────────────────────────────────────── */
+/* layout */
 .layout {
     display: flex;
-    gap: 18px;
+    gap: 14px;
     align-items: flex-start;
+    flex: 1;
+    overflow: hidden;
 }
 
-/* ─── SIDEBAR ────────────────────────────────────────────────────────────────── */
+
+/* sidebar */
 .sidebar {
     width: clamp(120px, 15vw, 160px);
     background: #fff;
@@ -259,10 +258,7 @@ h1 {
     font-size: clamp(11px, 1vw, 14px);
     color: #333;
     margin-bottom: 8px;
-    transition:
-        background 0.25s ease,
-        color 0.25s ease,
-        box-shadow 0.2s ease;
+    transition: background 0.25s ease, color 0.25s ease, box-shadow 0.2s ease;
 }
 
 .filter-item:hover {
@@ -285,16 +281,20 @@ h1 {
     box-shadow: 0 3px 8px rgba(26, 107, 58, 0.15);
 }
 
-/* ─── MAIN CONTENT ───────────────────────────────────────────────────────────── */
+/* main */
 .main {
     flex: 1;
-    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    gap: 5px;
+    overflow: hidden;
 }
 
 .search-row {
     display: flex;
     gap: 8px;
-    margin-bottom: 18px;
+    margin-bottom: 0;
     flex-wrap: wrap;
 }
 
@@ -333,10 +333,7 @@ h1 {
     font-weight: 700;
     cursor: pointer;
     font-family: "Roboto", sans-serif;
-    transition:
-        background 0.3s ease,
-        transform 0.2s ease,
-        box-shadow 0.2s ease;
+    transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
     white-space: nowrap;
 }
 
@@ -351,7 +348,7 @@ h1 {
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
-/* ─── JOB CARDS ──────────────────────────────────────────────────────────────── */
+/* update job card */
 .job-card {
     background: #fff;
     border: 1px solid #c8e6c9;
@@ -362,9 +359,7 @@ h1 {
     justify-content: space-between;
     align-items: flex-start;
     gap: 12px;
-    transition:
-        box-shadow 0.3s ease,
-        transform 0.2s ease;
+    transition: box-shadow 0.3s ease, transform 0.2s ease;
     flex-wrap: wrap;
 }
 
@@ -477,9 +472,7 @@ h1 {
     white-space: nowrap;
     flex-shrink: 0;
     align-self: flex-start;
-    transition:
-        background 0.2s,
-        transform 0.2s;
+    transition: background 0.2s, transform 0.2s;
 }
 
 .apply-btn:hover {
@@ -487,7 +480,7 @@ h1 {
     transform: translateY(-1px);
 }
 
-/* ─── EMPTY STATE ────────────────────────────────────────────────────────────── */
+/* emplty state */
 .empty-state {
     text-align: center;
     padding: 48px;
@@ -499,7 +492,7 @@ h1 {
     display: block;
 }
 
-/* ─── OVERLAYS ───────────────────────────────────────────────────────────────── */
+/* overlays */
 .overlay {
     position: fixed;
     inset: 0;
@@ -530,7 +523,7 @@ h1 {
     display: none;
 }
 
-/* ─── POST JOB MODAL ─────────────────────────────────────────────────────────── */
+/* post job modal */
 .modal {
     background: #fff;
     border-radius: 12px;
@@ -586,9 +579,7 @@ h1 {
     background: #f9fdf9;
     color: #111;
     outline: none;
-    transition:
-        border-color 0.2s,
-        box-shadow 0.2s;
+    transition: border-color 0.2s, box-shadow 0.2s;
 }
 
 .form-group input:focus,
@@ -641,9 +632,7 @@ h1 {
     font-weight: 700;
     cursor: pointer;
     font-family: "Roboto", sans-serif;
-    transition:
-        background 0.2s,
-        transform 0.2s;
+    transition: background 0.2s, transform 0.2s;
 }
 
 .btn-post:hover {
@@ -651,7 +640,7 @@ h1 {
     transform: translateY(-1px);
 }
 
-/* ─── JOB DETAIL MODAL ───────────────────────────────────────────────────────── */
+/* job detail modal */
 .detail-job {
     background: #fff;
     border-radius: 12px;
@@ -819,7 +808,7 @@ h1 {
     color: #ffffff;
 }
 
-/* ─── RESPONSIVE BREAKPOINTS ─────────────────────────────────────────────────── */
+/* responsive breakpoints */
 
 /* 125% zoom — sidebar + content starts to feel tight */
 @media (max-width: 1100px) {
@@ -1035,7 +1024,7 @@ body.modal-open {
     margin: 14px 0;
 }
 
-/* ─── RESTORE BUTTON ───────────────────────── */
+/* restore btn */
 
 .restore-btn {
     background: #15803d !important;
@@ -1047,7 +1036,7 @@ body.modal-open {
     background: #166534 !important;
 }
 
-/* ─── ERROR MODAL ───────────────────────── */
+/* error modal */
 
 .error-overlay {
     position: fixed;
@@ -1128,7 +1117,7 @@ body.modal-open {
     }
 }
 
-/* ─── FORM VALIDATION ───────────────────────── */
+/* form validation */
 
 .field-error {
     display: block;
@@ -1170,4 +1159,11 @@ body.modal-open {
     .salary-separator {
         display: none;
     }
+}
+
+#jobsList {
+    flex: 1;
+    overflow-y: auto;
+    padding-right: 10px;
+    padding: 10px 14px 20px 14px;
 }

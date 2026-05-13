@@ -9,17 +9,13 @@ require_once __DIR__ . '/../PHPMailer/src/PHPMailer.php';
 require_once __DIR__ . '/../PHPMailer/src/SMTP.php';
 require_once __DIR__ . '/../PHPMailer/src/Exception.php';
 
-/* =========================
-   AUTH CHECK
-========================= */
+// AUTH CHECK
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
     header("Location: ../login.php");
     exit();
 }
 
-/* =========================
-   VALIDATION
-========================= */
+// VALIDATION
 if (!isset($_POST['id'], $_POST['action'])) {
     $_SESSION['recovery_msg'] = "Invalid request.";
     header("Location: recovery_requests.php");
@@ -29,12 +25,10 @@ if (!isset($_POST['id'], $_POST['action'])) {
 $id = (int) $_POST['id'];
 $action = $_POST['action'];
 
-/* =========================
-   APPROVE
-========================= */
+// APPROVE
 if ($action === 'approve') {
 
-    // 1. Get request + user
+    // Get request + user
     $stmt = $conn->prepare("
         SELECT r.user_id, u.email
         FROM recovery_requests r
@@ -54,11 +48,11 @@ if ($action === 'approve') {
     $user_id = $request['user_id'];
     $email   = $request['email'];
 
-    // 2. Generate TEMP PASSWORD
+    // Generate TEMP PASSWORD
     $tempPassword = substr(str_shuffle("ABCDEFGHJKLMNPQRSTUVWXYZ23456789abcdefghjkmnpqrstuvwxyz"), 0, 10);
     $hashed = password_hash($tempPassword, PASSWORD_DEFAULT);
 
-    // 3. Update user password + force change flag
+    // Update user password + force change flag
     $stmt = $conn->prepare("
         UPDATE users 
         SET password = ?, force_password_change = 1
@@ -67,7 +61,7 @@ if ($action === 'approve') {
     $stmt->bind_param("si", $hashed, $user_id);
     $stmt->execute();
 
-    // 4. Mark request approved
+    // Mark request approved
     $stmt = $conn->prepare("
         UPDATE recovery_requests 
         SET status = 'approved'
@@ -76,7 +70,7 @@ if ($action === 'approve') {
     $stmt->bind_param("i", $id);
     $stmt->execute();
 
-    // 5. SEND EMAIL
+    // SEND EMAIL
     $mail = new PHPMailer(true);
 
     try {
@@ -151,9 +145,7 @@ if ($action === 'approve') {
         $_SESSION['recovery_msg'] = "Approved but email failed: " . $mail->ErrorInfo;
     }
 
-    /* =========================
-    REJECT
-========================= */
+// REJECT
 } elseif ($action === 'reject') {
 
     $stmt = $conn->prepare("

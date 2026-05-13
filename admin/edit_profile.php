@@ -3,11 +3,7 @@ include("../backend/db_admin.php");
 session_start();
 
 include("includes/flash.php");
-/*
-|-------------------------------------------------
-| SESSION CHECK
-|-------------------------------------------------
-*/
+// SESSION CHECK
 if (
     !isset($_SESSION['user_id']) ||
     $_SESSION['role'] !== 'admin'
@@ -16,11 +12,7 @@ if (
     exit();
 }
 
-/*
-|-------------------------------------------------
-| GET USER DATA
-|-------------------------------------------------
-*/
+// GET USER DATA
 $user_id = $_SESSION['user_id'];
 $user = null;
 
@@ -48,11 +40,7 @@ if (!$stmt) {
     $stmt->close();
 }
 
-/*
-|-------------------------------------------------
-| UPDATE PROFILE
-|-------------------------------------------------
-*/
+// UPDATE PROFILE
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     $email = trim($_POST['email'] ?? '');

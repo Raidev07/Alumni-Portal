@@ -2,6 +2,7 @@
 include("../backend/db_admin.php");
 session_start();
 
+include("includes/flash.php");
 /*
 |--------------------------------------------------------------------------
 | SESSION CHECK
@@ -187,7 +188,7 @@ if (!$result) {
                             <div class="card mb-4">
                                 <div class="card-header">
                                     <h3 class="card-title">
-                                        Comparison of Alumni Courses
+                                        Comparison of Alumni Programs
                                     </h3>
                                 </div>
                                 <div class="card-body">
@@ -336,7 +337,5 @@ if (!$result) {
 
         programmeChart.render();
     </script>
-
 </body>
-
 </html>

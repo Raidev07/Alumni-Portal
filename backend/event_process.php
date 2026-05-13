@@ -28,9 +28,7 @@ if ($method === 'GET') {
     echo json_encode(['success' => false, 'message' => 'Method not allowed.']);
 }
 
-
-// ─── AUTO STATUS UPDATE ─────────────────────────
-
+// AUTO STATUS UPDATE
 // ONGOING
 $conn->query("
     UPDATE events
@@ -54,10 +52,7 @@ $conn->query("
     )
 ");
 
-// ═════════════════════════════════════════════════════════════════════════════
-// GET — Fetch events from DB
-// ═════════════════════════════════════════════════════════════════════════════
-
+// Fetch events from DB
 function handleGetEvents()
 {
 
@@ -91,26 +86,15 @@ function handleGetEvents()
             WHERE 1=1
         ";
 
-
         $params = [];
         $types = '';
 
         if ($status === 'archived') {
-
-            $sql .= "
-        AND e.status IN ('completed', 'cancelled')
-    ";
-
+            $sql .= "AND e.status IN ('completed', 'cancelled')";
         } elseif ($status === 'all') {
-
-            $sql .= "
-        AND e.status IN ('upcoming', 'ongoing')
-    ";
-
+            $sql .= "AND e.status IN ('upcoming', 'ongoing')";
         } else {
-
             $sql .= " AND e.status = ?";
-
             $params[] = $status;
             $types .= 's';
         }
@@ -119,9 +103,7 @@ function handleGetEvents()
             $mine === '1' &&
             !empty($_SESSION['user_id'])
         ) {
-
             $sql .= " AND e.user_id = ?";
-
             $params[] = (int) $_SESSION['user_id'];
             $types .= 'i';
         }
@@ -192,7 +174,6 @@ function handleGetEvents()
 
         $events = [];
         while ($row = $result->fetch_assoc()) {
-            // Human-readable posted time
             $row['posted'] = timeAgo($row['created_at']);
 
             // Trim seconds off TIME columns (HH:MM:SS -> HH:MM)
@@ -217,9 +198,7 @@ function handleGetEvents()
     }
 }
 
-// ═════════════════════════════════════════════════════════════════════════════
-// POST — Insert a new event (must be logged in)
-// ═════════════════════════════════════════════════════════════════════════════
+// Insert a new event (must be logged in)
 
 function handlePostEvent()
 {
@@ -306,17 +285,17 @@ function handlePostEvent()
 
         $stmt->bind_param(
             'issssssisss',
-            $user_id,      // i
-            $title,        // s
-            $event_date,   // s
-            $time_start,   // s
-            $time_end,     // s
-            $location,     // s
-            $event_type,   // s
-            $max_att_val,  // i
-            $deadline_val, // s
-            $email_val,    // s
-            $description   // s
+            $user_id,      
+            $title,        
+            $event_date,   
+            $time_start,   
+            $time_end,     
+            $location,     
+            $event_type,   
+            $max_att_val,  
+            $deadline_val, 
+            $email_val,    
+            $description   
         );
 
         $stmt->execute();
@@ -334,10 +313,9 @@ function handlePostEvent()
     }
 }
 
-// ── Helper ────────────────────────────────────────────────────────────────────
+// Helper
 
-function handleUpdateEvent()
-{
+function handleUpdateEvent() {
     global $conn;
 
     if (empty($_SESSION['user_id'])) {
@@ -391,10 +369,8 @@ function handleUpdateEvent()
     ]);
 }
 
-function handleDeleteEvent()
-{
+function handleDeleteEvent() {
     global $conn;
-
     if (empty($_SESSION['user_id'])) {
         http_response_code(401);
         echo json_encode(['success' => false]);
@@ -424,8 +400,7 @@ function handleDeleteEvent()
 
 
 
-function handleRestoreEvent()
-{
+function handleRestoreEvent() {
     global $conn;
 
     if (empty($_SESSION['user_id'])) {
@@ -456,8 +431,7 @@ function handleRestoreEvent()
     ]);
 }
 
-function timeAgo($datetime)
-{
+function timeAgo($datetime) {
     if (!$datetime)
         return '';
     $diff = time() - strtotime($datetime);

@@ -68,16 +68,12 @@ $uid = $isLoggedIn ? $_SESSION['user_id'] : null;
                     us directly.</p>
             </div>
             <div class="contact-form-card">
-                <?php if (isset($_GET['success'])): ?>
-                    <div class="alert alert-success">
-                        Message sent successfully.
-                    </div>
+                <?php if (isset($_GET['success'])) : ?>
+                    <div class="alert alert-success">Message sent successfully.</div>
                 <?php endif; ?>
 
-                <?php if (isset($_GET['error'])): ?>
-                    <div class="alert alert-danger">
-                        Failed to send message.
-                    </div>
+                <?php if (isset($_GET['error'])) : ?>
+                    <div class="alert alert-danger">Failed to send message.</div>
                 <?php endif; ?>
                 <h3 class="form-title">Send a Message</h3>
                 <p class="form-sub">We'll respond within 24 hours on business days.</p>
@@ -107,7 +103,7 @@ $uid = $isLoggedIn ? $_SESSION['user_id'] : null;
                         <div class="info-icon"><i class="fas fa-envelope"></i></div>
                         <div class="info-text">
                             <h5>Email</h5>
-                            <p>rollamas_justinebryle<br>@plpasig.edu.ph</p>
+                            <p>plpalumni_org@gmail.com</p>
                         </div>
                     </div>
                 </div>
@@ -128,8 +124,7 @@ $uid = $isLoggedIn ? $_SESSION['user_id'] : null;
                     </div>
                     <div class="form-group">
                         <label for="message">Message</label>
-                        <textarea id="message" name="message" rows="6" placeholder="Write your message here..."
-                            required></textarea>
+                        <textarea id="message" name="message" rows="6" placeholder="Write your message here..."required></textarea>
                     </div>
                     <button type="submit" class="submit-btn">
                         <span>Send Message</span>
@@ -150,8 +145,7 @@ $uid = $isLoggedIn ? $_SESSION['user_id'] : null;
             <!-- Card 1 -->
             <div class="card" onclick="openModal('jonjesse')">
                 <div class="img-container">
-                    <img src="assets/image/1x1pic/tao.png" alt="John Jesse Escalona"
-                        onerror="this.style.display='none'; this.parentElement.textContent='JE'">
+                    <img src="assets/image/1x1pic/tao.png" alt="John Jesse Escalona" onerror="this.style.display='none'; this.parentElement.textContent='JE'">
                 </div>
                 <h3>John Jesse Escalona</h3>
                 <div class="card-role">Lead Developer</div>
@@ -352,7 +346,5 @@ $uid = $isLoggedIn ? $_SESSION['user_id'] : null;
             nav.classList.toggle('sticky', window.scrollY > 50);
         });
     </script>
-
 </body>
-
 </html>

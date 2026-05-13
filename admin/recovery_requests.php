@@ -87,7 +87,7 @@ unset($_SESSION['recovery_msg']);
                             }
                             ?>
 
-                            <table class="table table-bordered">
+                            <table class="table table-bordered" id="table-data">
                                 <thead>
                                     <tr>
                                         <th>Email</th>
@@ -101,7 +101,6 @@ unset($_SESSION['recovery_msg']);
                                 <tbody>
 
                                     <?php if (!empty($error)): ?>
-
                                         <tr>
                                             <td colspan="5" class="text-center text-danger">
                                                 <?= htmlspecialchars($error) ?>
@@ -114,7 +113,6 @@ unset($_SESSION['recovery_msg']);
                                             <tr>
                                                 <td><?= htmlspecialchars($row['email']) ?></td>
                                                 <td><?= htmlspecialchars($row['reason']) ?></td>
-
                                                 <td>
                                                     <?php if ($row['status'] === 'pending'): ?>
                                                         <span style="color:orange;">Pending</span>
@@ -126,7 +124,6 @@ unset($_SESSION['recovery_msg']);
                                                 </td>
 
                                                 <td><?= htmlspecialchars($row['created_at']) ?></td>
-
                                                 <td>
                                                     <?php if ($row['status'] === 'pending'): ?>
 
@@ -152,27 +149,17 @@ unset($_SESSION['recovery_msg']);
                                     <?php else: ?>
 
                                         <tr>
-                                            <td colspan="5" class="text-center text-muted">
-                                                No recovery requests found.
-                                            </td>
+                                            <td colspan="5" class="text-center text-muted">No recovery requests found.</td>
                                         </tr>
-
                                     <?php endif; ?>
-
                                 </tbody>
-
                             </table>
-
                         </div>
                     </div>
-
                 </div>
             </div>
-
         </main>
-
         <?php include("includes/footer.php"); ?>
-
     </div>
 
     <?php include("includes/flash-swal.php"); ?>

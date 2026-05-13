@@ -39,11 +39,7 @@ if (isset($_POST['exportexcel'])) {
 
     $result = mysqli_query($conn, $sql);
 
-    /*
-    |--------------------------------------------------------------------------
-    | EXPORT HEADERS (MATCH IMPORT FORMAT)
-    |--------------------------------------------------------------------------
-    */
+    // EXPORT HEADERS (MATCH IMPORT FORMAT)
     echo implode("\t", [
         "Student Number",
         "First Name",
@@ -60,11 +56,7 @@ if (isset($_POST['exportexcel'])) {
         "Year Graduated"
     ]) . "\n";
 
-    /*
-    |--------------------------------------------------------------------------
-    | DATA ROWS
-    |--------------------------------------------------------------------------
-    */
+    // DATA ROWS
     while ($row = mysqli_fetch_assoc($result)) {
 
         echo implode("\t", [

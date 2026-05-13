@@ -33,9 +33,9 @@ while ($row = mysqli_fetch_assoc($result)) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>PLP Alumni stories</title>
     <link rel="icon" href="assets/image/alumni_plp_newicon.png">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;0,700;1,400&family=Roboto+Slab:wght@400;600;700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="assets/css/alumni_homepage.css">
     <link rel="stylesheet" href="assets/css/articles_page.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;0,700;1,400&family=Roboto+Slab:wght@400;600;700&display=swap" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&family=Roboto+Slab:wght@600;700&display=swap" rel="stylesheet" />
@@ -85,18 +85,14 @@ while ($row = mysqli_fetch_assoc($result)) {
 
         <!-- RESULTS META -->
         <p class="results-meta" id="resultsMeta">Showing <strong>9</strong> stories</p>
-
         <!-- CARD GRID -->
         <div class="card-grid" id="cardGrid"></div>
-
         <!-- PAGINATION -->
         <div class="pagination" id="pagination"></div>
-
     </div>
 
 
     <?php include('includes/logoutmodal.php'); ?>
-
     <script>
         const articles = <?php echo json_encode($articles); ?>;
     </script>

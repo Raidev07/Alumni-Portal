@@ -14,7 +14,7 @@ $experience = [];
 $education = [];
 $skills = [];
 
-/* ================= PROFILE ================= */
+// profile
 $stmt = $conn->prepare("
     SELECT 
         u.email,
@@ -38,7 +38,7 @@ $stmt->bind_param("i", $uid);
 $stmt->execute();
 $profile = $stmt->get_result()->fetch_assoc();
 
-/* ================= EXPERIENCE ================= */
+// exp
 $stmt = $conn->prepare("
     SELECT * FROM experience
     WHERE user_id = ?
@@ -49,7 +49,7 @@ $stmt->bind_param("i", $uid);
 $stmt->execute();
 $experience = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
 
-/* ================= EDUCATION ================= */
+// edu
 $stmt = $conn->prepare("
     SELECT * FROM education
     WHERE user_id = ?
@@ -60,7 +60,7 @@ $stmt->bind_param("i", $uid);
 $stmt->execute();
 $education = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
 
-/* ================= SKILLS ================= */
+// skill
 $stmt = $conn->prepare("
     SELECT * FROM skills
     WHERE user_id = ?
@@ -111,7 +111,6 @@ if (!empty($profile['last_name'])) {
     <?php include('includes/navbarhome.php'); ?>
 
     <div class="container" id="app">
-
         <!-- Profile Header Card -->
         <div class="card">
             <div class="cardContent">
@@ -146,14 +145,10 @@ if (!empty($profile['last_name'])) {
                         <div class="profileMeta">
                             <span>
                                 <i class="fa-solid fa-location-dot"></i>
-                                <span id="displayLocation">
-                                    <?= htmlspecialchars($profile['address'] ?? "No location") ?>
-                                </span>
+                                <span id="displayLocation"><?= htmlspecialchars($profile['address'] ?? "No location") ?></span>
                             </span>
                             <span><i class="fa-regular fa-envelope"></i>
-                                <span id="displayEmail">
-                                    <?= htmlspecialchars($email ?: "No email") ?>
-                                </span>
+                                <span id="displayEmail"><?= htmlspecialchars($email ?: "No email") ?></span>
                             </span>
                         </div>
                     </div>
@@ -166,9 +161,7 @@ if (!empty($profile['last_name'])) {
             <div class="cardContent">
                 <div class="sectionHeader">
                     <h2 class="sectionTitle">About</h2>
-                    <button class="btnProf btnGhost" onclick="openEditBio()">
-                        <i class="fas fa-pencil"></i>
-                    </button>
+                    <button class="btnProf btnGhost" onclick="openEditBio()"><i class="fas fa-pencil"></i></button>
                 </div>
                 <p class="entryDesc" id="displayBio"><?= htmlspecialchars($profile['about'] ?? '') ?></p>
             </div>
@@ -178,9 +171,7 @@ if (!empty($profile['last_name'])) {
             <div class="cardContent">
                 <div class="sectionHeader">
                     <h2 class="sectionTitle">Experience</h2>
-                    <button class="btnProf btnGhost" onclick="openAddExp()">
-                        <i class="fas fa-plus"></i>
-                    </button>
+                    <button class="btnProf btnGhost" onclick="openAddExp()"><i class="fas fa-plus"></i></button>
                 </div>
                 <div id="experienceList">
                     <?php if (!empty($experience)): ?>
@@ -196,9 +187,7 @@ if (!empty($profile['last_name'])) {
                             </div>
                         <?php endforeach; ?>
                     <?php else: ?>
-                        <div class="entryCard empty">
-                            <p>No experience added yet.</p>
-                        </div>
+                        <div class="entryCard empty"><p>No experience added yet.</p></div>
                     <?php endif; ?>
                 </div>
             </div>
@@ -208,9 +197,7 @@ if (!empty($profile['last_name'])) {
             <div class="cardContent">
                 <div class="sectionHeader">
                     <h2 class="sectionTitle">Education</h2>
-                    <button class="btnProf btnGhost" onclick="openAddEdu()">
-                        <i class="fas fa-plus"></i>
-                    </button>
+                    <button class="btnProf btnGhost" onclick="openAddEdu()"><i class="fas fa-plus"></i></button>
                 </div>
                 <div id="educationList">
                     <?php if (!empty($education)): ?>
@@ -239,8 +226,7 @@ if (!empty($profile['last_name'])) {
             <div class="cardContent">
                 <div class="sectionHeader">
                     <h2 class="sectionTitle">Skills</h2>
-                    <button class="btnProf btnGhost" onclick="openAddSkill()">
-                        <i class="fas fa-plus"></i>
+                    <button class="btnProf btnGhost" onclick="openAddSkill()"><i class="fas fa-plus"></i>
                     </button>
                 </div>
                 <div class="skillsWrap" id="skillsList">

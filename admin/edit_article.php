@@ -8,22 +8,14 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
     exit();
 }
 
-/*
-|-------------------------------------------------------
-| GET STORY ID
-|-------------------------------------------------------
-*/
+//  GET STORY ID
 if (!isset($_GET['id'])) {
     die("Story ID missing.");
 }
 
 $story_id = (int) $_GET['id'];
 
-/*
-|-------------------------------------------------------
-| FETCH STORY
-|-------------------------------------------------------
-*/
+// FETCH STORY
 $stmt = $conn->prepare("
     SELECT *
     FROM alumnifeatured
@@ -53,11 +45,7 @@ if (!$result || $result->num_rows === 0) {
 $story = $result->fetch_assoc();
 $stmt->close();
 
-/*
-|-------------------------------------------------------
-| UPDATE STORY
-|-------------------------------------------------------
-*/
+// UPDATE STORY
 if (isset($_POST['update_story'])) {
 
     $title          = trim($_POST['title']);
@@ -90,9 +78,7 @@ if (isset($_POST['update_story'])) {
 
     $cover_image = $story['cover_image'];
 
-    /*
-    | IMAGE UPLOAD ERROR HANDLING
-    */
+    // IMAGE UPLOAD ERROR HANDLING
     if (!empty($_FILES['coverImage']['name'])) {
 
         if ($_FILES['coverImage']['error'] !== 0) {
@@ -125,9 +111,7 @@ if (isset($_POST['update_story'])) {
         }
     }
 
-    /*
-    | DATABASE UPDATE
-    */
+    // DATABASE UPDATE
     $stmt = $conn->prepare("
         UPDATE alumnifeatured
         SET title = ?, alumni_name = ?, year_graduated = ?, category = ?, cover_image = ?, excerpt = ?, content = ?
@@ -214,20 +198,15 @@ if (isset($_POST['update_story'])) {
             <!-- CONTENT -->
             <div class="app-content">
                 <div class="container-fluid">
-
                     <div class="row">
                         <div class="col-md-12">
-
                             <div class="card card-primary card-outline">
-
                                 <div class="card-header">
                                     <div class="card-title">
                                         Edit Alumni Achievement Story
                                     </div>
                                 </div>
-
                                 <form method="POST" enctype="multipart/form-data">
-
                                     <div class="card-body">
 
                                         <!-- TITLE -->

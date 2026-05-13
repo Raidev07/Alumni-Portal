@@ -3,17 +3,14 @@ include("../backend/db_admin.php");
 session_start();
 
 include("includes/flash.php");
-/* =========================
-   AUTH CHECK
-========================= */
+
+// AUTH CHECK
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
     header("Location: ../login.php");
     exit();
 }
 
-/* =========================
-   PHPMailer LOAD
-========================= */
+// PHPMailer LOAD
 require '../PHPMailer/src/PHPMailer.php';
 require '../PHPMailer/src/SMTP.php';
 require '../PHPMailer/src/Exception.php';
@@ -21,24 +18,17 @@ require '../PHPMailer/src/Exception.php';
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
-/* =========================
-    MESSAGES
-========================= */
-
+// MESSAGES
 $error = "";
 $success = "";
 
-/* =========================
-    PASSWORD GENERATOR
-========================= */
+// PASSWORD GENERATOR
 function generatePassword($length = 10)
 {
     return substr(str_shuffle("ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789"), 0, $length);
 }
 
-/* =========================
-    SUBMIT FORM
-========================= */
+// SUBMIT FORM
 if (isset($_POST['add_alumni'])) {
 
     // EMAIL
@@ -121,9 +111,7 @@ if (isset($_POST['add_alumni'])) {
 
         if ($stmt->execute()) {
 
-            /* =========================
-                SEND EMAIL VIA SMTP
-            ========================= */
+            // SEND EMAIL VIA SMTP
             $mail = new PHPMailer(true);
 
             try {
@@ -239,7 +227,7 @@ if (isset($_POST['add_alumni'])) {
                                         <!-- ROW 1: STUDENT ID ONLY -->
                                         <div class="row g-3">
                                             <div class="col-md-4">
-                                                <label>Student ID <span class="text-danger">*</span></label>
+                                                <label>Student Number<span class="text-danger">*</span></label>
                                                 <input type="text" name="student_number" placeholder="24-00123"
                                                     class="form-control" pattern="\d{2}-\d{5}" required>
                                             </div>
@@ -303,9 +291,7 @@ if (isset($_POST['add_alumni'])) {
                                                 <input type="radio" name="gender" value="Male"> Male
                                                 <input type="radio" name="gender" value="Female"> Female
                                             </div>
-
                                         </div>
-
                                         <hr>
 
                                         <!-- ROW 3: SCHOOL INFO -->
@@ -314,7 +300,7 @@ if (isset($_POST['add_alumni'])) {
                                             <div class="col-md-6">
                                                 <label>Program <span class="text-danger">*</span></label>
                                                 <select name="course_id" class="form-select" required>
-                                                    <option value="">Select Course</option>
+                                                    <option value="">Select Program</option>
                                                     <?php
                                                     $q = mysqli_query($conn, "SELECT * FROM courses");
                                                     while ($c = mysqli_fetch_assoc($q)) {

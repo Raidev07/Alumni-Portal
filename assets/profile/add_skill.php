@@ -1,7 +1,6 @@
 <?php
 session_start();
 require_once "../../backend/db.php";
-
 header("Content-Type: application/json");
 
 if (!isset($_SESSION['user_id'])) {

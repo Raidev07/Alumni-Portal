@@ -8,7 +8,7 @@ if (!isset($_SESSION['user_id'])) {
 
 $uid = $_SESSION['user_id'];
 
-/* optional: delete file sa folder */
+// delete file sa folder
 $stmt = $conn->prepare("SELECT profile_picture FROM userprofile WHERE user_id = ?");
 $stmt->bind_param("i", $uid);
 $stmt->execute();
@@ -21,7 +21,7 @@ if (!empty($result['profile_picture'])) {
     }
 }
 
-/* set DB to NULL */
+// set DB to NULL
 $stmt = $conn->prepare("UPDATE userprofile SET profile_picture = NULL WHERE user_id = ?");
 $stmt->bind_param("i", $uid);
 

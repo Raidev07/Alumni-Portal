@@ -3,7 +3,7 @@ session_start();
 include "db.php";
 header('Content-Type: application/json');
 
-// ─── Collect & sanitize POST data ───────────────────────────────────────────
+// Collect & sanitize POST data
 $student_number = trim($_POST['studentId'] ?? '');
 $first_name = trim($_POST['firstName'] ?? '');
 $middle_name = trim($_POST['middleName'] ?? '');
@@ -19,7 +19,7 @@ $year_graduated = (int) ($_POST['yearGraduated'] ?? 0);
 $raw_password = $_POST['password'] ?? '';
 $confirm_pass = $_POST['confirmPassword'] ?? '';
 
-// ─── Validation ──────────────────────────────────────────────────────────────
+// valid
 $errors = [];
 
 if (empty($student_number) || !preg_match('/^\d{2}-\d{5}$/', $student_number))
@@ -51,8 +51,7 @@ if (!empty($errors)) {
     exit;
 }
 
-
-// ─── Verify if student is an alumni ─────────────────────────────
+// Verify if student is an alumni
 $checkGraduate = $conn->prepare("
     SELECT grad_id 
     FROM graduates 
@@ -77,12 +76,12 @@ if ($result->num_rows === 0) {
 
 $checkGraduate->close();
 
-// ─── Hash password ───────────────────────────────────────────────────────────
+// Hash password
 $hashed_password = password_hash($raw_password, PASSWORD_DEFAULT);
 
 
 
-// ─── Call stored procedure ───────────────────────────────────────────────────
+// Call stored procedure
 try {
     $stmt = $conn->prepare("CALL sp_RegisterAlumni(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
@@ -139,5 +138,4 @@ try {
 
     echo json_encode(['success' => false, 'errors' => [$errMsg]]);
 }
-
 ?>
