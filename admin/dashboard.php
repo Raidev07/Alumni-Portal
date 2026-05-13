@@ -36,15 +36,16 @@ $sql = "SELECT
 
 $result = $conn->query($sql);
 
-if ($result->num_rows > 0) {
+if (!$result) {
+    flash("error", "Database Error", $conn->error);
+    $programmeData = [];
+} else {
     while ($row = $result->fetch_assoc()) {
         $programmeData[] = [
             'programme' => $row['course_code'],
             'count' => $row['count']
         ];
     }
-} else {
-    echo "No results found.";
 }
 ?>
 
@@ -116,8 +117,14 @@ if ($result->num_rows > 0) {
                                         <?php
                                         $sql = "SELECT COUNT(*) AS total FROM alumnidetails";
                                         $result = $conn->query($sql);
-                                        $row = $result->fetch_assoc();
-                                        echo $row['total'];
+
+                                        $total = 0;
+
+                                        if ($result) {
+                                            $row = $result->fetch_assoc();
+                                            $total = $row['total'] ?? 0;
+                                        }
+                                        echo $total;
                                         ?>
                                     </h3>
                                     <p>Total Alumni Members</p>
@@ -197,10 +204,12 @@ if ($result->num_rows > 0) {
 
     </div>
 
+    <?php include("includes/flash-swal.php"); ?>
+
     <script src="js/apexcharts.min.js"></script>
     <script src="js/Sortable.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         function logout(event) {
             event.preventDefault();

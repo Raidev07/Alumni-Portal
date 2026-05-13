@@ -2,6 +2,7 @@
 include("../backend/db_admin.php");
 session_start();
 
+include("includes/flash.php");
 /*
 |--------------------------------------------------------------------------
 | ADMIN CHECK
@@ -21,35 +22,48 @@ if (isset($_GET['restore_id'])) {
 
     $rid = intval($_GET['restore_id']);
 
-    // GET USER ID
-    $getUser = mysqli_query($conn, "
+    // GET USER ID (SAFE VERSION WITHOUT get_result)
+    $stmt = $conn->prepare("
         SELECT user_id 
         FROM alumnidetails 
-        WHERE alumni_id = $rid
+        WHERE alumni_id = ?
         LIMIT 1
     ");
 
-    $data = mysqli_fetch_assoc($getUser);
-    $user_id = $data['user_id'] ?? 0;
+    $stmt->bind_param("i", $rid);
+    $stmt->execute();
+    $stmt->bind_result($user_id);
+    $stmt->fetch();
+    $stmt->close();
+
+    $user_id = $user_id ?? 0;
 
     // UNARCHIVE
-    mysqli_query($conn, "
+    $stmt = $conn->prepare("
         UPDATE alumnidetails 
         SET is_archived = 0 
-        WHERE alumni_id = $rid
+        WHERE alumni_id = ?
     ");
+    $stmt->bind_param("i", $rid);
+    $stmt->execute();
+    $stmt->close();
 
     // RESTORE USER
     if ($user_id) {
-        mysqli_query($conn, "
+        $stmt = $conn->prepare("
             UPDATE users 
             SET status = 'active'
-            WHERE id = $user_id
+            WHERE id = ?
         ");
+        $stmt->bind_param("i", $user_id);
+        $stmt->execute();
+        $stmt->close();
     }
 
-    // redirect WITHOUT restore param
-    header("Location: archived_alumni.php?msg=restored");
+    // USE FLASH (IMPORTANT)
+    flash("success", "Restored", "Alumnus restored successfully!");
+
+    header("Location: archived_alumni.php");
     exit();
 }
 
@@ -255,6 +269,28 @@ $ret = mysqli_query($conn, $query);
 
     </div>
 
+    <?php include("includes/flash-swal.php"); ?>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        function logout(event) {
+            event.preventDefault();
+
+            Swal.fire({
+                title: "Are you sure?",
+                text: "You will be logged out.",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#dc3545",
+                cancelButtonColor: "#6c757d",
+                confirmButtonText: "Yes, log out",
+                cancelButtonText: "Cancel"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = "../logout.php";
+                }
+            });
+        }
+    </script>
 </body>
 
 </html>

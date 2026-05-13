@@ -2,6 +2,7 @@
 include("../backend/db_admin.php");
 session_start();
 
+include("includes/flash.php");
 /*
 |-------------------------------------------------
 | SESSION CHECK
@@ -21,19 +22,31 @@ if (
 |-------------------------------------------------
 */
 $user_id = $_SESSION['user_id'];
+$user = null;
 
 $sql = "SELECT * FROM users WHERE id = ?";
+
 $stmt = $conn->prepare($sql);
 
-$stmt->bind_param("i", $user_id);
+if (!$stmt) {
+    flash("error", "Database Error", $conn->error);
+} else {
 
-$stmt->execute();
+    if (!$stmt->bind_param("i", $user_id)) {
+        flash("error", "System Error", "Bind failed.");
+    } elseif (!$stmt->execute()) {
+        flash("error", "Database Error", $stmt->error);
+    } else {
 
-$result = $stmt->get_result();
+        $result = $stmt->get_result();
 
-$user = $result->fetch_assoc();
+        if ($result) {
+            $user = $result->fetch_assoc();
+        }
+    }
 
-$stmt->close();
+    $stmt->close();
+}
 
 /*
 |-------------------------------------------------
@@ -46,54 +59,40 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $password = trim($_POST['password'] ?? '');
     $confirm_password = trim($_POST['confirm_password'] ?? '');
 
-    // Empty fields
-    if (
-        empty($email) ||
-        empty($password) ||
-        empty($confirm_password)
-    ) {
-
-        $error = "All fields are required.";
-    }
-
-    // Password mismatch
-    elseif ($password !== $confirm_password) {
-
-        $error = "Passwords do not match.";
+    if (empty($email) || empty($password) || empty($confirm_password)) {
+        flash("error", "Validation Error", "All fields are required.");
+    } elseif ($password !== $confirm_password) {
+        flash("error", "Validation Error", "Passwords do not match.");
     } else {
 
-        $hashed_password = password_hash(
-            $password,
-            PASSWORD_DEFAULT
-        );
+        $hashed_password = password_hash($password, PASSWORD_DEFAULT);
 
-        $update = "
-            UPDATE users
-            SET email = ?, password = ?
-            WHERE id = ?
-        ";
+        $update = "UPDATE users SET email = ?, password = ? WHERE id = ?";
 
         $stmt = $conn->prepare($update);
 
-        $stmt->bind_param(
-            "ssi",
-            $email,
-            $hashed_password,
-            $user_id
-        );
-
-        if ($stmt->execute()) {
-
-            $_SESSION['email'] = $email;
-
-            header("Location: profile.php?update=success");
-            exit();
+        if (!$stmt) {
+            flash("error", "Database Error", $conn->error);
         } else {
 
-            $error = "Something went wrong.";
-        }
+            if (!$stmt->bind_param("ssi", $email, $hashed_password, $user_id)) {
+                flash("error", "System Error", "Bind failed.");
+            } elseif (!$stmt->execute()) {
+                flash("error", "Database Error", $stmt->error);
+            } else {
 
-        $stmt->close();
+                $_SESSION['email'] = $email;
+
+                $stmt->close();
+
+                flash("success", "Updated", "Profile updated successfully!");
+
+                header("Location: profile.php?update=success");
+                exit();
+            }
+
+            $stmt->close();
+        }
     }
 }
 ?>
@@ -146,12 +145,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                                     <div class="card-title">Hello, <?php echo htmlspecialchars($user['role']); ?>! Please update the information below to improve your profile.</div>
                                 </div>
 
-                                <?php if (isset($error)) : ?>
-                                    <div class="alert alert-danger m-3">
-                                        <?php echo $error; ?>
-                                    </div>
-                                <?php endif; ?>
-
                                 <form method="POST" action="">
                                     <div class="card-body">
 
@@ -202,6 +195,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         <?php include("includes/footer.php"); ?>
     </div>
 
+    <?php include("includes/flash-swal.php"); ?>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         function logout(event) {
