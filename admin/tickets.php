@@ -232,7 +232,7 @@ if (!$ret) {
                                     </div>
                                 <?php else: ?>
 
-                                    <table class="table table-striped table-hover">
+                                    <table class="table table-striped table-hover" id="table-data">
 
                                         <thead>
                                             <tr>

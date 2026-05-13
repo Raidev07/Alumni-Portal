@@ -87,7 +87,7 @@ unset($_SESSION['recovery_msg']);
                             }
                             ?>
 
-                            <table class="table table-bordered">
+                            <table class="table table-bordered" id="table-data">
                                 <thead>
                                     <tr>
                                         <th>Email</th>

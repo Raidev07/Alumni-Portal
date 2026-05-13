@@ -195,7 +195,7 @@ $ret = mysqli_query($conn, $query);
 
                             <div class="table-responsive">
 
-                                <table class="table table-striped table-hover">
+                                <table class="table table-striped table-hover" id="table-data">
 
                                     <thead>
                                         <tr>
