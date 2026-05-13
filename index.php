@@ -247,7 +247,7 @@ if ($isLoggedIn) {
 
                             <div class="card-content">
                                 <h3 class="card-title"><?= htmlspecialchars($featured['title']) ?></h3>
-                                <p class="card-text"><?= htmlspecialchars($featured['excerpt']) ?></p>
+                                <p class="card-text"><?= htmlspecialchars(mb_strimwidth($featured['excerpt'], 0, 100, '...')) ?></p>
                                 <div class="card-footer">
                                     <div class="card-profile">
                                         <?php if (!empty($featured['profile_picture'])): ?>
