@@ -1997,6 +1997,35 @@ DELIMITER ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
 
 --
+-- Temporary table structure for view `vw_alumnicompleteprofile`
+--
+
+DROP TABLE IF EXISTS `vw_alumnicompleteprofile`;
+/*!50001 DROP VIEW IF EXISTS `vw_alumnicompleteprofile`*/;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+/*!50001 CREATE VIEW `vw_alumnicompleteprofile` AS SELECT
+ 1 AS `user_id`,
+  1 AS `student_number`,
+  1 AS `email`,
+  1 AS `first_name`,
+  1 AS `middle_name`,
+  1 AS `last_name`,
+  1 AS `suffix`,
+  1 AS `gender`,
+  1 AS `birthdate`,
+  1 AS `contact_number`,
+  1 AS `address`,
+  1 AS `course_code`,
+  1 AS `course_name`,
+  1 AS `year_graduated`,
+  1 AS `account_status`,
+  1 AS `twofa_enabled`,
+  1 AS `is_archived`,
+  1 AS `registered_date` */;
+SET character_set_client = @saved_cs_client;
+
+--
 -- Dumping events for database 'alumniDB'
 --
 /*!50106 SET @save_time_zone= @@TIME_ZONE */ ;
@@ -2077,55 +2106,6 @@ DELIMITER ;
 --
 -- Dumping routines for database 'alumniDB'
 --
-/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'NO_AUTO_VALUE_ON_ZERO' */ ;
-/*!50003 DROP PROCEDURE IF EXISTS `sp_FilterEvents` */;
-/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
-/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
-/*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8mb4 */ ;
-/*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
-DELIMITER ;;
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_FilterEvents`(IN `p_event_type` VARCHAR(50))
-BEGIN
-    IF p_event_type = 'All' THEN
-        SELECT * FROM Events WHERE status != 'cancelled' ORDER BY event_date ASC;
-    ELSE
-        SELECT * FROM Events 
-        WHERE event_type = p_event_type 
-        AND status != 'cancelled' 
-        ORDER BY event_date ASC;
-    END IF;
-END ;;
-DELIMITER ;
-/*!50003 SET sql_mode              = @saved_sql_mode */ ;
-/*!50003 SET character_set_client  = @saved_cs_client */ ;
-/*!50003 SET character_set_results = @saved_cs_results */ ;
-/*!50003 SET collation_connection  = @saved_col_connection */ ;
-/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'NO_AUTO_VALUE_ON_ZERO' */ ;
-/*!50003 DROP PROCEDURE IF EXISTS `sp_FilterJobs` */;
-/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
-/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
-/*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8mb4 */ ;
-/*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
-DELIMITER ;;
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_FilterJobs`(IN `p_type` VARCHAR(50), IN `p_modality` VARCHAR(50))
-BEGIN
-    SELECT * FROM JobPostings
-    WHERE (job_type = p_type OR p_type = 'All')
-    AND (modality = p_modality OR p_modality = 'All')
-    AND status = 'active'
-    ORDER BY posted_at DESC;
-END ;;
-DELIMITER ;
-/*!50003 SET sql_mode              = @saved_sql_mode */ ;
-/*!50003 SET character_set_client  = @saved_cs_client */ ;
-/*!50003 SET character_set_results = @saved_cs_results */ ;
-/*!50003 SET collation_connection  = @saved_col_connection */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'NO_AUTO_VALUE_ON_ZERO' */ ;
 /*!50003 DROP PROCEDURE IF EXISTS `sp_RegisterAlumni` */;
@@ -2236,6 +2216,24 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+
+--
+-- Final view structure for view `vw_alumnicompleteprofile`
+--
+
+/*!50001 DROP VIEW IF EXISTS `vw_alumnicompleteprofile`*/;
+/*!50001 SET @saved_cs_client          = @@character_set_client */;
+/*!50001 SET @saved_cs_results         = @@character_set_results */;
+/*!50001 SET @saved_col_connection     = @@collation_connection */;
+/*!50001 SET character_set_client      = utf8mb4 */;
+/*!50001 SET character_set_results     = utf8mb4 */;
+/*!50001 SET collation_connection      = utf8mb4_general_ci */;
+/*!50001 CREATE ALGORITHM=UNDEFINED */
+/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
+/*!50001 VIEW `vw_alumnicompleteprofile` AS select `u`.`id` AS `user_id`,`a`.`student_number` AS `student_number`,`u`.`email` AS `email`,`p`.`first_name` AS `first_name`,`p`.`middle_name` AS `middle_name`,`p`.`last_name` AS `last_name`,`p`.`suffix` AS `suffix`,`p`.`gender` AS `gender`,`p`.`birthdate` AS `birthdate`,`p`.`contact_number` AS `contact_number`,`p`.`address` AS `address`,`c`.`course_code` AS `course_code`,`c`.`course_name` AS `course_name`,`a`.`year_graduated` AS `year_graduated`,`u`.`status` AS `account_status`,`u`.`twofa_enabled` AS `twofa_enabled`,`a`.`is_archived` AS `is_archived`,`u`.`created_at` AS `registered_date` from (((`users` `u` join `userprofile` `p` on(`u`.`id` = `p`.`user_id`)) join `alumnidetails` `a` on(`u`.`id` = `a`.`user_id`)) join `courses` `c` on(`a`.`course_id` = `c`.`course_id`)) where `u`.`role` = 'alumni' */;
+/*!50001 SET character_set_client      = @saved_cs_client */;
+/*!50001 SET character_set_results     = @saved_cs_results */;
+/*!50001 SET collation_connection      = @saved_col_connection */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -2246,4 +2244,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-05-13 23:06:34
+-- Dump completed on 2026-05-14  2:20:37
