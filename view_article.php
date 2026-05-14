@@ -83,9 +83,17 @@ while ($edu = $eduResult->fetch_assoc()) {
 
     <?php include('includes/navbarhome.php'); ?>
 
+    <a href="articles_page.php" class="article-back-btn" aria-label="Back to articles">
+                    <span class="back-arrow">←</span>
+                    Back to Articles
+                </a>
+                
     <div class="page-wrap">
         <!-- MAIN ARTICLE -->
         <main class="article-main">
+            <div class="article-actions">
+                
+            </div>
             <div class="cover-image-wrap">
                 <?php if (!empty($article['cover_image'])): ?>
                     <img src="<?php echo htmlspecialchars($article['cover_image']); ?>" alt="Cover Image">

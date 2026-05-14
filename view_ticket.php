@@ -67,6 +67,7 @@ $replies = mysqli_query($conn, "
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ticket Conversation</title>
     <link rel="icon" href="assets/image/alumni_plp_newicon.png">
+
     <link rel="stylesheet" href="assets/css/contact.css">
     <link rel="stylesheet" href="assets/css/alumni_homepage.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
@@ -103,7 +104,7 @@ $replies = mysqli_query($conn, "
         }
 
         .user .bubble {
-            background: #4f46e5;
+            background: #028f21;
             color: #fff;
         }
 
@@ -126,6 +127,25 @@ $replies = mysqli_query($conn, "
             resize: none;
             font-family: inherit;
         }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 16px;
+            background: #006e14;
+            color: #ffffff;
+            border-radius: 10px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            transition: background 0.25s ease, transform 0.2s ease;
+        }
+
+        .back-link:hover {
+            background: #005210;
+            transform: translateY(-1px);
+        }
     </style>
 </head>
 
@@ -133,8 +153,10 @@ $replies = mysqli_query($conn, "
 
     <?php include('includes/navbarhome.php'); ?>
 
+    <!-- CONTACT STYLE WRAPPER -->
     <section class="contact-section">
         <div class="contact-wrapper">
+
             <div class="contact-header">
                 <span class="section-tag">Support Ticket</span>
                 <p class="section-sub">
@@ -142,45 +164,82 @@ $replies = mysqli_query($conn, "
                 </p>
             </div>
             <div style="margin-bottom: 15px;">
-                <a href="my_tickets.php" style="display:inline-block; padding:8px 14px; background:#6c757d; color:#fff; border-radius:8px; text-decoration:none; font-size:14px;">← Back to My Tickets</a>
+                <a href="my_tickets.php" class="back-link">
+                    <i class="fas fa-arrow-left"></i> Back to My Tickets
+                </a>
             </div>
 
             <div class="contact-form-card">
-                <h3 class="form-title"><?= htmlspecialchars($ticket['subject']) ?></h3>
-                <p class="form-sub">Status:<b><?= ucfirst($ticket['status']) ?></b></p>
+
+                <h3 class="form-title">
+                    <?= htmlspecialchars($ticket['subject']) ?>
+                </h3>
+
+                <p class="form-sub">
+                    Status:
+                    <b><?= ucfirst($ticket['status']) ?></b>
+                </p>
 
                 <!-- CHAT BOX -->
                 <div class="chat-box">
+
                     <?php while ($row = mysqli_fetch_assoc($replies)): ?>
+
                         <div class="message <?= $row['sender_type'] ?>">
+
                             <div class="bubble">
+
                                 <?= nl2br(htmlspecialchars($row['message'])) ?>
-                                <div class="time"><?= date("M d, Y h:i A", strtotime($row['created_at'])) ?></div>
+
+                                <div class="time">
+                                    <?= date("M d, Y h:i A", strtotime($row['created_at'])) ?>
+                                </div>
+
                             </div>
+
                         </div>
+
                     <?php endwhile; ?>
+
                 </div>
 
                 <?php if ($ticket['status'] === 'resolved'): ?>
+
                     <!-- READ ONLY MODE -->
-                    <div style="padding:15px; background:#e9ecef; border-radius:10px; margin-top:15px; ">
-                        <b>This ticket is resolved (Archived).</b><br>You can view this conversation but cannot send messages anymore.
+                    <div style="
+                            padding:15px;
+                            background:#e9ecef;
+                            border-radius:10px;
+                            margin-top:15px;
+                        ">
+                        <b>This ticket is resolved (Archived).</b><br>
+                        You can view this conversation but cannot send messages anymore.
                     </div>
+
                 <?php else: ?>
+
                     <!-- REPLY FORM -->
                     <form method="POST" class="contact-form">
+
                         <div class="form-group">
                             <label>Reply Message</label>
                             <textarea name="message" rows="4" placeholder="Type your reply..." required></textarea>
                         </div>
-                        <button class="submit-btn" name="send_reply">Send Reply <i class="fas fa-paper-plane"></i></button>
+
+                        <button class="submit-btn" name="send_reply">
+                            Send Reply <i class="fas fa-paper-plane"></i>
+                        </button>
+
                     </form>
                 <?php endif; ?>
+
             </div>
         </div>
     </section>
 
     <?php include('includes/logoutmodal.php'); ?>
+
     <script src="assets/js/alumni_homepage.js"></script>
 </body>
+
 </html>

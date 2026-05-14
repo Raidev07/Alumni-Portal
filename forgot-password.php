@@ -163,7 +163,7 @@ $step = $_SESSION['step'] ?? "email";
         }
 
         input {
-            width: 100%;
+            width: 95%;
             padding: 10px;
             margin-top: 10px;
         }
@@ -172,7 +172,7 @@ $step = $_SESSION['step'] ?? "email";
             width: 100%;
             padding: 10px;
             margin-top: 12px;
-            background: #007bff;
+            background: #006e14;
             color: white;
             border: none;
         }

@@ -69,7 +69,7 @@ $uid = $isLoggedIn ? $_SESSION['user_id'] : null;
             </div>
             <div class="contact-form-card">
                 <?php if (isset($_GET['success'])) : ?>
-                    <div class="alert alert-success">Message sent successfully.</div>
+                    <div class="alert alert-success">Message sent successfully. A ticket has been added.</div>
                 <?php endif; ?>
 
                 <?php if (isset($_GET['error'])) : ?>
