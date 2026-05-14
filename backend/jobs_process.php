@@ -31,13 +31,60 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
     // SEARCH
     if ($query !== '') {
-        $q = $conn->real_escape_string($query);
 
-        $sql .= " AND (
-            job_title LIKE '%$q%' OR
-            company_name LIKE '%$q%' OR
-            location LIKE '%$q%'
-        )";
+        $stmt = $conn->prepare("CALL sp_SearchJobs(?)");
+
+        $stmt->bind_param("s", $query);
+
+        $stmt->execute();
+
+        $result = $stmt->get_result();
+
+        $jobs = [];
+
+        while ($row = $result->fetch_assoc()) {
+
+            $postedAt = new DateTime($row['posted_at']);
+            $now = new DateTime();
+
+            $diff = $now->diff($postedAt);
+
+            if ($diff->days === 0)
+                $posted = 'Today';
+            elseif ($diff->days === 1)
+                $posted = '1 day ago';
+            elseif ($diff->days < 7)
+                $posted = $diff->days . ' days ago';
+            elseif ($diff->days < 14)
+                $posted = '1 week ago';
+            else
+                $posted = floor($diff->days / 7) . ' weeks ago';
+
+            $jobs[] = [
+
+                'id' => (int) $row['job_id'],
+                'user_id' => (int) $row['user_id'],
+                'status' => $row['status'],
+
+                'title' => $row['job_title'],
+                'company' => $row['company_name'],
+                'type' => $row['job_type'],
+                'location' => $row['location'],
+                'salary' => $row['salary_range'] ?? '',
+                'posted' => $posted,
+                'desc' => $row['job_description'] ?? '',
+                'modality' => $row['modality'],
+                'category' => $row['category'],
+                'req' => $row['requirements_qualifications'] ?? '',
+                'benefits' => $row['benefits'] ?? '',
+                'link' => $row['application_link'] ?? '#',
+                'email' => $row['contact_email'] ?? '',
+            ];
+        }
+
+        echo json_encode($jobs);
+
+        exit;
     }
 
     $sql .= " ORDER BY posted_at DESC";

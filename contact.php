@@ -216,7 +216,7 @@ $uid = $isLoggedIn ? $_SESSION['user_id'] : null;
     </div>
 
     <?php include('includes/logoutmodal.php'); ?>
-    
+
     <script src="assets/js/alumni_homepage.js"></script>
     <script>
         const members = {
@@ -341,7 +341,7 @@ $uid = $isLoggedIn ? $_SESSION['user_id'] : null;
         });
 
         // Sticky navbar
-        window.addEventListener('scroll', function() {
+        window.addEventListener('scroll', function () {
             const nav = document.getElementById('navbar');
             nav.classList.toggle('sticky', window.scrollY > 50);
         });

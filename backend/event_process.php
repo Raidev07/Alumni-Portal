@@ -115,18 +115,50 @@ function handleGetEvents()
             $types .= 's';
         }
 
-        // Search by title, location, or organizer name
+        // SEARCH
         if ($search !== '') {
-            $like = '%' . $search . '%';
-            $sql .= " AND (
-                                e.event_title LIKE ?
-                            OR e.location    LIKE ?
-                            OR CONCAT(up.first_name, ' ', up.last_name) LIKE ?
-                            )";
-            $params[] = $like;
-            $params[] = $like;
-            $params[] = $like;
-            $types .= 'sss';
+
+            $stmt = $conn->prepare("CALL sp_SearchEvents(?)");
+
+            $stmt->bind_param("s", $search);
+
+            $stmt->execute();
+
+            $result = $stmt->get_result();
+
+            $events = [];
+
+            while ($row = $result->fetch_assoc()) {
+
+                $events[] = [
+                    'id' => (int) $row['event_id'],
+                    'user_id' => (int) $row['user_id'],
+                    'title' => $row['event_title'],
+                    'organizer' =>
+                        trim(
+                            $row['first_name'] . ' ' .
+                            $row['last_name'] . ' ' .
+                            ($row['suffix'] ?? '')
+                        ),
+                    'type' => $row['event_type'],
+                    'date' => $row['event_date'],
+                    'timeStart' => substr($row['start_time'], 0, 5),
+                    'timeEnd' => substr($row['end_time'], 0, 5),
+                    'location' => $row['location'],
+                    'maxAttendees' => $row['max_attendees'],
+                    'deadline' => $row['registration_deadline'],
+                    'email' => $row['contact_email'],
+                    'desc' => $row['event_description'],
+                    'status' => $row['status']
+                ];
+            }
+
+            echo json_encode([
+                'success' => true,
+                'events' => $events
+            ]);
+
+            return;
         }
 
         $sql .= " ORDER BY e.event_date ASC, e.start_time ASC";
