@@ -14,32 +14,41 @@ if (isset($_POST['exportexcel'])) {
     header("Content-Type: application/vnd.ms-excel");
     header("Content-Disposition: attachment; filename=\"$filename\"");
 
+    $selected_course = mysqli_real_escape_string($conn, $_POST['course'] ?? 'All');
+    $selected_year = mysqli_real_escape_string($conn, $_POST['year'] ?? 'All');
+
     $sql = "
-    SELECT 
-        ad.student_number,
-        up.first_name,
-        up.middle_name,
-        up.last_name,
-        up.suffix,
-        u.email,
-        up.contact_number AS phone,
-        up.address,
-        up.birthdate,
-        up.gender AS sex,
-        d.department_name AS department,
-        c.course_code,
-        ad.year_graduated
-    FROM alumnidetails ad
-    INNER JOIN users u ON ad.user_id = u.id
-    INNER JOIN userprofile up ON up.user_id = u.id
-    LEFT JOIN courses c ON ad.course_id = c.course_id
-    LEFT JOIN departments d ON c.department_id = d.department_id
-    ORDER BY ad.year_graduated DESC
-";
+        SELECT 
+            ad.student_number,
+            up.first_name,
+            up.middle_name,
+            up.last_name,
+            up.suffix,
+            u.email,
+            up.contact_number AS phone,
+            up.address,
+            up.birthdate,
+            up.gender AS sex,
+            d.department_name AS department,
+            c.course_code,
+            ad.year_graduated
+        
+        FROM alumnidetails ad
+        INNER JOIN users u ON ad.user_id = u.id
+        INNER JOIN userprofile up ON up.user_id = u.id
+        LEFT JOIN courses c ON ad.course_id = c.course_id
+        LEFT JOIN departments d ON c.department_id = d.department_id
+        
+        WHERE ad.is_archived = 0
+        AND (('$selected_course' = 'All' OR c.course_code = '$selected_course')
+            AND ('$selected_year' = 'All' OR ad.year_graduated = '$selected_year'))
+        
+        ORDER BY ad.year_graduated DESC
+        ";
 
     $result = mysqli_query($conn, $sql);
 
-    // EXPORT HEADERS (MATCH IMPORT FORMAT)
+    // excel header
     echo implode("\t", [
         "Student Number",
         "First Name",

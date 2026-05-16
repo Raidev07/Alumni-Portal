@@ -231,6 +231,9 @@ if (isset($_POST['import'])) {
                         <hr>
                         <h5>Excel Format Required:</h5>
                         <pre>School Number | First Name | Middle Name | Surname | Suffix | Email | Phone | Address | Birthdate | Sex | Department | Course Code | Year Graduated</pre>
+                        <a href="download_import_template.php" class="btn btn-success mt-2">
+                            <i class="bi bi-download"></i> Download Template
+                        </a>
                     </div>
                 </div>
             </div>

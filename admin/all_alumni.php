@@ -307,6 +307,8 @@ if (isset($_GET['archive_id'])) {
                                 </div>
                                 <div class="card-footer clearfix">
                                     <form action="export_data.php" method="POST">
+                                        <input type="hidden" name="course" value="<?= htmlspecialchars($selected_course) ?>">
+                                        <input type="hidden" name="year" value="<?= htmlspecialchars($selected_year) ?>">
                                         <a href="add_alumnus.php" class="btn btn-primary"><i class="bi bi-plus-circle"></i>&nbsp; Add New Alumnus</a>
                                         <button class="exportexcel btn btn-success" id="exportexcel" name="exportexcel" type="submit"><i class="bi bi-download"></i>&nbsp; Export Data</button>
                                         <ul class="pagination pagination-sm m-0 float-end">
