@@ -13,7 +13,6 @@ if (
     exit();
 }
 
-// BASE FILE (IMPORTANT FIX - PREVENT "NOT FOUND")
 $baseFile = basename($_SERVER['PHP_SELF']);
 
 // FILTER SYSTEM
@@ -180,7 +179,7 @@ if (!$ret) {
                         <div class="card-header">
                             <div class="card-title">All Tickets</div>
                         </div>
-                        <!-- FILTER BUTTONS (FIXED LINKS) -->
+                        <!-- FILTER BUTTONS -->
                         <div class="filter-bar">
                             <a href="<?= $baseFile ?>?filter=all"
                                 class="btn-all <?= $filter == 'all' ? 'active-filter' : '' ?>">

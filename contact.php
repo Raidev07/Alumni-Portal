@@ -69,7 +69,15 @@ $uid = $isLoggedIn ? $_SESSION['user_id'] : null;
             </div>
             <div class="contact-form-card">
                 <?php if (isset($_GET['success'])) : ?>
-                    <div class="alert alert-success">Message sent successfully. A ticket has been added.</div>
+                    <div class="alert alert-success">
+
+                        <?php if ($isLoggedIn): ?>
+                            Ticket submitted successfully.
+                        <?php else: ?>
+                            Message sent successfully. We will reply to your email shortly.
+                        <?php endif; ?>
+
+                    </div>
                 <?php endif; ?>
 
                 <?php if (isset($_GET['error'])) : ?>
@@ -124,7 +132,7 @@ $uid = $isLoggedIn ? $_SESSION['user_id'] : null;
                     </div>
                     <div class="form-group">
                         <label for="message">Message</label>
-                        <textarea id="message" name="message" rows="6" placeholder="Write your message here..."required></textarea>
+                        <textarea id="message" name="message" rows="6" placeholder="Write your message here..." required></textarea>
                     </div>
                     <button type="submit" class="submit-btn">
                         <span>Send Message</span>
@@ -341,10 +349,11 @@ $uid = $isLoggedIn ? $_SESSION['user_id'] : null;
         });
 
         // Sticky navbar
-        window.addEventListener('scroll', function () {
+        window.addEventListener('scroll', function() {
             const nav = document.getElementById('navbar');
             nav.classList.toggle('sticky', window.scrollY > 50);
         });
     </script>
 </body>
+
 </html>
