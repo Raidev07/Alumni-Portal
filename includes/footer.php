@@ -25,8 +25,8 @@
         <!-- Right: Contact -->
         <div class="footer-section">
             <h4>Contact</h4>
-            <p>Email: alumni@plpasig.edu.ph</p>
-            <p>Phone: +63 912 345 6789</p>
+            <p>Email: plpalumni_org@gmail.com</p>
+            <p>Phone: 0912 345 6789</p>
 
             <div class="socials">
                 <a href="#"><i class="fab fa-facebook-f"></i></a>

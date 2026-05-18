@@ -97,7 +97,7 @@ $uid = $isLoggedIn ? $_SESSION['user_id'] : null;
                         <div class="info-icon"><i class="fas fa-phone-alt"></i></div>
                         <div class="info-text">
                             <h5>Phone</h5>
-                            <p>0287215846</p>
+                            <p>0912 345 6789</p>
                         </div>
                     </div>
                     <div class="info-card">
